@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Entrar | Costa do Dendê{% endblock %}
+{% block page_title %}Acesso ao sistema{% endblock %}
+{% block page_subtitle %}Use o usuário administrador para acessar cadastros, cargas e dashboard.{% endblock %}
+
+{% block content %}
+<section class="panel auth-panel">
+    <form method="post" class="form-grid one-column">
+        {% csrf_token %}
+        <div>
+            <label for="id_username">Usuário</label>
+            <input type="text" name="username" autofocus required id="id_username" class="form-control">
+        </div>
+        <div>
+            <label for="id_password">Senha</label>
+            <input type="password" name="password" required id="id_password" class="form-control">
+        </div>
+        {% if form.errors %}
+            <div class="message error">Usuário ou senha inválidos.</div>
+        {% endif %}
+        <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Carga | Costa do Dendê{% endblock %}
+{% block page_title %}Registro de carga{% endblock %}
+{% block page_subtitle %}Informe cliente, produto, rota e dados operacionais da viagem.{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <form method="post" class="form-grid two-columns" id="carga-form">
+        {% csrf_token %}
+        <input type="hidden" name="compartimentos_json" id="compartimentos_json">
+        {% for field in form %}
+            <div class="field-block {% if field.name == 'observacoes' %}full-width{% endif %} {% if field.name == 'litros' %}litros-block{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+            </div>
+        {% endfor %}
+
+        <!-- Seção de bocas do caminhão -->
+        <div class="field-block full-width" id="bocas-section" style="display:none;">
+            <label>Bocas do caminhão</label>
+            <div id="bocas-lista" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;"></div>
+            <button type="button" class="btn-secondary" id="btn-add-boca" style="margin-right:8px;">+ Adicionar boca</button>
+            <small style="color:#666;">Capacidade total será somada automaticamente no campo Litros.</small>
+        </div>
+
+        <div class="field-block full-width">
+            <label for="valor_total_display">Valor total do frete (calculado)</label>
+            <input type="text" id="valor_total_display" class="form-control" readonly
+                   placeholder="Preencha a quantidade e o valor por litro"
+                   style="background:#f5f5f5;font-weight:600;color:#1a6b4a;">
+        </div>
+        {% if form.non_field_errors %}
+            <div class="field-error full-width">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="full-width panel-actions">
+            <button type="submit" class="btn-primary">Salvar carga</button>
+            <a href="{% url 'fretes:carga-list' %}" class="btn-secondary">Voltar</a>
+        </div>
+    </form>
+</section>
+
+<style>
+.boca-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f7f4;
+    border: 1px solid #c5ddd6;
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+.boca-item select { border: 1px solid #b0cfc7; border-radius: 4px; padding: 3px 6px; }
+.boca-item button { background: #e55; color: #fff; border: none; border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+</style>
+
+<script>
+var COMPARTIMENTOS_URL = "{% url 'fretes:caminhao-compartimentos' pk=0 %}".replace('/0/', '/');
+var opcoes = [2000, 3000, 5000];
+
+function criarBocaEl(capacidade) {
+    var div = document.createElement('div');
+    div.className = 'boca-item';
+    var sel = document.createElement('select');
+    opcoes.forEach(function(op) {
+        var opt = document.createElement('option');
+        opt.value = op;
+        opt.textContent = op.toLocaleString('pt-BR') + ' L';
+        if (op === capacidade) opt.selected = true;
+        sel.appendChild(opt);
+    });
+    sel.addEventListener('change', atualizarLitros);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = '✕';
+    btn.addEventListener('click', function() { div.remove(); atualizarLitros(); });
+    div.appendChild(sel);
+    div.appendChild(btn);
+    return div;
+}
+
+function atualizarLitros() {
+    var bocas = document.querySelectorAll('#bocas-lista .boca-item select');
+    var total = 0;
+    var caps = [];
+    bocas.forEach(function(s) { var v = parseFloat(s.value); total += v; caps.push(v); });
+    document.getElementById('compartimentos_json').value = JSON.stringify(caps);
+    if (bocas.length > 0) {
+        document.getElementById('id_litros').value = total.toFixed(2);
+    }
+    calcularFrete();
+}
+
+function carregarCompartimentos(caminhaoId) {
+    if (!caminhaoId) { document.getElementById('bocas-section').style.display = 'none'; return; }
+    fetch(COMPARTIMENTOS_URL + caminhaoId + '/compartimentos/')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var lista = document.getElementById('bocas-lista');
+            lista.innerHTML = '';
+            var comps = data.compartimentos && data.compartimentos.length > 0
+                ? data.compartimentos
+                : [{capacidade_litros: 5000}];
+            comps.forEach(function(c) { lista.appendChild(criarBocaEl(c.capacidade_litros)); });
+            document.getElementById('bocas-section').style.display = 'block';
+            atualizarLitros();
+        });
+}
+
+document.getElementById('btn-add-boca').addEventListener('click', function() {
+    document.getElementById('bocas-lista').appendChild(criarBocaEl(5000));
+    atualizarLitros();
+});
+
+var selectCaminhao = document.getElementById('id_caminhao');
+selectCaminhao.addEventListener('change', function() { carregarCompartimentos(this.value); });
+if (selectCaminhao.value) { carregarCompartimentos(selectCaminhao.value); }
+
+function calcularFrete() {
+    var litros = parseFloat(document.getElementById('id_litros').value) || 0;
+    var valorLitro = parseFloat(document.getElementById('id_valor_frete_litro').value) || 0;
+    var total = litros * valorLitro;
+    var display = document.getElementById('valor_total_display');
+    if (litros > 0 && valorLitro > 0) {
+        display.value = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    } else {
+        display.value = '';
+    }
+}
+document.getElementById('id_litros').addEventListener('input', calcularFrete);
+document.getElementById('id_valor_frete_litro').addEventListener('input', calcularFrete);
+calcularFrete();
+</script>
+{% endblock %}

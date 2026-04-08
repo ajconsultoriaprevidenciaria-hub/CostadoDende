@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Cargas | Costa do Dendê{% endblock %}
+{% block page_title %}Lançamentos de carga{% endblock %}
+{% block page_subtitle %}Consulte e edite as viagens registradas no sistema.{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel-actions">
+        <form method="get" class="form-grid compact-grid">
+            <div>
+                <label for="cliente">Cliente</label>
+                <input type="text" id="cliente" name="cliente" value="{{ request.GET.cliente }}" class="form-control">
+            </div>
+            <div>
+                <label for="produto">Produto</label>
+                <input type="text" id="produto" name="produto" value="{{ request.GET.produto }}" class="form-control">
+            </div>
+            <div class="action-align">
+                <button type="submit" class="btn-secondary">Filtrar</button>
+            </div>
+        </form>
+        <a href="{% url 'fretes:carga-create' %}" class="btn-primary">Nova carga</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Cliente</th>
+                    <th>Produto</th>
+                    <th>Fornecedor</th>
+                    <th>Caminhão</th>
+                    <th>Litros</th>
+                    <th>R$/litro</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for carga in cargas %}
+                    <tr>
+                        <td>{{ carga.data_carga|date:'d/m/Y' }}</td>
+                        <td>{{ carga.cliente }}</td>
+                        <td>{{ carga.produto }}</td>
+                        <td>{{ carga.fornecedor }}</td>
+                        <td>{{ carga.caminhao }}</td>
+                        <td>{{ carga.litros|floatformat:2 }}</td>
+                        <td>R$ {{ carga.valor_frete_litro|default:0|floatformat:4 }}</td>
+                        <td>R$ {{ carga.valor_total_frete|default:0|floatformat:2 }}</td>
+                        <td><a href="{% url 'fretes:carga-update' carga.pk %}">Editar</a></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="9">Nenhuma carga cadastrada.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

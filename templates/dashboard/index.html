@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Costa do Dendê{% endblock %}
+{% block page_title %}Dashboard interativo{% endblock %}
+{% block page_subtitle %}Acompanhe carga por cliente x produto, frete médio e fornecedores.{% endblock %}
+
+{% block content %}
+<section class="panel" id="painel-filtros">
+    <div class="panel-actions">
+        <div class="quick-filters">
+            <button type="button" class="btn-secondary js-quick-range" data-range="7">Últimos 7 dias</button>
+            <button type="button" class="btn-secondary js-quick-range" data-range="30">Últimos 30 dias</button>
+            <button type="button" class="btn-secondary js-quick-range" data-range="0">Hoje</button>
+            <button type="button" class="btn-secondary js-clear-filters">Limpar filtros</button>
+        </div>
+        <div class="panel-actions">
+            <a href="{% url 'dashboard:export-pdf' %}?data_inicial={{ filtros.data_inicial|date:'Y-m-d' }}&data_final={{ filtros.data_final|date:'Y-m-d' }}&cliente={{ filtros.cliente }}&produto={{ filtros.produto }}&fornecedor={{ filtros.fornecedor }}&rota={{ filtros.rota }}" class="btn-secondary">Exportar PDF</a>
+            <button onclick="window.print()" class="btn-secondary" type="button">Imprimir</button>
+        </div>
+    </div>
+    <form method="get" class="form-grid four-columns" id="form-dashboard-filtros">
+        <div>
+            <label for="data_inicial">Data inicial</label>
+            <input type="date" id="data_inicial" name="data_inicial" value="{{ filtros.data_inicial|date:'Y-m-d' }}" class="form-control">
+        </div>
+        <div>
+            <label for="data_final">Data final</label>
+            <input type="date" id="data_final" name="data_final" value="{{ filtros.data_final|date:'Y-m-d' }}" class="form-control">
+        </div>
+        <div>
+            <label for="cliente">Cliente</label>
+            <select id="cliente" name="cliente" class="form-select">
+                <option value="">Todos</option>
+                {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}" {% if filtros.cliente == cliente.id|stringformat:'s' %}selected{% endif %}>{{ cliente.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="produto">Produto</label>
+            <select id="produto" name="produto" class="form-select">
+                <option value="">Todos</option>
+                {% for produto in produtos %}
+                    <option value="{{ produto.id }}" {% if filtros.produto == produto.id|stringformat:'s' %}selected{% endif %}>{{ produto.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="fornecedor">Fornecedor</label>
+            <select id="fornecedor" name="fornecedor" class="form-select">
+                <option value="">Todos</option>
+                {% for fornecedor in fornecedores %}
+                    <option value="{{ fornecedor.id }}" {% if filtros.fornecedor == fornecedor.id|stringformat:'s' %}selected{% endif %}>{{ fornecedor.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="rota">Rota</label>
+            <select id="rota" name="rota" class="form-select">
+                <option value="">Todas</option>
+                {% for rota in rotas %}
+                    <option value="{{ rota.id }}" {% if filtros.rota == rota.id|stringformat:'s' %}selected{% endif %}>{{ rota.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="action-align">
+            <button type="submit" class="btn-primary">Atualizar</button>
+        </div>
+    </form>
+    <div class="loading-note" id="loading-note" aria-live="polite"></div>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card">
+        <span>Total carregado</span>
+        <strong>{{ total_litros|floatformat:2 }} L</strong>
+    </article>
+    <article class="stat-card">
+        <span>Total de frete</span>
+        <strong>R$ {{ total_frete|floatformat:2 }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Frete médio</span>
+        <strong>R$ {{ frete_medio|floatformat:4 }}/L</strong>
+    </article>
+    <article class="stat-card">
+        <span>Quantidade de cargas</span>
+        <strong>{{ quantidade_cargas }}</strong>
+    </article>
+</section>
+
+<section class="chart-grid">
+    <div class="panel chart-panel">{{ grafico_cliente_produto|safe }}</div>
+    <div class="panel chart-panel">{{ grafico_frete_medio|safe }}</div>
+    <div class="panel chart-panel">{{ grafico_fornecedor|safe }}</div>
+    <div class="panel chart-panel">{{ grafico_volume_fornecedor|safe }}</div>
+</section>
+
+<section class="panel">
+    <div class="panel-title-row">
+        <h2>Relatório consolidado</h2>
+        <div class="table-search-wrap">
+            <input type="text" id="busca-relatorio" class="form-control" placeholder="Buscar por cliente, produto ou fornecedor...">
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <table id="tabela-relatorio">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Produto</th>
+                    <th>Fornecedor</th>
+                    <th>Cargas</th>
+                    <th>Litros</th>
+                    <th>Frete médio</th>
+                    <th>Frete total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in tabela_relatorio %}
+                    <tr>
+                        <td>{{ item.cliente__nome }}</td>
+                        <td>{{ item.produto__nome }}</td>
+                        <td>{{ item.fornecedor__nome }}</td>
+                        <td>{{ item.cargas }}</td>
+                        <td>{{ item.litros|floatformat:2 }}</td>
+                        <td>R$ {{ item.frete_medio|floatformat:4 }}</td>
+                        <td>R$ {{ item.frete_total|floatformat:2 }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7">Sem registros para o período selecionado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<script>
+    (function () {
+        const form = document.getElementById('form-dashboard-filtros');
+        const loadingNote = document.getElementById('loading-note');
+        const filterFields = form ? form.querySelectorAll('select, input[type="date"]') : [];
+        let submitTimeout;
+
+        function submitWithFeedback() {
+            if (!form) return;
+            if (loadingNote) {
+                loadingNote.textContent = 'Atualizando painel...';
+            }
+            form.submit();
+        }
+
+        filterFields.forEach((field) => {
+            field.addEventListener('change', () => {
+                clearTimeout(submitTimeout);
+                submitTimeout = setTimeout(submitWithFeedback, 250);
+            });
+        });
+
+        const quickButtons = document.querySelectorAll('.js-quick-range');
+        const clearButton = document.querySelector('.js-clear-filters');
+        const dataInicial = document.getElementById('data_inicial');
+        const dataFinal = document.getElementById('data_final');
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        quickButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const range = Number(button.dataset.range || '0');
+                const today = new Date();
+                const start = new Date(today);
+                start.setDate(today.getDate() - range);
+
+                if (dataInicial) dataInicial.value = formatDate(start);
+                if (dataFinal) dataFinal.value = formatDate(today);
+                submitWithFeedback();
+            });
+        });
+
+        if (clearButton) {
+            clearButton.addEventListener('click', () => {
+                if (!form) return;
+                form.querySelectorAll('select').forEach((select) => {
+                    select.value = '';
+                });
+                if (dataInicial) dataInicial.value = '';
+                if (dataFinal) dataFinal.value = '';
+                submitWithFeedback();
+            });
+        }
+
+        const searchInput = document.getElementById('busca-relatorio');
+        const table = document.getElementById('tabela-relatorio');
+        if (searchInput && table) {
+            searchInput.addEventListener('input', () => {
+                const term = searchInput.value.trim().toLowerCase();
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach((row) => {
+                    const text = row.innerText.toLowerCase();
+                    row.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
+    })();
+</script>
+{% endblock %}

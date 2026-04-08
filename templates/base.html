@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Costa do Dendê | Fretes{% endblock %}</title>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body>
+    <div class="layout-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="{% static 'img/logo.png' %}" alt="Costa do Dendê" class="brand-logo">
+                <div>
+                    <strong>Costa do Dendê</strong>
+                    <span>Controle de Fretes</span>
+                </div>
+            </div>
+            <nav class="menu">
+                <a href="{% url 'dashboard:index' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">Dashboard</a>
+                <a href="{% url 'fretes:carga-list' %}" class="{% if request.path|slice:':9' == '/operacao' %}active{% endif %}">Cargas</a>
+                <a href="/admin/" class="{% if request.path|slice:':7' == '/admin/' %}active{% endif %}">Cadastros</a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'logout' %}">Sair</a>
+                {% endif %}
+            </nav>
+        </aside>
+        <main class="content">
+            <nav class="mobile-menu">
+                <a href="{% url 'dashboard:index' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">Dashboard</a>
+                <a href="{% url 'fretes:carga-list' %}" class="{% if request.path|slice:':9' == '/operacao' %}active{% endif %}">Cargas</a>
+                <a href="/admin/" class="{% if request.path|slice:':7' == '/admin/' %}active{% endif %}">Cadastros</a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'logout' %}">Sair</a>
+                {% endif %}
+            </nav>
+            <header class="topbar">
+                <div>
+                    <h1>{% block page_title %}Painel de Fretes{% endblock %}</h1>
+                    <p>{% block page_subtitle %}Operação, cadastros e visão gerencial da transportadora.{% endblock %}</p>
+                </div>
+                {% if request.user.is_authenticated %}
+                    <span class="user-chip">{{ request.user.username }}</span>
+                {% endif %}
+            </header>
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
