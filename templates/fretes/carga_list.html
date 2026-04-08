@@ -7,20 +7,30 @@
 {% block content %}
 <section class="panel">
     <div class="panel-actions">
-        <form method="get" class="form-grid compact-grid">
+        <form method="get" class="form-grid compact-grid" style="flex:1;">
             <div>
                 <label for="cliente">Cliente</label>
-                <input type="text" id="cliente" name="cliente" value="{{ request.GET.cliente }}" class="form-control">
+                <input type="text" id="cliente" name="cliente" value="{{ request.GET.cliente }}" class="form-control" placeholder="Filtrar por cliente...">
             </div>
             <div>
                 <label for="produto">Produto</label>
-                <input type="text" id="produto" name="produto" value="{{ request.GET.produto }}" class="form-control">
+                <input type="text" id="produto" name="produto" value="{{ request.GET.produto }}" class="form-control" placeholder="Filtrar por produto...">
             </div>
             <div class="action-align">
-                <button type="submit" class="btn-secondary">Filtrar</button>
+                <button type="submit" class="btn-secondary">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    Filtrar
+                </button>
             </div>
         </form>
-        <a href="{% url 'fretes:carga-create' %}" class="btn-primary">Nova carga</a>
+        <a href="{% url 'fretes:carga-create' %}" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Nova carga
+        </a>
     </div>
 
     <div class="table-wrapper">
@@ -41,19 +51,19 @@
             <tbody>
                 {% for carga in cargas %}
                     <tr>
-                        <td>{{ carga.data_carga|date:'d/m/Y' }}</td>
-                        <td>{{ carga.cliente }}</td>
+                        <td><span class="badge badge-cyan">{{ carga.data_carga|date:'d/m/Y' }}</span></td>
+                        <td><strong>{{ carga.cliente }}</strong></td>
                         <td>{{ carga.produto }}</td>
                         <td>{{ carga.fornecedor }}</td>
                         <td>{{ carga.caminhao }}</td>
                         <td>{{ carga.litros|floatformat:2 }}</td>
                         <td>R$ {{ carga.valor_frete_litro|default:0|floatformat:4 }}</td>
-                        <td>R$ {{ carga.valor_total_frete|default:0|floatformat:2 }}</td>
+                        <td><strong>R$ {{ carga.valor_total_frete|default:0|floatformat:2 }}</strong></td>
                         <td><a href="{% url 'fretes:carga-update' carga.pk %}">Editar</a></td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="9">Nenhuma carga cadastrada.</td>
+                        <td colspan="9" style="text-align:center; color:var(--muted); padding:40px;">Nenhuma carga cadastrada.</td>
                     </tr>
                 {% endfor %}
             </tbody>

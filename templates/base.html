@@ -8,7 +8,7 @@
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
 </head>
 <body>
@@ -21,24 +21,51 @@
                     <span>Controle de Fretes</span>
                 </div>
             </div>
+
+            <p class="menu-section-label">Menu</p>
             <nav class="menu">
-                <a href="{% url 'dashboard:index' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">Dashboard</a>
-                <a href="{% url 'fretes:carga-list' %}" class="{% if request.path|slice:':9' == '/operacao' %}active{% endif %}">Cargas</a>
-                <a href="/admin/" class="{% if request.path|slice:':7' == '/admin/' %}active{% endif %}">Cadastros</a>
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'logout' %}">Sair</a>
-                {% endif %}
+                <a href="{% url 'dashboard:index' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="{% url 'fretes:carga-list' %}" class="{% if request.path|slice:':9' == '/operacao' %}active{% endif %}">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                        <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                    Cargas
+                </a>
+                <a href="{% url 'fretes:carga-create' %}" class="{% if request.path == '/operacao/cargas/nova/' %}active{% endif %}">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                    Nova carga
+                </a>
+                <a href="/admin/" class="{% if request.path|slice:':7' == '/admin/' %}active{% endif %}">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    Cadastros
+                </a>
             </nav>
+
+            <div class="sidebar-footer">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'logout' %}">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Sair
+                    </a>
+                {% endif %}
+            </div>
         </aside>
+
         <main class="content">
-            <nav class="mobile-menu">
-                <a href="{% url 'dashboard:index' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">Dashboard</a>
-                <a href="{% url 'fretes:carga-list' %}" class="{% if request.path|slice:':9' == '/operacao' %}active{% endif %}">Cargas</a>
-                <a href="/admin/" class="{% if request.path|slice:':7' == '/admin/' %}active{% endif %}">Cadastros</a>
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'logout' %}">Sair</a>
-                {% endif %}
-            </nav>
             <header class="topbar">
                 <div>
                     <h1>{% block page_title %}Painel de Fretes{% endblock %}</h1>

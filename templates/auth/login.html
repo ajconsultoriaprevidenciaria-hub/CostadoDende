@@ -2,7 +2,7 @@
 
 {% block title %}Entrar | Costa do Dendê{% endblock %}
 {% block page_title %}Acesso ao sistema{% endblock %}
-{% block page_subtitle %}Use o usuário administrador para acessar cadastros, cargas e dashboard.{% endblock %}
+{% block page_subtitle %}Use seu usuário e senha para acessar cadastros, cargas e dashboard.{% endblock %}
 
 {% block content %}
 <section class="panel auth-panel">
@@ -10,16 +10,22 @@
         {% csrf_token %}
         <div>
             <label for="id_username">Usuário</label>
-            <input type="text" name="username" autofocus required id="id_username" class="form-control">
+            <input type="text" name="username" autofocus required id="id_username" class="form-control" placeholder="Digite seu usuário">
         </div>
         <div>
             <label for="id_password">Senha</label>
-            <input type="password" name="password" required id="id_password" class="form-control">
+            <input type="password" name="password" required id="id_password" class="form-control" placeholder="••••••••">
         </div>
         {% if form.errors %}
-            <div class="message error">Usuário ou senha inválidos.</div>
+            <div class="field-error">Usuário ou senha inválidos. Tente novamente.</div>
         {% endif %}
-        <button type="submit" class="btn-primary">Entrar</button>
+        <button type="submit" class="btn-primary" style="margin-top:4px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            Entrar
+        </button>
     </form>
 </section>
 {% endblock %}
