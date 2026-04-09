@@ -250,21 +250,21 @@ p { color: var(--text); }
 .module caption a { color: var(--primary); text-decoration: none; }
 
 /* ── Tables ───────────────────────────────────────────────── */
-table { width: 100%; border-collapse: collapse; }
+table { width: 100%; border-collapse: collapse; table-layout: auto; }
 #result_list, table.results {
   border: 1px solid var(--border); border-radius: var(--r);
-  overflow: hidden; border-collapse: collapse; width: 100%;
+  overflow: hidden; border-collapse: collapse; width: 100%; table-layout: auto;
 }
 #result_list thead th, thead th {
   background: #050c17; color: var(--primary);
-  font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
-  padding: 10px 11px; border-bottom: 1px solid var(--border); white-space: nowrap;
+  font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  padding: 6px 7px; border-bottom: 1px solid var(--border); white-space: nowrap;
 }
 #result_list thead th a, thead th a { color: var(--primary); text-decoration: none; }
 #result_list thead th.sorted { background: rgba(0,217,166,.07); }
 tbody td {
-  color: var(--text); padding: 9px 11px; border-bottom: 1px solid rgba(0,217,166,.07);
-  font-size: .83rem; vertical-align: middle; background: var(--panel);
+  color: var(--text); padding: 5px 7px; border-bottom: 1px solid rgba(0,217,166,.07);
+  font-size: .78rem; vertical-align: middle; background: var(--panel); white-space: nowrap;
 }
 tbody tr:hover td { background: rgba(0,217,166,.04); }
 tbody tr:last-child td { border-bottom: none; }
@@ -311,7 +311,9 @@ ul.object-tools a:hover { background: var(--primary); color: #070d1a; }
 ul.object-tools a.addlink { background: var(--primary); color: #070d1a; border-color: var(--primary); }
 
 /* ── Filters ──────────────────────────────────────────────── */
-#changelist { display: flex; gap: 14px; align-items: flex-start; }
+#changelist { display: flex; gap: 10px; align-items: flex-start; }
+#changelist > .changelist-form-container { min-width: 0; flex: 1; overflow: hidden; }
+#content-main { overflow: hidden; }
 #changelist-filter {
   background: var(--panel); border: 1px solid var(--border);
   border-radius: var(--r); min-width: 165px; flex-shrink: 0; overflow: hidden;
@@ -665,7 +667,6 @@ select.filtered { background: var(--bg3); border: none; color: var(--text); }
       {% endblock %}
 
       <div id="content" class="{% block coltype %}colM{% endblock %}">
-        {% block object-tools %}{% endblock %}
         {% block content %}{% endblock %}
         {% block sidebar %}{% endblock %}
         <div class="clear"></div>
