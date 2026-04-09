@@ -253,7 +253,7 @@ p { color: var(--text); }
 table { width: 100%; border-collapse: collapse; table-layout: auto; }
 #result_list, table.results {
   border: 1px solid var(--border); border-radius: var(--r);
-  overflow: hidden; border-collapse: collapse; width: 100%; table-layout: auto;
+  overflow: hidden; border-collapse: collapse; width: 100%; table-layout: fixed;
 }
 #result_list thead th, thead th {
   background: #050c17; color: var(--primary);
@@ -265,11 +265,13 @@ table { width: 100%; border-collapse: collapse; table-layout: auto; }
 tbody td {
   color: var(--text); padding: 5px 7px; border-bottom: 1px solid rgba(0,217,166,.07);
   font-size: .78rem; vertical-align: middle; background: var(--panel); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
 }
 tbody tr:hover td { background: rgba(0,217,166,.04); }
 tbody tr:last-child td { border-bottom: none; }
 td a, tbody a { color: var(--primary); text-decoration: none; }
 td.action-checkbox, th.action-checkbox-column { width: 36px; }
+th.column-acoes, td.field-acoes { width: 180px; overflow: visible; white-space: nowrap; }
 input[type="checkbox"] { accent-color: var(--primary); }
 
 /* ── Buttons ──────────────────────────────────────────────── */
@@ -312,8 +314,8 @@ ul.object-tools a.addlink { background: var(--primary); color: #070d1a; border-c
 
 /* ── Filters ──────────────────────────────────────────────── */
 #changelist { display: flex; gap: 10px; align-items: flex-start; }
-#changelist > .changelist-form-container { min-width: 0; flex: 1; overflow: hidden; }
-#content-main { overflow: hidden; }
+#changelist > .changelist-form-container { min-width: 0; flex: 1; overflow-x: auto; }
+#content-main { overflow-x: auto; }
 #changelist-filter {
   background: var(--panel); border: 1px solid var(--border);
   border-radius: var(--r); min-width: 165px; flex-shrink: 0; overflow: hidden;
