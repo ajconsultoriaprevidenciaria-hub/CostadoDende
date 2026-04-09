@@ -256,3 +256,18 @@ class Carga(BaseModel):
 		if self.litros and self.valor_frete_litro is not None:
 			self.valor_total_frete = Decimal(self.litros) * Decimal(self.valor_frete_litro)
 		super().save(*args, **kwargs)
+
+
+class CargaCompartimento(models.Model):
+	carga = models.ForeignKey(Carga, on_delete=models.CASCADE, related_name='carga_compartimentos')
+	compartimento = models.ForeignKey(Compartimento, on_delete=models.CASCADE)
+	produto = models.ForeignKey(Produto, on_delete=models.PROTECT)
+
+	class Meta:
+		unique_together = ('carga', 'compartimento')
+		ordering = ['compartimento__numero']
+		verbose_name = 'Compartimento da Carga'
+		verbose_name_plural = 'Compartimentos da Carga'
+
+	def __str__(self):
+		return f'Boca {self.compartimento.numero} - {self.produto.nome}'

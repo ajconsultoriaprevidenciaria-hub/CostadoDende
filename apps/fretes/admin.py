@@ -5,6 +5,7 @@ from django.urls import reverse
 from .models import (
 	Caminhao,
 	Carga,
+	CargaCompartimento,
 	Cliente,
 	Compartimento,
 	Fornecedor,
@@ -207,6 +208,12 @@ class TabelaFreteAdmin(admin.ModelAdmin):
 	date_hierarchy = 'vigencia_inicio'
 
 
+class CargaCompartimentoInline(admin.StackedInline):
+	model = CargaCompartimento
+	extra = 0
+	fields = ('compartimento', 'produto')
+
+
 @admin.register(Carga)
 class CargaAdmin(admin.ModelAdmin):
 	list_display = (
@@ -222,4 +229,8 @@ class CargaAdmin(admin.ModelAdmin):
 	list_filter = ('data_carga', 'cliente', 'produto', 'fornecedor', 'rota')
 	search_fields = ('cliente__nome', 'fornecedor__nome', 'caminhao__placa', 'numero_documento')
 	autocomplete_fields = ('cliente', 'fornecedor', 'produto', 'caminhao', 'motorista', 'rota')
+	inlines = [CargaCompartimentoInline]
 	date_hierarchy = 'data_carga'
+
+	class Media:
+		js = ('admin/js/carga_compartimentos.js',)

@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CargaForm
-from .models import Caminhao, Carga, Compartimento
+from .models import Caminhao, Carga, Compartimento, Produto
 
 
 @login_required
@@ -21,11 +21,17 @@ def caminhao_compartimentos_json(request, pk):
     except Caminhao.DoesNotExist:
         return JsonResponse({'compartimentos': []})
     compartimentos = list(
-        caminhao.compartimentos.order_by('numero').values('numero', 'capacidade_litros')
+        caminhao.compartimentos.order_by('numero').values('id', 'numero', 'capacidade_litros')
     )
     for c in compartimentos:
         c['capacidade_litros'] = float(c['capacidade_litros'])
     return JsonResponse({'compartimentos': compartimentos})
+
+
+@login_required
+def produtos_json(request):
+    produtos = list(Produto.objects.filter(ativo=True).order_by('nome').values('id', 'nome'))
+    return JsonResponse({'produtos': produtos})
 
 
 def _salvar_compartimentos(caminhao, dados_raw):
