@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CargaForm
 from .models import Caminhao, Carga, Compartimento
@@ -88,3 +88,9 @@ class CargaUpdateView(LoginRequiredMixin, UpdateView):
 		if dados and self.object.caminhao_id:
 			_salvar_compartimentos(self.object.caminhao, dados)
 		return response
+
+
+class CargaDeleteView(LoginRequiredMixin, DeleteView):
+	model = Carga
+	template_name = 'fretes/carga_confirm_delete.html'
+	success_url = reverse_lazy('fretes:carga-list')

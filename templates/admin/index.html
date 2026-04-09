@@ -1,0 +1,233 @@
+{% extends "admin/base_site.html" %}
+{% load i18n log %}
+
+{% block coltype %}colM{% endblock %}
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+
+  <!-- ── Hero Banner ────────────────────────────────────────── -->
+  <div style="background:var(--adpanel);border:1px solid var(--adborder);border-radius:16px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;gap:20px;overflow:hidden;position:relative;">
+    <!-- background glow -->
+    <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(0,217,166,.12) 0%,transparent 70%);pointer-events:none;"></div>
+    <!-- icon -->
+    <div style="width:72px;height:72px;background:rgba(0,217,166,.1);border:1px solid rgba(0,217,166,.25);border-radius:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </div>
+    <!-- text -->
+    <div>
+      <p style="margin:0 0 3px;font-size:1.5rem;font-weight:800;color:var(--adtext);letter-spacing:-.01em;">Painel de Cadastros</p>
+      <p style="margin:0;color:var(--admuted);font-size:.88rem;">Gerencie os dados operacionais da <strong style="color:var(--adprimary);">Rede Costa do Dendê</strong>.</p>
+    </div>
+    <!-- badge -->
+    <div style="margin-left:auto;background:rgba(0,217,166,.08);border:1px solid rgba(0,217,166,.2);border-radius:12px;padding:10px 18px;text-align:center;flex-shrink:0;">
+      <p style="margin:0;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--admuted);">Sistema</p>
+      <p style="margin:0;font-size:1.1rem;font-weight:800;color:var(--adprimary);">Admin</p>
+    </div>
+  </div>
+
+  <!-- ── App Sections ───────────────────────────────────────── -->
+  {% for app in app_list %}
+  <div style="margin-bottom:32px;">
+
+    <!-- App title divider -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="flex:1;height:1px;background:var(--adborder);"></span>
+      <a href="{{ app.app_url }}" style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--admuted);text-decoration:none;white-space:nowrap;padding:4px 12px;background:var(--adpanel);border:1px solid var(--adborder);border-radius:20px;">
+        {{ app.name }}
+      </a>
+      <span style="flex:1;height:1px;background:var(--adborder);"></span>
+    </div>
+
+    <!-- Model cards grid -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;">
+      {% for model in app.models %}
+
+      <!-- ── Card ─────────────────────────────────────────── -->
+      <div style="background:var(--adpanel);border:1px solid var(--adborder);border-radius:14px;padding:18px;transition:.2s;display:flex;flex-direction:column;gap:14px;"
+           onmouseover="this.style.borderColor='rgba(0,217,166,.35)';this.style.boxShadow='0 4px 20px rgba(0,217,166,.08)'"
+           onmouseout="this.style.borderColor='rgba(0,217,166,.14)';this.style.boxShadow='none'">
+
+        <!-- Icon + name -->
+        <div style="display:flex;align-items:center;gap:12px;">
+
+          <!-- Dynamic icon by model -->
+          <div style="width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+            {% if model.object_name == 'Caminhao' %}background:rgba(29,78,216,.15);border:1px solid rgba(29,78,216,.3);
+            {% elif model.object_name == 'Carga' %}background:rgba(217,119,6,.15);border:1px solid rgba(217,119,6,.3);
+            {% elif model.object_name == 'Cliente' %}background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);
+            {% elif model.object_name == 'Fornecedor' %}background:rgba(5,150,105,.15);border:1px solid rgba(5,150,105,.3);
+            {% elif model.object_name == 'LocalCarregamento' %}background:rgba(190,24,93,.15);border:1px solid rgba(190,24,93,.3);
+            {% elif model.object_name == 'Motorista' %}background:rgba(2,132,199,.15);border:1px solid rgba(2,132,199,.3);
+            {% elif model.object_name == 'Produto' %}background:rgba(202,138,4,.15);border:1px solid rgba(202,138,4,.3);
+            {% elif model.object_name == 'Rota' %}background:rgba(234,88,12,.15);border:1px solid rgba(234,88,12,.3);
+            {% elif model.object_name == 'TabelaFrete' %}background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);
+            {% elif model.object_name == 'Group' %}background:rgba(147,51,234,.15);border:1px solid rgba(147,51,234,.3);
+            {% elif model.object_name == 'User' %}background:rgba(79,70,229,.15);border:1px solid rgba(79,70,229,.3);
+            {% else %}background:rgba(0,217,166,.12);border:1px solid rgba(0,217,166,.25);{% endif %}">
+
+            <!-- SVG Icon per model -->
+            {% if model.object_name == 'Caminhao' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13" rx="1"/>
+              <path d="M16 8h4l3 3v5h-7V8z"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+
+            {% elif model.object_name == 'Carga' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+
+            {% elif model.object_name == 'Cliente' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+
+            {% elif model.object_name == 'Fornecedor' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+
+            {% elif model.object_name == 'LocalCarregamento' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#be185d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+
+            {% elif model.object_name == 'Motorista' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" opacity=".4"/>
+            </svg>
+
+            {% elif model.object_name == 'Produto' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ca8a04" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+
+            {% elif model.object_name == 'Rota' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+            </svg>
+
+            {% elif model.object_name == 'TabelaFrete' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+
+            {% elif model.object_name == 'Group' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+
+            {% elif model.object_name == 'User' %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+
+            {% else %}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+            {% endif %}
+
+          </div><!-- /icon -->
+
+          <div>
+            <p style="margin:0;font-size:.9rem;font-weight:700;color:var(--adtext);line-height:1.2;">{{ model.name }}</p>
+          </div>
+        </div><!-- /icon+name -->
+
+        <!-- Actions -->
+        <div style="display:flex;gap:8px;">
+          {% if model.admin_url %}
+          <a href="{{ model.admin_url }}"
+             style="flex:1;background:var(--adbg3);border:1px solid var(--adborder);color:var(--adtext);border-radius:8px;padding:6px 10px;font-size:.73rem;font-weight:600;text-align:center;text-decoration:none;display:block;transition:.18s;"
+             onmouseover="this.style.borderColor='rgba(0,217,166,.35)';this.style.color='var(--adprimary)'"
+             onmouseout="this.style.borderColor='var(--adborder)';this.style.color='var(--adtext)'">
+            Ver lista
+          </a>
+          {% endif %}
+          {% if model.add_url %}
+          <a href="{{ model.add_url }}"
+             style="flex:1;background:var(--adprimary);color:#070d1a;border-radius:8px;padding:6px 10px;font-size:.73rem;font-weight:700;text-align:center;text-decoration:none;display:block;transition:.18s;"
+             onmouseover="this.style.opacity='.82'"
+             onmouseout="this.style.opacity='1'">
+            + Adicionar
+          </a>
+          {% endif %}
+        </div><!-- /actions -->
+
+      </div><!-- /card -->
+      {% endfor %}
+    </div><!-- /grid -->
+  </div>
+  {% empty %}
+  <p style="color:var(--admuted);text-align:center;padding:40px;">Nenhum item disponível para o seu perfil.</p>
+  {% endfor %}
+
+  <!-- ── Ações Recentes ─────────────────────────────────────── -->
+  {% load log %}
+  {% get_admin_log 8 as admin_log for_user user %}
+  {% if admin_log %}
+  <div style="margin-top:8px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="flex:1;height:1px;background:var(--adborder);"></span>
+      <span style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--admuted);white-space:nowrap;padding:4px 12px;background:var(--adpanel);border:1px solid var(--adborder);border-radius:20px;">Ações recentes</span>
+      <span style="flex:1;height:1px;background:var(--adborder);"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+      {% for entry in admin_log %}
+      <div style="background:var(--adpanel);border:1px solid var(--adborder);border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+          {% if entry.is_addition %}background:rgba(0,217,166,.1);border:1px solid rgba(0,217,166,.25);
+          {% elif entry.is_change %}background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);
+          {% else %}background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);{% endif %}">
+          {% if entry.is_addition %}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          {% elif entry.is_change %}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          {% else %}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          {% endif %}
+        </div>
+        <div style="min-width:0;">
+          {% if entry.is_deletion or not entry.get_admin_url %}
+          <p style="margin:0;font-size:.8rem;font-weight:600;color:var(--adtext);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ entry.object_repr }}</p>
+          {% else %}
+          <a href="{{ entry.get_admin_url }}" style="display:block;font-size:.8rem;font-weight:600;color:var(--adprimary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;">{{ entry.object_repr }}</a>
+          {% endif %}
+          <p style="margin:2px 0 0;font-size:.69rem;color:var(--admuted);">{{ entry.content_type.app_labeled_name }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div><!-- /padding wrapper -->
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
