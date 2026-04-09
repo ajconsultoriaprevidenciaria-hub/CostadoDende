@@ -159,9 +159,44 @@ class FornecedorAdmin(admin.ModelAdmin):
 
 @admin.register(Rota)
 class RotaAdmin(admin.ModelAdmin):
-	list_display = ('nome', 'origem', 'destino', 'distancia_km', 'ativo')
-	list_filter = ('ativo',)
+	list_display = ('nome', 'origem', 'destino', 'distancia_km', 'ativo', 'acoes')
+	list_filter = ('ativo', 'origem')
 	search_fields = ('nome', 'origem', 'destino')
+	readonly_fields = ('destino_lat', 'destino_lng')
+	fieldsets = (
+		(None, {'fields': ('nome', 'origem', 'destino', 'distancia_km', 'ativo')}),
+		('Coordenadas (preenchido automaticamente)', {
+			'classes': ('collapse',),
+			'fields': ('destino_lat', 'destino_lng'),
+		}),
+	)
+
+	class Media:
+		css = {'all': ('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',)}
+		js = (
+			'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+			'admin/js/rota_destino.js',
+		)
+
+	@admin.display(description='Ações')
+	def acoes(self, obj):
+		edit_url = reverse('admin:fretes_rota_change', args=[obj.pk])
+		delete_url = reverse('admin:fretes_rota_delete', args=[obj.pk])
+		return format_html(
+			'<a href="{}" style="background:var(--panel);color:var(--primary);border:1px solid var(--border);'
+			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
+			'margin-right:5px;display:inline-block;transition:all .18s;"'
+			' onmouseover="this.style.background=\'var(--primary)\';this.style.color=\'#070d1a\'"'
+			' onmouseout="this.style.background=\'var(--panel)\';this.style.color=\'var(--primary)\'">'
+			'✏️ Editar</a>'
+			'<a href="{}" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25);'
+			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
+			'display:inline-block;transition:all .18s;"'
+			' onmouseover="this.style.background=\'#ef4444\';this.style.color=\'#fff\'"'
+			' onmouseout="this.style.background=\'rgba(239,68,68,.1)\';this.style.color=\'#ef4444\'">'
+			'🗑️ Excluir</a>',
+			edit_url, delete_url
+		)
 
 
 @admin.register(TabelaFrete)

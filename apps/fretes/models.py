@@ -148,9 +148,17 @@ class Fornecedor(BaseModel):
 
 
 class Rota(BaseModel):
+	ORIGEM_CHOICES = [
+		('Candeias/BA', 'Candeias - BA'),
+		('São Francisco do Conde/BA', 'São Francisco do Conde - BA'),
+		('Suape/PE', 'Suape - PE'),
+	]
+
 	nome = models.CharField(max_length=150)
-	origem = models.CharField(max_length=150)
+	origem = models.CharField(max_length=150, choices=ORIGEM_CHOICES)
 	destino = models.CharField(max_length=150)
+	destino_lat = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, verbose_name='Latitude destino')
+	destino_lng = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, verbose_name='Longitude destino')
 	distancia_km = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
 	class Meta:
