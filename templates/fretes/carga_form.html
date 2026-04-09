@@ -288,7 +288,7 @@
   var caminhaoSelect = document.getElementById('id_caminhao');
   if(!caminhaoSelect) return;
 
-  var COMP_URL = "{% url 'fretes:caminhao-compartimentos' pk=0 %}".replace('/0/', '/');
+  var COMP_URL = "/operacao/caminhao/{pk}/compartimentos/";
   var produtos = [];
   var compartimentos = [];
   var selecionados = {};
@@ -312,7 +312,7 @@
       compartimentos = []; selecionados = {}; bocaAtiva = null;
       return;
     }
-    fetch(COMP_URL + val + '/compartimentos/')
+    fetch(COMP_URL.replace('{pk}', val))
       .then(function(r){ return r.json(); })
       .then(function(data){
         compartimentos = data.compartimentos || [];
