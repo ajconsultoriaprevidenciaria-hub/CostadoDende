@@ -7,10 +7,10 @@ class CargaForm(forms.ModelForm):
     class Meta:
         model = Carga
         fields = [
+            'ativo',
             'data_carga',
             'cliente',
             'fornecedor',
-            'produto',
             'caminhao',
             'motorista',
             'rota',
@@ -20,10 +20,10 @@ class CargaForm(forms.ModelForm):
             'observacoes',
         ]
         widgets = {
+            'ativo': forms.CheckboxInput(),
             'data_carga': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'cliente': forms.Select(attrs={'class': 'form-select'}),
             'fornecedor': forms.Select(attrs={'class': 'form-select'}),
-            'produto': forms.Select(attrs={'class': 'form-select'}),
             'caminhao': forms.Select(attrs={'class': 'form-select'}),
             'motorista': forms.Select(attrs={'class': 'form-select'}),
             'rota': forms.Select(attrs={'class': 'form-select'}),

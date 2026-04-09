@@ -1,142 +1,454 @@
 {% extends 'base.html' %}
 
-{% block title %}Carga | Costa do Dendê{% endblock %}
-{% block page_title %}Registro de carga{% endblock %}
-{% block page_subtitle %}Informe cliente, produto, rota e dados operacionais da viagem.{% endblock %}
+{% block title %}{% if object %}Alterar Carga{% else %}Adicionar Carga{% endif %} | Costa do Dendê{% endblock %}
+{% block page_title %}{% if object %}Alterar Carga{% else %}Adicionar Carga{% endif %}{% endblock %}
+{% block page_subtitle %}{% endblock %}
 
 {% block content %}
-<section class="panel">
-    <form method="post" class="form-grid two-columns" id="carga-form">
-        {% csrf_token %}
-        <input type="hidden" name="compartimentos_json" id="compartimentos_json">
-        {% for field in form %}
-            <div class="field-block {% if field.name == 'observacoes' %}full-width{% endif %} {% if field.name == 'litros' %}litros-block{% endif %}">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
-                {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+{% if form.non_field_errors %}
+<div class="cf-errors">
+    {% for error in form.non_field_errors %}
+    <p>{{ error }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+<form method="post" id="carga-form">
+{% csrf_token %}
+<input type="hidden" name="compartimentos_json" id="compartimentos_json">
+
+<!-- ── Fieldset principal ── -->
+<fieldset class="cf-fieldset">
+    <!-- Ativo -->
+    <div class="cf-row">
+        <label class="cf-label" style="min-width:0;">
+            {{ form.ativo }}
+            <span style="margin-left:6px;font-weight:600;text-transform:uppercase;font-size:.78rem;letter-spacing:.04em;">Ativo</span>
+        </label>
+    </div>
+
+    <!-- Data Carga -->
+    <div class="cf-row">
+        <label class="cf-label">Data carga:</label>
+        <div class="cf-field">{{ form.data_carga }}
+            {% for e in form.data_carga.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Cliente -->
+    <div class="cf-row">
+        <label class="cf-label">Cliente:</label>
+        <div class="cf-field cf-field--rel">
+            {{ form.cliente }}
+            <div class="cf-rel-btns">
+                <a href="/admin/fretes/cliente/add/" class="cf-ico" title="Adicionar">＋</a>
             </div>
-        {% endfor %}
-
-        <!-- Seção de bocas do caminhão -->
-        <div class="field-block full-width" id="bocas-section" style="display:none;">
-            <label>Bocas do caminhão</label>
-            <div id="bocas-lista" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;"></div>
-            <button type="button" class="btn-secondary" id="btn-add-boca" style="margin-right:8px;">+ Adicionar boca</button>
-            <small style="color:#666;">Capacidade total será somada automaticamente no campo Litros.</small>
+            {% for e in form.cliente.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
         </div>
+    </div>
 
-        <div class="field-block full-width">
-            <label for="valor_total_display">Valor total do frete (calculado)</label>
+    <!-- Fornecedor -->
+    <div class="cf-row">
+        <label class="cf-label">Fornecedor:</label>
+        <div class="cf-field cf-field--rel">
+            {{ form.fornecedor }}
+            <div class="cf-rel-btns">
+                <a href="/admin/fretes/fornecedor/add/" class="cf-ico" title="Adicionar">＋</a>
+            </div>
+            {% for e in form.fornecedor.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Caminhão -->
+    <div class="cf-row">
+        <label class="cf-label">Caminhão:</label>
+        <div class="cf-field cf-field--rel">
+            {{ form.caminhao }}
+            <div class="cf-rel-btns">
+                <a href="/admin/fretes/caminhao/add/" class="cf-ico" title="Adicionar">＋</a>
+            </div>
+            {% for e in form.caminhao.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Motorista -->
+    <div class="cf-row">
+        <label class="cf-label">Motorista:</label>
+        <div class="cf-field cf-field--rel">
+            {{ form.motorista }}
+            <div class="cf-rel-btns">
+                <a href="/admin/fretes/motorista/add/" class="cf-ico" title="Adicionar">＋</a>
+            </div>
+            {% for e in form.motorista.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Rota -->
+    <div class="cf-row">
+        <label class="cf-label">Rota:</label>
+        <div class="cf-field cf-field--rel">
+            {{ form.rota }}
+            <div class="cf-rel-btns">
+                <a href="/admin/fretes/rota/add/" class="cf-ico" title="Adicionar">＋</a>
+            </div>
+            {% for e in form.rota.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Litros -->
+    <div class="cf-row">
+        <label class="cf-label">Litros:</label>
+        <div class="cf-field">{{ form.litros }}
+            {% for e in form.litros.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Valor frete litro -->
+    <div class="cf-row">
+        <label class="cf-label">Valor frete litro:</label>
+        <div class="cf-field">{{ form.valor_frete_litro }}
+            {% for e in form.valor_frete_litro.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Valor total frete (calculado) -->
+    <div class="cf-row">
+        <label class="cf-label">Valor total frete:</label>
+        <div class="cf-field">
             <input type="text" id="valor_total_display" class="form-control" readonly
-                   placeholder="Preencha a quantidade e o valor por litro"
-                   style="background:var(--primary-lt);font-weight:700;color:var(--primary-dk);font-size:1.1rem;">
+                   placeholder="Preencha litros e valor por litro"
+                   style="background:rgba(0,217,166,.08);font-weight:700;color:var(--primary);border-color:rgba(0,217,166,.25);">
         </div>
-        </div>
-        {% if form.non_field_errors %}
-            <div class="field-error full-width">{{ form.non_field_errors }}</div>
-        {% endif %}
-        <div class="full-width panel-actions">
-            <button type="submit" class="btn-primary">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                Salvar carga
-            </button>
-            <a href="{% url 'fretes:carga-list' %}" class="btn-secondary">Cancelar</a>
-        </div>
-    </form>
-</section>
+    </div>
 
+    <!-- Número documento -->
+    <div class="cf-row">
+        <label class="cf-label">Número documento:</label>
+        <div class="cf-field">{{ form.numero_documento }}
+            {% for e in form.numero_documento.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+
+    <!-- Observações -->
+    <div class="cf-row cf-row--top">
+        <label class="cf-label">Observações:</label>
+        <div class="cf-field">{{ form.observacoes }}
+            {% for e in form.observacoes.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+        </div>
+    </div>
+</fieldset>
+
+<!-- ── Selecionar Bocas & Produtos ── -->
+<div id="bocas-container" style="display:none;margin-bottom:18px;background:linear-gradient(145deg,#0d1929 40%,#0f2235);border:1px solid rgba(0,217,166,.18);border-radius:16px;overflow:hidden;box-shadow:0 6px 30px rgba(0,0,0,.3);">
+    <div style="padding:16px 22px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(0,217,166,.1);">
+        <span style="font-size:1.3rem;">🛢️</span>
+        <span style="font-size:.9rem;font-weight:800;color:#00d9a6;letter-spacing:.04em;">SELECIONAR BOCAS &amp; PRODUTOS</span>
+        <span style="flex:1"></span>
+        <span id="bocas-resumo" style="font-size:.7rem;color:#8892a4;"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;min-height:200px;">
+        <div style="padding:16px;border-right:1px solid rgba(0,217,166,.1);">
+            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8892a4;margin-bottom:12px;">📦 Bocas do Caminhão</div>
+            <div id="bocas-grid" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        </div>
+        <div style="padding:16px;">
+            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8892a4;margin-bottom:12px;">🧪 Selecione o Produto</div>
+            <div id="produtos-grid" style="display:flex;flex-direction:column;gap:6px;"></div>
+            <div id="produtos-placeholder" style="font-size:.75rem;color:#5a6478;padding:20px;text-align:center;">👈 Clique em uma boca para ver os produtos</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Botões de ação ── -->
+<div class="cf-actions">
+    <button type="submit" class="btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar
+    </button>
+    <a href="{% url 'fretes:carga-list' %}" class="btn-secondary">Cancelar</a>
+</div>
+</form>
+
+<!-- ── ESTILOS ────────────────────────────────────────────── -->
 <style>
-.boca-item {
+/* ── Fieldset ── */
+.cf-fieldset {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel);
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+.cf-fs-title {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px;
+    font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--primary);
+    background: rgba(0,217,166,.06);
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+}
+
+/* ── Rows ── */
+.cf-row {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: #f0f7f4;
-    border: 1px solid #c5ddd6;
-    border-radius: 6px;
-    padding: 6px 10px;
+    gap: 14px;
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(0,217,166,.07);
 }
-.boca-item select { border: 1px solid #b0cfc7; border-radius: 4px; padding: 3px 6px; }
-.boca-item button { background: #e55; color: #fff; border: none; border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+.cf-row:last-child { border-bottom: none; }
+.cf-row--top { align-items: flex-start; }
+
+/* ── Label ── */
+.cf-label {
+    min-width: 150px;
+    flex-shrink: 0;
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--muted);
+}
+
+/* ── Field ── */
+.cf-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.cf-field select,
+.cf-field input,
+.cf-field textarea {
+    max-width: 360px;
+}
+.cf-field textarea {
+    max-width: 100%;
+    min-width: 360px;
+    min-height: 80px;
+}
+
+/* ── Related buttons ── */
+.cf-field--rel { display: flex; align-items: center; gap: 8px; }
+.cf-rel-btns {
+    display: flex; gap: 4px;
+}
+.cf-ico {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(0,217,166,.1);
+    color: var(--primary);
+    font-size: 1rem; font-weight: 700;
+    text-decoration: none;
+    border: 1px solid rgba(0,217,166,.2);
+    transition: all .18s;
+}
+.cf-ico:hover {
+    background: var(--primary); color: #070d1a;
+}
+
+/* ── Errors ── */
+.cf-err {
+    display: block;
+    color: var(--danger);
+    font-size: .78rem;
+    font-weight: 600;
+    width: 100%;
+}
+.cf-errors {
+    background: rgba(239,68,68,.12);
+    border: 1px solid rgba(239,68,68,.3);
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 16px;
+    color: #ef4444;
+    font-size: .88rem;
+    font-weight: 600;
+}
+
+/* ── Actions bar ── */
+.cf-actions {
+    display: flex; gap: 10px; align-items: center;
+    padding: 16px 0;
+}
+
+/* ── Checkbox ativo ── */
+.cf-row input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--primary);
+}
 </style>
 
+<!-- ── SCRIPTS ────────────────────────────────────────────── -->
 <script>
-var COMPARTIMENTOS_URL = "{% url 'fretes:caminhao-compartimentos' pk=0 %}".replace('/0/', '/');
-var opcoes = [2000, 3000, 5000];
+(function(){
+  var caminhaoSelect = document.getElementById('id_caminhao');
+  if(!caminhaoSelect) return;
 
-function criarBocaEl(capacidade) {
-    var div = document.createElement('div');
-    div.className = 'boca-item';
-    var sel = document.createElement('select');
-    opcoes.forEach(function(op) {
-        var opt = document.createElement('option');
-        opt.value = op;
-        opt.textContent = op.toLocaleString('pt-BR') + ' L';
-        if (op === capacidade) opt.selected = true;
-        sel.appendChild(opt);
+  var COMP_URL = "{% url 'fretes:caminhao-compartimentos' pk=0 %}".replace('/0/', '/');
+  var produtos = [];
+  var compartimentos = [];
+  var selecionados = {};
+  var bocaAtiva = null;
+  var lastCaminhaoVal = '';
+  var container = document.getElementById('bocas-container');
+
+  /* Buscar produtos */
+  fetch('/operacao/api/produtos/')
+    .then(function(r){ return r.json(); })
+    .then(function(d){ produtos = d.produtos || []; })
+    .catch(function(){});
+
+  /* Quando caminhão muda */
+  function onCaminhaoChange(){
+    var val = caminhaoSelect.value;
+    if(val === lastCaminhaoVal) return;
+    lastCaminhaoVal = val;
+    if(!val){
+      container.style.display = 'none';
+      compartimentos = []; selecionados = {}; bocaAtiva = null;
+      return;
+    }
+    fetch(COMP_URL + val + '/compartimentos/')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        compartimentos = data.compartimentos || [];
+        selecionados = {}; bocaAtiva = null;
+        if(compartimentos.length){
+          container.style.display = 'block';
+          renderBocas(); renderProdutos(); updateResumo();
+        } else {
+          container.style.display = 'none';
+        }
+      })
+      .catch(function(){ container.style.display = 'none'; });
+  }
+
+  caminhaoSelect.addEventListener('change', onCaminhaoChange);
+  if(caminhaoSelect.value){ lastCaminhaoVal=''; setTimeout(onCaminhaoChange, 300); }
+
+  /* Renderizar bocas */
+  function renderBocas(){
+    var grid = document.getElementById('bocas-grid');
+    grid.innerHTML = '';
+    compartimentos.forEach(function(c){
+      var card = document.createElement('div');
+      card.dataset.compId = c.id;
+      var sel = selecionados[c.id];
+      var prodNome = sel ? getProdutoNome(sel) : null;
+      card.style.cssText =
+        'cursor:pointer;border-radius:12px;padding:14px 16px;min-width:110px;text-align:center;'
+        +'transition:all .2s;position:relative;'
+        +(sel
+          ? 'background:rgba(0,217,166,.12);border:2px solid #00d9a6;'
+          : (bocaAtiva===c.id
+            ? 'background:rgba(59,130,246,.12);border:2px solid #3b82f6;'
+            : 'background:#070d1a;border:2px solid rgba(0,217,166,.12);'));
+      card.innerHTML =
+        '<div style="font-size:1.6rem;margin-bottom:4px;">🛢️</div>'
+        +'<div style="font-size:.82rem;font-weight:800;color:'+(sel?'#00d9a6':'#dde6f0')+';">Boca '+c.numero+'</div>'
+        +'<div style="font-size:.62rem;color:#8892a4;margin-top:2px;">'+Number(c.capacidade_litros).toLocaleString('pt-BR')+' L</div>'
+        +(prodNome
+          ? '<div style="margin-top:6px;font-size:.6rem;font-weight:700;color:#00d9a6;background:rgba(0,217,166,.08);border-radius:6px;padding:3px 8px;">'+prodNome+'</div>'
+            +'<div class="boca-remove" style="position:absolute;top:4px;right:6px;font-size:.65rem;color:#ef4444;cursor:pointer;opacity:.7;" title="Remover">✕</div>'
+          : '');
+      card.addEventListener('click', function(e){
+        if(e.target.classList.contains('boca-remove')){
+          delete selecionados[c.id]; bocaAtiva=null;
+          renderBocas(); renderProdutos(); updateResumo(); updateLitros();
+          return;
+        }
+        bocaAtiva = c.id;
+        renderBocas(); renderProdutos();
+      });
+      card.addEventListener('mouseenter', function(){
+        if(!selecionados[c.id] && bocaAtiva!==c.id) card.style.borderColor='rgba(0,217,166,.4)';
+      });
+      card.addEventListener('mouseleave', function(){
+        if(!selecionados[c.id] && bocaAtiva!==c.id) card.style.borderColor='rgba(0,217,166,.12)';
+      });
+      grid.appendChild(card);
     });
-    sel.addEventListener('change', atualizarLitros);
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = '✕';
-    btn.addEventListener('click', function() { div.remove(); atualizarLitros(); });
-    div.appendChild(sel);
-    div.appendChild(btn);
-    return div;
-}
+  }
 
-function atualizarLitros() {
-    var bocas = document.querySelectorAll('#bocas-lista .boca-item select');
-    var total = 0;
-    var caps = [];
-    bocas.forEach(function(s) { var v = parseFloat(s.value); total += v; caps.push(v); });
-    document.getElementById('compartimentos_json').value = JSON.stringify(caps);
-    if (bocas.length > 0) {
-        document.getElementById('id_litros').value = total.toFixed(2);
+  /* Renderizar produtos */
+  function renderProdutos(){
+    var grid = document.getElementById('produtos-grid');
+    var placeholder = document.getElementById('produtos-placeholder');
+    grid.innerHTML = '';
+    if(!bocaAtiva){ placeholder.style.display='block'; return; }
+    placeholder.style.display='none';
+    var boca = compartimentos.find(function(c){ return c.id===bocaAtiva; });
+    if(boca){
+      var hdr = document.createElement('div');
+      hdr.style.cssText='font-size:.75rem;color:#3b82f6;font-weight:700;margin-bottom:8px;';
+      hdr.textContent='🛢️ Boca '+boca.numero+' — selecione o produto:';
+      grid.appendChild(hdr);
+    }
+    produtos.forEach(function(p){
+      var item = document.createElement('div');
+      var isSel = selecionados[bocaAtiva]===p.id;
+      item.style.cssText =
+        'padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;'
+        +'transition:all .15s;display:flex;align-items:center;gap:8px;'
+        +(isSel
+          ? 'background:rgba(0,217,166,.15);border:1px solid #00d9a6;color:#00d9a6;'
+          : 'background:#070d1a;border:1px solid rgba(0,217,166,.08);color:#dde6f0;');
+      item.innerHTML='<span style="font-size:1rem;">'+(isSel?'✅':'🧪')+'</span><span>'+p.nome+'</span>';
+      item.addEventListener('mouseenter', function(){ if(!isSel) item.style.background='rgba(0,217,166,.06)'; });
+      item.addEventListener('mouseleave', function(){ if(!isSel) item.style.background='#070d1a'; });
+      item.addEventListener('click', function(){
+        selecionados[bocaAtiva]=p.id; bocaAtiva=null;
+        renderBocas(); renderProdutos(); updateResumo(); updateLitros();
+      });
+      grid.appendChild(item);
+    });
+  }
+
+  /* Resumo */
+  function updateResumo(){
+    var el = document.getElementById('bocas-resumo');
+    el.textContent = Object.keys(selecionados).length + ' de ' + compartimentos.length + ' bocas com produto';
+  }
+
+  function getProdutoNome(id){
+    var p = produtos.find(function(x){ return x.id===id; });
+    return p ? p.nome : '';
+  }
+
+  /* Atualizar litros com base nas bocas selecionadas */
+  function updateLitros(){
+    var keys = Object.keys(selecionados);
+    if(keys.length > 0){
+      var total = 0;
+      keys.forEach(function(compId){
+        var comp = compartimentos.find(function(c){ return c.id == compId; });
+        if(comp) total += Number(comp.capacidade_litros);
+      });
+      document.getElementById('id_litros').value = total.toFixed(2);
     }
     calcularFrete();
-}
+  }
 
-function carregarCompartimentos(caminhaoId) {
-    if (!caminhaoId) { document.getElementById('bocas-section').style.display = 'none'; return; }
-    fetch(COMPARTIMENTOS_URL + caminhaoId + '/compartimentos/')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            var lista = document.getElementById('bocas-lista');
-            lista.innerHTML = '';
-            var comps = data.compartimentos && data.compartimentos.length > 0
-                ? data.compartimentos
-                : [{capacidade_litros: 5000}];
-            comps.forEach(function(c) { lista.appendChild(criarBocaEl(c.capacidade_litros)); });
-            document.getElementById('bocas-section').style.display = 'block';
-            atualizarLitros();
-        });
-}
-
-document.getElementById('btn-add-boca').addEventListener('click', function() {
-    document.getElementById('bocas-lista').appendChild(criarBocaEl(5000));
-    atualizarLitros();
-});
-
-var selectCaminhao = document.getElementById('id_caminhao');
-selectCaminhao.addEventListener('change', function() { carregarCompartimentos(this.value); });
-if (selectCaminhao.value) { carregarCompartimentos(selectCaminhao.value); }
-
-function calcularFrete() {
+  /* Calcular frete */
+  function calcularFrete(){
     var litros = parseFloat(document.getElementById('id_litros').value) || 0;
     var valorLitro = parseFloat(document.getElementById('id_valor_frete_litro').value) || 0;
     var total = litros * valorLitro;
     var display = document.getElementById('valor_total_display');
-    if (litros > 0 && valorLitro > 0) {
-        display.value = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    if(litros > 0 && valorLitro > 0){
+      display.value = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
     } else {
-        display.value = '';
+      display.value = '';
+      display.placeholder = 'Preencha litros e valor por litro';
     }
-}
-document.getElementById('id_litros').addEventListener('input', calcularFrete);
-document.getElementById('id_valor_frete_litro').addEventListener('input', calcularFrete);
-calcularFrete();
+  }
+  document.getElementById('id_litros').addEventListener('input', calcularFrete);
+  document.getElementById('id_valor_frete_litro').addEventListener('input', calcularFrete);
+  calcularFrete();
+})();
 </script>
 {% endblock %}
