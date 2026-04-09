@@ -351,10 +351,13 @@ ul.object-tools a.addlink { background: var(--primary); color: #070d1a; border-c
 .actions label { display: inline; text-transform: none; letter-spacing: 0; font-size: .77rem; color: var(--muted); }
 
 /* ── Forms ────────────────────────────────────────────────── */
-.form-row { padding: 11px 14px; border-bottom: 1px solid rgba(0,217,166,.07); }
+.form-row { padding: 11px 14px; border-bottom: 1px solid rgba(0,217,166,.07); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .form-row:last-child { border-bottom: none; }
+.form-row > label, .form-row > .label { min-width: 140px; flex-shrink: 0; }
 label { color: var(--muted); font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; display: block; }
 .required label::after { content: ' *'; color: var(--danger); }
+/* Placa field styling */
+#id_placa { text-transform: uppercase; font-family: monospace; font-weight: 800; letter-spacing: .08em; font-size: .95rem; text-align: center; max-width: 180px; }
 input[type="text"], input[type="password"], input[type="email"], input[type="number"],
 input[type="url"], input[type="date"], input[type="time"], input[type="datetime-local"],
 textarea, select {
@@ -373,14 +376,104 @@ fieldset h2 {
 }
 fieldset .description { padding: 7px 14px; color: var(--muted); font-size: .77rem; border-bottom: 1px solid var(--border); }
 
-/* ── Inline ───────────────────────────────────────────────── */
+/* ── Inline (Compartimentos) ───────────────────────────────── */
 .inline-group { border: 1px solid var(--border); border-radius: var(--r); background: var(--panel); margin-bottom: 14px; overflow: hidden; }
 .inline-group h2, .inline-related h3 {
   background: #050c17; color: var(--primary); padding: 9px 14px; font-size: .68rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: .07em; border-bottom: 1px solid var(--border); margin: 0;
 }
-.add-row a { color: var(--primary); font-size: .77rem; font-weight: 600; }
-.add-row td { padding: 7px 11px; }
+/* ── Custom compartimento grid ── */
+.cpt-hdr {
+  display: grid; grid-template-columns: 220px 1fr 180px;
+  gap: 10px; padding: 7px 16px; background: #050c17;
+  border-bottom: 1px solid var(--border);
+}
+.cpt-hdr span { font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--primary); }
+.cpt-hdr-cap { text-align: center; }
+.cpt-hdr-act { text-align: center; }
+
+.cpt-row {
+  display: grid; grid-template-columns: 220px 1fr 180px;
+  gap: 10px; align-items: center; padding: 8px 16px;
+  border-bottom: 1px solid rgba(0,217,166,.06);
+  background: var(--panel); transition: background .12s;
+}
+.cpt-row:hover { background: rgba(0,217,166,.03); }
+.cpt-row.empty-form { display: none !important; }
+
+/* Placa Mercosul badge */
+.cpt-id { display: flex; align-items: center; gap: 8px; }
+.cpt-placa {
+  display: flex; flex-direction: column; align-items: center;
+  border: 2px solid #3b82f6; border-radius: 5px; overflow: hidden;
+  min-width: 82px; background: #0d1929;
+}
+.cpt-placa-bar {
+  background: #3b82f6; color: #fff; font-size: .38rem; font-weight: 800;
+  letter-spacing: .2em; padding: 1px 0; width: 100%; text-align: center; display: block;
+}
+.cpt-placa-num {
+  color: #fff; font-family: monospace; font-weight: 800; font-size: .78rem;
+  letter-spacing: .1em; padding: 2px 6px; display: block; text-align: center;
+}
+.cpt-placa--new { border-color: #555; opacity: .45; }
+.cpt-placa--new .cpt-placa-bar { background: #555; }
+.cpt-comp-num { font-size: .72rem; font-weight: 700; color: var(--text); white-space: nowrap; }
+.cpt-nf input { width: 50px; text-align: center; padding: 3px 5px; font-size: .78rem; }
+.cpt-nf--hide { display: none; }
+
+/* Capacidade */
+.cpt-cap { display: flex; justify-content: center; }
+.cpt-cap-wrap {
+  display: flex; align-items: center;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; max-width: 180px; width: 100%;
+}
+.cpt-cap-wrap input {
+  border: none !important; background: transparent !important;
+  text-align: right; font-weight: 700; font-size: .85rem;
+  padding: 6px 2px 6px 10px !important; flex: 1; color: var(--text); min-width: 0;
+  box-shadow: none !important;
+}
+.cpt-cap-wrap input:focus { outline: none; }
+.cpt-cap-l { color: var(--primary); font-weight: 800; font-size: .78rem; padding: 0 8px 0 2px; flex-shrink: 0; }
+
+/* Ações */
+.cpt-act { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.cpt-del {
+  cursor: pointer; display: inline-block; text-decoration: none;
+  background: rgba(239,68,68,.1); color: #ef4444; border: 1px solid rgba(239,68,68,.3);
+  border-radius: 6px; padding: 4px 10px; font-size: .66rem; font-weight: 700;
+  transition: all .15s; user-select: none; white-space: nowrap;
+}
+.cpt-del:hover { background: #ef4444; color: #fff; }
+.cpt-act input[type="checkbox"] { display: none !important; }
+
+.cpt-edit {
+  display: inline-block; background: rgba(0,217,166,.1); color: var(--primary);
+  border: 1px solid rgba(0,217,166,.25); border-radius: 6px;
+  padding: 4px 10px; font-size: .66rem; font-weight: 700;
+  text-decoration: none; transition: all .15s; white-space: nowrap;
+}
+.cpt-edit:hover { background: var(--primary); color: #070d1a; }
+.cpt-edit--disabled { opacity: .35; cursor: default; pointer-events: none; }
+
+/* Add button */
+.cpt-add {
+  padding: 8px 16px; background: #050c17; border-top: 1px solid var(--border);
+}
+.cpt-add a {
+  display: inline-block; background: var(--primary); color: #070d1a;
+  border-radius: 7px; padding: 6px 18px; font-size: .74rem; font-weight: 800;
+  text-decoration: none; transition: opacity .15s;
+}
+.cpt-add a:hover { opacity: .82; }
+
+/* Error inside inline */
+.cpt-row .errorlist { color: var(--danger); font-size: .68rem; list-style: none; padding: 0; margin: 2px 0 0; }
+
+/* Hide Django's default add-row when using custom */
+.inline-group .add-row { display: none; }
 
 /* ── Pagination ───────────────────────────────────────────── */
 .paginator {

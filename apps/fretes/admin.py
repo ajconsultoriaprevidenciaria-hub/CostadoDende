@@ -20,17 +20,44 @@ admin.site.site_title = 'Costa do Dendê'
 admin.site.index_title = 'Painel administrativo de fretes'
 
 
+@admin.register(Compartimento)
+class CompartimentoAdmin(admin.ModelAdmin):
+	list_display = ('caminhao', 'numero', 'capacidade_litros')
+	list_filter = ('caminhao',)
+
+
 class CompartimentoInline(admin.TabularInline):
 	model = Compartimento
+	fields = ('numero', 'capacidade_litros')
 	extra = 1
+	can_delete = True
+	show_change_link = True
 
 
 @admin.register(Caminhao)
 class CaminhaoAdmin(admin.ModelAdmin):
-	list_display = ('placa', 'motorista_principal', 'local_carregamento', 'numero_compartimentos', 'capacidade_total_litros', 'ativo', 'acoes')
+	list_display = ('placa_mercosul', 'motorista_principal', 'local_carregamento', 'numero_compartimentos', 'capacidade_total_litros', 'ativo', 'acoes')
 	list_filter = ('ativo', 'local_carregamento')
 	search_fields = ('placa', 'motorista_principal__nome')
 	inlines = [CompartimentoInline]
+
+	class Media:
+		js = ('admin/js/placa_mercosul.js',)
+
+	@admin.display(description='Placa', ordering='placa')
+	def placa_mercosul(self, obj):
+		p = obj.placa.upper().replace('-', '').replace(' ', '')
+		if len(p) == 7:
+			formatted = f'{p[:3]}{p[3]}{p[4:]}'
+			return format_html(
+				'<span style="font-family:monospace;font-weight:800;font-size:.85rem;'
+				'background:#0d1929;border:2px solid #3b82f6;border-radius:6px;padding:3px 8px;'
+				'display:inline-block;letter-spacing:.08em;color:#fff;text-align:center;'
+				'border-top:14px solid #3b82f6;position:relative;">'
+				'<span style="position:absolute;top:-13px;left:0;right:0;font-size:.45rem;'
+				'color:#fff;font-weight:700;letter-spacing:.15em;">BRASIL</span>'
+				'{}</span>', formatted)
+		return obj.placa
 
 	@admin.display(description='Ações')
 	def acoes(self, obj):
