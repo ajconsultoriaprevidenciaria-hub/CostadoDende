@@ -201,7 +201,7 @@ class Carga(BaseModel):
 	data_carga = models.DateField(default=timezone.localdate)
 	cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='cargas')
 	fornecedor = models.ForeignKey(Fornecedor, on_delete=models.PROTECT, related_name='cargas')
-	produto = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name='cargas')
+	produto = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name='cargas', blank=True, null=True)
 	caminhao = models.ForeignKey(Caminhao, on_delete=models.PROTECT, related_name='cargas')
 	motorista = models.ForeignKey(Motorista, on_delete=models.PROTECT, related_name='cargas')
 	rota = models.ForeignKey(Rota, on_delete=models.PROTECT, related_name='cargas')
@@ -217,7 +217,7 @@ class Carga(BaseModel):
 		verbose_name_plural = 'Cargas'
 
 	def __str__(self):
-		return f'{self.data_carga:%d/%m/%Y} - {self.cliente} - {self.produto}'
+		return f'{self.data_carga:%d/%m/%Y} - {self.cliente}'
 
 	def buscar_tabela_frete(self):
 		tabelas = TabelaFrete.objects.filter(

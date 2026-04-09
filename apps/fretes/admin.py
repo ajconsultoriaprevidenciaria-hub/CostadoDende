@@ -228,7 +228,8 @@ class CargaAdmin(admin.ModelAdmin):
 	)
 	list_filter = ('data_carga', 'cliente', 'produto', 'fornecedor', 'rota')
 	search_fields = ('cliente__nome', 'fornecedor__nome', 'caminhao__placa', 'numero_documento')
-	autocomplete_fields = ('cliente', 'fornecedor', 'produto', 'caminhao', 'motorista', 'rota')
+	exclude = ('produto',)
+	autocomplete_fields = ('cliente', 'fornecedor', 'caminhao', 'motorista', 'rota')
 	inlines = [CargaCompartimentoInline]
 	date_hierarchy = 'data_carga'
 
