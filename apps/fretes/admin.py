@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from django.urls import reverse
+from django.urls import path, reverse
+from django.shortcuts import get_object_or_404, render
+from apps.motorista_portal.models import AbastecimentoViagem, ChecklistViagem
 
 from .models import (
 	Caminhao,
@@ -217,22 +219,100 @@ class CargaCompartimentoInline(admin.StackedInline):
 
 @admin.register(Carga)
 class CargaAdmin(admin.ModelAdmin):
+	change_list_template = 'admin/fretes/carga/change_list.html'
+
 	list_display = (
-		'data_carga',
+		'data_carga_fmt',
 		'cliente',
-		'produto',
-		'fornecedor',
+		'motorista',
+		'rota',
 		'caminhao',
-		'litros',
-		'valor_frete_litro',
-		'valor_total_frete',
+		'litros_fmt',
+		'frete_litro_fmt',
+		'total_frete_fmt',
 	)
-	list_filter = ('data_carga', 'cliente', 'produto', 'fornecedor', 'rota')
+	list_filter = ('data_carga', 'cliente', 'fornecedor', 'rota')
 	search_fields = ('cliente__nome', 'fornecedor__nome', 'caminhao__placa', 'numero_documento')
 	exclude = ('produto',)
 	autocomplete_fields = ('cliente', 'fornecedor', 'caminhao', 'motorista', 'rota')
 	inlines = [CargaCompartimentoInline]
 	date_hierarchy = 'data_carga'
 
+	def changelist_view(self, request, extra_context=None):
+		response = super().changelist_view(request, extra_context=extra_context)
+		if not hasattr(response, 'context_data') or 'cl' not in response.context_data:
+			return response
+
+		base_qs = response.context_data['cl'].queryset
+		cargas_concluidas_ids = AbastecimentoViagem.objects.filter(
+			despesa__carga__in=base_qs,
+			despesa__tipo='abastecimento',
+			foto_cupom__isnull=False,
+		).exclude(
+			foto_cupom='',
+		).values_list('despesa__carga_id', flat=True)
+
+		cargas_concluidas = base_qs.filter(
+			checklists__concluido=True,
+			id__in=cargas_concluidas_ids,
+		).distinct().select_related(
+			'cliente', 'motorista', 'rota', 'caminhao'
+		)
+
+		response.context_data['cargas_concluidas'] = cargas_concluidas
+		response.context_data['qtd_cargas_concluidas'] = cargas_concluidas.count()
+		return response
+
+	@admin.display(description='DATA DA CARGA', ordering='data_carga')
+	def data_carga_fmt(self, obj):
+		return obj.data_carga.strftime('%d/%m/%Y')
+
+	@admin.display(description='Litros', ordering='litros')
+	def litros_fmt(self, obj):
+		val = f"{int(obj.litros):,}".replace(',', '.')
+		return f"{val} L"
+
+	@admin.display(description='R$/Litro', ordering='valor_frete_litro')
+	def frete_litro_fmt(self, obj):
+		if obj.valor_frete_litro is None:
+			return '-'
+		return f"R$ {obj.valor_frete_litro:.4f}"
+
+	@admin.display(description='Total Frete', ordering='valor_total_frete')
+	def total_frete_fmt(self, obj):
+		if obj.valor_total_frete is None:
+			return '-'
+		val = f"{obj.valor_total_frete:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+		return f"R$ {val}"
+
 	class Media:
 		js = ('admin/js/carga_compartimentos.js',)
+
+	def get_urls(self):
+		urls = super().get_urls()
+		custom = [
+			path(
+				'<int:carga_pk>/info-viagem/',
+				self.admin_site.admin_view(self.info_viagem_view),
+				name='fretes_carga_info_viagem',
+			),
+		]
+		return custom + urls
+
+	def info_viagem_view(self, request, carga_pk):
+		carga = get_object_or_404(Carga, pk=carga_pk)
+		checklists = ChecklistViagem.objects.filter(
+			carga=carga,
+		).prefetch_related('itens').order_by('-data_hora')
+		abastecimentos = AbastecimentoViagem.objects.filter(
+			despesa__carga=carga,
+		).select_related('despesa').order_by('-despesa__data')
+		context = {
+			**self.admin_site.each_context(request),
+			'carga': carga,
+			'checklists': checklists,
+			'abastecimentos': abastecimentos,
+			'title': f'Informações da Viagem — Carga #{carga.pk}',
+			'opts': self.model._meta,
+		}
+		return render(request, 'admin/fretes/carga/info_viagem.html', context)
