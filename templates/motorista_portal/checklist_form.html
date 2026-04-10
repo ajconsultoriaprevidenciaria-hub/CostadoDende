@@ -239,6 +239,20 @@ document.getElementById('ab_cupom').addEventListener('change', function() {
     }
 });
 
+// Cálculo automático preço por litro
+const abValor = document.getElementById('ab_valor');
+const abLitros = document.getElementById('ab_litros');
+const abPreco = document.getElementById('ab_preco');
+function calcPrecoLitro() {
+    const v = parseFloat(abValor.value);
+    const l = parseFloat(abLitros.value);
+    if (v > 0 && l > 0) {
+        abPreco.value = (v / l).toFixed(4);
+    }
+}
+abValor.addEventListener('input', calcPrecoLitro);
+abLitros.addEventListener('input', calcPrecoLitro);
+
 // Preview de foto do checklist ao selecionar
 document.querySelectorAll('.mp-checklist-grid input[type="file"]').forEach(input => {
     input.addEventListener('change', function() {
