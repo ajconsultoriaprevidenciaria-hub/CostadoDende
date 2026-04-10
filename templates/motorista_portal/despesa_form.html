@@ -94,6 +94,14 @@
 const tipoSelect = document.getElementById('tipo');
 const panelAbast = document.getElementById('campos-abastecimento');
 
+// Pre-select tipo from URL query param
+const params = new URLSearchParams(window.location.search);
+const tipoParam = params.get('tipo');
+if (tipoParam) {
+    tipoSelect.value = tipoParam;
+    if (tipoParam === 'abastecimento') panelAbast.style.display = 'block';
+}
+
 tipoSelect.addEventListener('change', () => {
     panelAbast.style.display = tipoSelect.value === 'abastecimento' ? 'block' : 'none';
 });

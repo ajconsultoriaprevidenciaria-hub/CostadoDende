@@ -2,22 +2,184 @@
 
 {% block title %}Checklist - Carga #{{ carga.pk }}{% endblock %}
 
+{% block extra_css %}
+<style>
+.ck-cat-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.ck-cat-icon { display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px; flex-shrink:0; }
+.ck-cat-icon svg { width:20px; height:20px; }
+.ck-cat-icon--pneus        { background:rgba(59,130,246,.12); color:#3b82f6; }
+.ck-cat-icon--retrovisores { background:rgba(168,85,247,.12); color:#a855f7; }
+.ck-cat-icon--parabrisa     { background:rgba(6,182,212,.12); color:#06b6d4; }
+.ck-cat-icon--tanque        { background:rgba(245,158,11,.12); color:#f59e0b; }
+.ck-cat-icon--farois        { background:rgba(234,179,8,.12);  color:#eab308; }
+.ck-cat-icon--freios        { background:rgba(239,68,68,.12);  color:#ef4444; }
+.ck-cat-icon--documentos    { background:rgba(16,185,129,.12); color:#10b981; }
+.ck-cat-icon--outros        { background:rgba(148,163,184,.12); color:#94a3b8; }
+.ck-cat-name { font-size:.82rem; font-weight:700; color:var(--primary); }
+
+/* Botão abastecimento apartado */
+.ck-fuel-standalone {
+    display:flex; align-items:center; gap:14px;
+    background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.22);
+    border-radius:14px; padding:16px 20px; margin:16px 0 4px;
+    cursor:pointer; text-decoration:none; transition:all .2s;
+}
+.ck-fuel-standalone:hover { background:rgba(245,158,11,.16); border-color:rgba(245,158,11,.4); transform:translateY(-1px); }
+.ck-fuel-standalone svg { width:60px; height:60px; color:#f59e0b; flex-shrink:0; }
+.ck-fuel-standalone-text { font-size:.82rem; font-weight:800; color:#f59e0b; line-height:1.3; letter-spacing:.3px; }
+
+/* Painel abastecimento */
+.ck-fuel-panel {
+    display:none; background:rgba(245,158,11,.04);
+    border:1px solid rgba(245,158,11,.18); border-radius:12px;
+    padding:16px; margin:14px 0;
+}
+.ck-fuel-panel.open { display:block; animation: slideDown .25s ease; }
+@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+.ck-fuel-title {
+    display:flex; align-items:center; gap:8px;
+    font-size:.78rem; font-weight:700; color:#f59e0b; margin-bottom:12px;
+}
+
+/* Lista de abastecimentos */
+.ck-abast-list { margin:14px 0 0; }
+.ck-abast-item {
+    display:flex; align-items:center; justify-content:space-between;
+    background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.12);
+    border-radius:10px; padding:10px 14px; margin-bottom:8px;
+}
+.ck-abast-info { display:flex; flex-direction:column; gap:2px; }
+.ck-abast-posto { font-size:.74rem; font-weight:700; color:#f59e0b; }
+.ck-abast-detail { font-size:.62rem; color:var(--text-sec); }
+.ck-abast-valor { font-size:.78rem; font-weight:700; color:#f59e0b; }
+.ck-abast-count {
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:18px; height:18px; border-radius:9px;
+    background:#f59e0b; color:#000; font-size:.6rem; font-weight:800;
+    padding:0 4px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <a href="{% url 'motorista_portal:carga-detalhe' pk=carga.pk %}" class="mp-back">← Voltar</a>
 
 <div class="mp-card">
     <h2>Checklist — Carga #{{ carga.pk }}</h2>
-    <p style="font-size:.72rem; color:var(--text-sec); margin-bottom:14px;">
+    <p style="font-size:.72rem; color:var(--text-sec); margin-bottom:0;">
         Tire uma foto de cada item e informe o status.
     </p>
+</div>
 
-    <form method="post" enctype="multipart/form-data">
+<a href="#" id="fuel-toggle" class="ck-fuel-standalone">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 22V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17"/><path d="M3 22h12"/>
+        <path d="M15 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9l-3-3"/>
+        <path d="M6 8h6"/><path d="M6 11h6"/>
+    </svg>
+    <div>
+        <div class="ck-fuel-standalone-text">⛽ REGISTRAR ABASTECIMENTO DA VIAGEM</div>
+        {% if abastecimentos %}<span style="font-size:.64rem; color:rgba(245,158,11,.6); margin-top:2px; display:block;">{{ abastecimentos|length }} abastecimento{{ abastecimentos|length|pluralize }} registrado{{ abastecimentos|length|pluralize }}</span>{% endif %}
+    </div>
+</a>
+
+<div class="mp-card" style="margin-top:4px;">
+
+    <!-- ── Painel Abastecimento Rápido ── -->
+    <div id="fuel-panel" class="ck-fuel-panel">
+        <div class="ck-fuel-title">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 22V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17"/><path d="M3 22h12"/>
+                <path d="M15 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9l-3-3"/>
+                <path d="M6 8h6"/><path d="M6 11h6"/>
+            </svg>
+            Registrar Abastecimento desta Viagem
+        </div>
+
+        <form method="post" enctype="multipart/form-data" action="{% url 'motorista_portal:abastecimento-rapido' carga_pk=carga.pk %}">
+            {% csrf_token %}
+            <div class="mp-field">
+                <label for="ab_posto">Nome do Posto *</label>
+                <select name="posto" id="ab_posto" required>
+                    <option value="">Selecione o cliente/posto...</option>
+                    {% for cli in clientes %}
+                    <option value="{{ cli.nome }}">{{ cli.nome }}{% if cli.cidade %} — {{ cli.cidade }}/{{ cli.uf }}{% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mp-grid-2">
+                <div class="mp-field">
+                    <label for="ab_valor">Valor da Nota (R$) *</label>
+                    <input type="number" name="valor" id="ab_valor" step="0.01" min="0" required inputmode="decimal">
+                </div>
+                <div class="mp-field">
+                    <label for="ab_litros">Litros</label>
+                    <input type="number" name="litros" id="ab_litros" step="0.01" min="0" inputmode="decimal">
+                </div>
+            </div>
+            <div class="mp-field">
+                <label for="ab_preco">Preço por Litro (R$)</label>
+                <input type="number" name="preco_litro" id="ab_preco" step="0.0001" min="0" inputmode="decimal">
+            </div>
+            <div class="mp-field">
+                <label for="ab_cupom">Foto do Cupom Fiscal *</label>
+                <input type="file" name="foto_cupom" id="ab_cupom" accept="image/*" capture="environment" required>
+                <img id="preview_cupom_inline" class="mp-thumb" style="display:none; margin-top:8px;">
+            </div>
+            <button type="submit" class="mp-btn mp-btn-primary mp-btn-block" style="background:rgba(245,158,11,.9); border-color:#f59e0b;">
+                ⛽ Salvar Abastecimento
+            </button>
+        </form>
+
+        {% if abastecimentos %}
+        <div class="ck-abast-list">
+            <div style="font-size:.7rem; font-weight:600; color:var(--text-sec); margin:14px 0 8px; text-transform:uppercase; letter-spacing:.3px;">
+                Abastecimentos registrados nesta viagem
+            </div>
+            {% for ab in abastecimentos %}
+            <div class="ck-abast-item">
+                <div class="ck-abast-info">
+                    <span class="ck-abast-posto">⛽ {{ ab.posto }}</span>
+                    <span class="ck-abast-detail">
+                        {{ ab.litros|floatformat:1 }}L &middot; R$ {{ ab.preco_litro|floatformat:2 }}/L &middot; {{ ab.despesa.data|date:"d/m/Y" }}
+                    </span>
+                </div>
+                <span class="ck-abast-valor">R$ {{ ab.despesa.valor|floatformat:2 }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ── Formulário do Checklist ── -->
+    <form method="post" enctype="multipart/form-data" style="margin-top:14px;">
         {% csrf_token %}
 
         <div class="mp-checklist-grid">
             {% for cat in categorias %}
             <div class="mp-checklist-item">
-                <div class="cat-name">{{ cat.label }}</div>
+                <div class="ck-cat-header">
+                    <div class="ck-cat-icon ck-cat-icon--{{ cat.key }}">
+                        {% if cat.key == 'pneus' %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/></svg>
+                        {% elif cat.key == 'retrovisores' %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><path d="M14 10h4a2 2 0 0 1 2 2v6"/><line x1="5" y1="8" x2="11" y2="8"/></svg>
+                        {% elif cat.key == 'parabrisa' %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M8 4v16"/><path d="M16 4v16"/><path d="M2 12h20"/></svg>
+                        {% elif cat.key == 'tanque' %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17"/><path d="M3 22h12"/><path d="M15 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9l-3-3"/><path d="M6 8h6"/><path d="M6 11h6"/></svg>
+                        {% elif cat.key == 'farois' %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="5"/><line x1="14" y1="7" x2="20" y2="4"/><line x1="14" y1="12" x2="21" y2="12"/><line x1="14" y1="17" x2="20" y2="20"/></svg>
+                        {% elif cat.key == 'freios' %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/></svg>
+                        {% elif cat.key == 'documentos' %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        {% else %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        {% endif %}
+                    </div>
+                    <span class="ck-cat-name">{{ cat.label }}</span>
+                </div>
 
                 <div class="mp-field">
                     <label for="status_{{ cat.key }}">Status</label>
@@ -57,8 +219,28 @@
 
 {% block extra_js %}
 <script>
-// Preview de foto ao selecionar
-document.querySelectorAll('input[type="file"]').forEach(input => {
+// Toggle painel abastecimento
+document.getElementById('fuel-toggle').addEventListener('click', function(e) {
+    e.preventDefault();
+    const panel = document.getElementById('fuel-panel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+});
+
+// Preview cupom fiscal inline
+document.getElementById('ab_cupom').addEventListener('change', function() {
+    const preview = document.getElementById('preview_cupom_inline');
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+        reader.readAsDataURL(this.files[0]);
+    }
+});
+
+// Preview de foto do checklist ao selecionar
+document.querySelectorAll('.mp-checklist-grid input[type="file"]').forEach(input => {
     input.addEventListener('change', function() {
         const preview = document.getElementById('preview_' + this.name.replace('foto_', ''));
         if (this.files && this.files[0] && preview) {
