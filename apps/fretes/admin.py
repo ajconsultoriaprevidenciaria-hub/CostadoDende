@@ -90,10 +90,11 @@ class ClienteAdmin(admin.ModelAdmin):
 
 @admin.register(Motorista)
 class MotoristaAdmin(admin.ModelAdmin):
-	list_display = ('nome', 'cpf', 'cnh', 'telefone', 'ativo', 'acoes')
+	list_display = ('nome', 'cpf', 'cnh', 'telefone', 'user', 'ativo', 'acoes')
 	list_filter = ('ativo',)
 	search_fields = ('nome', 'cpf', 'cnh')
 	list_editable = ('ativo',)
+	raw_id_fields = ('user',)
 
 	@admin.display(description='Ações')
 	def acoes(self, obj):

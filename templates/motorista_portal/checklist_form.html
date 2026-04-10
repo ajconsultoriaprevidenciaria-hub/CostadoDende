@@ -1,0 +1,75 @@
+{% extends "motorista_portal/base.html" %}
+
+{% block title %}Checklist - Carga #{{ carga.pk }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'motorista_portal:carga-detalhe' pk=carga.pk %}" class="mp-back">← Voltar</a>
+
+<div class="mp-card">
+    <h2>Checklist — Carga #{{ carga.pk }}</h2>
+    <p style="font-size:.72rem; color:var(--text-sec); margin-bottom:14px;">
+        Tire uma foto de cada item e informe o status.
+    </p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mp-checklist-grid">
+            {% for cat in categorias %}
+            <div class="mp-checklist-item">
+                <div class="cat-name">{{ cat.label }}</div>
+
+                <div class="mp-field">
+                    <label for="status_{{ cat.key }}">Status</label>
+                    <select name="status_{{ cat.key }}" id="status_{{ cat.key }}">
+                        <option value="ok">OK</option>
+                        <option value="atencao">Atenção</option>
+                        <option value="critico">Crítico</option>
+                    </select>
+                </div>
+
+                <div class="mp-field">
+                    <label for="foto_{{ cat.key }}">Foto *</label>
+                    <input type="file" name="foto_{{ cat.key }}" id="foto_{{ cat.key }}" accept="image/*" capture="environment" required>
+                </div>
+
+                <div class="mp-field">
+                    <label for="obs_{{ cat.key }}">Observação</label>
+                    <input type="text" name="obs_{{ cat.key }}" id="obs_{{ cat.key }}" placeholder="Opcional...">
+                </div>
+
+                <img id="preview_{{ cat.key }}" class="mp-thumb" style="display:none;">
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mp-field" style="margin-top:14px;">
+            <label for="observacoes">Observações gerais</label>
+            <textarea name="observacoes" id="observacoes" rows="3" placeholder="Observações gerais da viagem...">{{ form.observacoes.value|default:"" }}</textarea>
+        </div>
+
+        <button type="submit" class="mp-btn mp-btn-primary mp-btn-block" style="margin-top:8px;">
+            Concluir Checklist
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Preview de foto ao selecionar
+document.querySelectorAll('input[type="file"]').forEach(input => {
+    input.addEventListener('change', function() {
+        const preview = document.getElementById('preview_' + this.name.replace('foto_', ''));
+        if (this.files && this.files[0] && preview) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+</script>
+{% endblock %}

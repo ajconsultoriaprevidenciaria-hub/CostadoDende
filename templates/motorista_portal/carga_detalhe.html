@@ -1,0 +1,78 @@
+{% extends "motorista_portal/base.html" %}
+
+{% block title %}Carga {{ carga.pk }} - Portal do Motorista{% endblock %}
+
+{% block content %}
+<a href="{% url 'motorista_portal:painel' %}" class="mp-back">← Voltar</a>
+
+<div class="mp-card">
+    <h2>Carga #{{ carga.pk }}</h2>
+    <div class="mp-list-item">
+        <span class="label">Data</span>
+        <span>{{ carga.data_carga|date:"d/m/Y" }}</span>
+    </div>
+    <div class="mp-list-item">
+        <span class="label">Cliente</span>
+        <span>{{ carga.cliente }}</span>
+    </div>
+    <div class="mp-list-item">
+        <span class="label">Caminhão</span>
+        <span>{{ carga.caminhao }}</span>
+    </div>
+    <div class="mp-list-item">
+        <span class="label">Rota</span>
+        <span>{{ carga.rota }}</span>
+    </div>
+    <div class="mp-list-item">
+        <span class="label">Litros</span>
+        <span>{{ carga.litros|floatformat:0 }} L</span>
+    </div>
+</div>
+
+<!-- ── Checklist ── -->
+<div class="mp-section-title">Checklist</div>
+
+{% if tem_checklist %}
+    {% for cl in checklists %}
+    <a href="{% url 'motorista_portal:checklist-detalhe' pk=cl.pk %}" style="text-decoration:none; color:inherit;">
+        <div class="mp-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:.78rem;">{{ cl.data_hora|date:"d/m/Y H:i" }}</span>
+            {% if cl.concluido %}
+                <span class="mp-badge mp-badge-ok">Concluído</span>
+            {% else %}
+                <span class="mp-badge mp-badge-pending">Incompleto</span>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+{% else %}
+    <a href="{% url 'motorista_portal:checklist-criar' carga_pk=carga.pk %}" class="mp-btn mp-btn-primary mp-btn-block" style="margin-bottom:12px;">
+        📋 Iniciar Checklist
+    </a>
+{% endif %}
+
+<!-- ── Despesas ── -->
+<div class="mp-section-title">Despesas</div>
+
+{% if tem_checklist %}
+    <a href="{% url 'motorista_portal:despesa-criar' carga_pk=carga.pk %}" class="mp-btn mp-btn-outline mp-btn-sm" style="margin-bottom:12px;">
+        + Nova Despesa
+    </a>
+{% endif %}
+
+{% if despesas %}
+    {% for d in despesas %}
+    <a href="{% url 'motorista_portal:despesa-detalhe' pk=d.pk %}" style="text-decoration:none; color:inherit;">
+        <div class="mp-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div style="font-size:.78rem; font-weight:600;">{{ d.get_tipo_display }}</div>
+                <div style="font-size:.68rem; color:var(--text-sec);">{{ d.data|date:"d/m/Y" }}</div>
+            </div>
+            <span style="font-size:.82rem; font-weight:700; color:var(--primary);">R$ {{ d.valor }}</span>
+        </div>
+    </a>
+    {% endfor %}
+{% else %}
+    <div class="mp-empty">Nenhuma despesa registrada.</div>
+{% endif %}
+{% endblock %}

@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -34,6 +35,13 @@ class Cliente(BaseModel):
 
 
 class Motorista(BaseModel):
+	user = models.OneToOneField(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.SET_NULL,
+		null=True,
+		blank=True,
+		related_name='motorista',
+	)
 	nome = models.CharField(max_length=150)
 	cpf = models.CharField(max_length=14, unique=True)
 	cnh = models.CharField(max_length=20, unique=True)

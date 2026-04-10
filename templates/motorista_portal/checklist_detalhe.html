@@ -1,0 +1,41 @@
+{% extends "motorista_portal/base.html" %}
+
+{% block title %}Checklist {{ checklist.pk }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'motorista_portal:carga-detalhe' pk=checklist.carga.pk %}" class="mp-back">← Voltar</a>
+
+<div class="mp-card">
+    <h2>Checklist — {{ checklist.data_hora|date:"d/m/Y H:i" }}</h2>
+    {% if checklist.concluido %}
+        <span class="mp-badge mp-badge-ok" style="margin-bottom:12px;">Concluído</span>
+    {% else %}
+        <span class="mp-badge mp-badge-pending" style="margin-bottom:12px;">Incompleto</span>
+    {% endif %}
+
+    {% if checklist.observacoes %}
+    <div style="margin-top:10px; font-size:.78rem; color:var(--text-sec);">
+        <strong>Observações:</strong> {{ checklist.observacoes }}
+    </div>
+    {% endif %}
+</div>
+
+<div class="mp-section-title">Itens</div>
+
+{% for item in checklist.itens.all %}
+<div class="mp-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:.8rem; font-weight:600;">{{ item.get_categoria_display }}</span>
+        <span class="mp-badge mp-badge-{{ item.status }}">{{ item.get_status_display }}</span>
+    </div>
+    {% if item.foto %}
+        <img src="{{ item.foto.url }}" class="mp-thumb" alt="{{ item.get_categoria_display }}">
+    {% endif %}
+    {% if item.observacao %}
+        <div style="font-size:.72rem; color:var(--text-sec); margin-top:6px;">{{ item.observacao }}</div>
+    {% endif %}
+</div>
+{% empty %}
+<div class="mp-empty">Nenhum item registrado.</div>
+{% endfor %}
+{% endblock %}

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.fretes',
     'apps.dashboard',
+    'apps.motorista_portal',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,8 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    'apps.motorista_portal.backends.CPFBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
