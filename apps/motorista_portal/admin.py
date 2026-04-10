@@ -9,7 +9,7 @@ from .models import (
 )
 
 
-class ItemChecklistInline(admin.TabularInline):
+class ItemChecklistInline(admin.StackedInline):
     model = ItemChecklist
     extra = 0
     readonly_fields = ('foto_preview',)
