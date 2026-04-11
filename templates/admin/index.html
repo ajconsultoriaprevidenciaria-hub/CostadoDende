@@ -104,7 +104,7 @@
 
 <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-bottom:24px;">
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
-    <h3 style="margin:0 0 14px 0;font-size:1rem;font-weight:800;color:var(--text);">Viagens por caminhão</h3>
+    <h3 style="margin:0 0 14px 0;display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Viagens por caminhão</h3>
     <div style="display:grid;gap:8px;">
       {% for item in viagens_por_caminhao %}
         <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,217,166,.06);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:10px 12px;">
@@ -130,7 +130,7 @@
             {% endif %}
             <span style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.caminhao__placa }}</span>
           </div>
-          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} viagem{% if item.viagens != 1 %}ens{% endif %}</span>
+          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#22c55e;">{% if item.viagens == 1 %}viagem{% else %}viagens{% endif %}</span></span>
         </div>
       {% empty %}
         <p style="margin:0;color:var(--muted);">Sem viagens no período selecionado.</p>
@@ -139,7 +139,7 @@
   </div>
 
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
-    <h3 style="margin:0 0 14px 0;font-size:1rem;font-weight:800;color:var(--text);">Viagens por motorista</h3>
+    <h3 style="margin:0 0 14px 0;display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Viagens por motorista</h3>
     <div style="display:grid;gap:8px;">
       {% for item in viagens_por_motorista %}
         <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,217,166,.06);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:10px 12px;">
@@ -165,7 +165,7 @@
             {% endif %}
             <span style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.motorista__nome }}</span>
           </div>
-          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} viagem{% if item.viagens != 1 %}ens{% endif %}</span>
+          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#22c55e;">{% if item.viagens == 1 %}viagem{% else %}viagens{% endif %}</span></span>
         </div>
       {% empty %}
         <p style="margin:0;color:var(--muted);">Sem viagens no período selecionado.</p>
