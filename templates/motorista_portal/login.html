@@ -1,29 +1,437 @@
 {% extends "motorista_portal/base.html" %}
 
-{% block topbar %}
-<div class="mp-topbar">
-    <div>
-        <div class="brand-name">COSTA DO DENDÊ</div>
-        <div class="brand-sub">Portal do Motorista</div>
-    </div>
-</div>
+{% block extra_css %}
+<style>
+/* ── Reset shell para tela cheia ── */
+body { background: #050b16; overflow-x: hidden; }
+.mp-shell { max-width: 100%; padding: 0; }
+
+/* ── Wrapper de Login ── */
+.login-page {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: linear-gradient(170deg, #050b16 0%, #091525 55%, #0a1e10 100%);
+    padding: 0 0 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Partículas de fundo */
+.login-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 600px 300px at 20% 100%, rgba(0,217,166,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 200px at 80% 0%, rgba(0,160,255,.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ── Cena SVG ── */
+.login-scene { width: 100%; max-width: 560px; margin: 0 auto; padding: 0 12px; display: block; }
+
+/* ── Card de login ── */
+.login-card-wrap {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+.login-card {
+    background: rgba(13,25,41,.92);
+    border: 1px solid rgba(0,217,166,.18);
+    border-radius: 20px;
+    padding: 28px 24px 24px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(0,217,166,.06) inset;
+    backdrop-filter: blur(12px);
+}
+.login-card-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.login-card-header .brand {
+    font-size: .78rem;
+    font-weight: 800;
+    color: #00d9a6;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.login-card-header h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #e2e8f0;
+    line-height: 1.2;
+}
+.login-card-header p {
+    font-size: .78rem;
+    color: rgba(255,255,255,.4);
+    margin-top: 4px;
+}
+.login-field { margin-bottom: 16px; }
+.login-field label {
+    display: block;
+    font-size: .68rem;
+    font-weight: 700;
+    color: rgba(255,255,255,.45);
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    margin-bottom: 6px;
+}
+.login-field input {
+    width: 100%;
+    background: rgba(5,11,22,.7);
+    border: 1px solid rgba(0,217,166,.18);
+    color: #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: .9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+.login-field input:focus {
+    border-color: #00d9a6;
+    box-shadow: 0 0 0 3px rgba(0,217,166,.12);
+}
+.login-submit {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #00d9a6, #00b894);
+    color: #050b16;
+    font-size: .9rem;
+    font-weight: 800;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 4px;
+    letter-spacing: .3px;
+    transition: filter .2s, transform .1s;
+    box-shadow: 0 4px 20px rgba(0,217,166,.3);
+}
+.login-submit:hover { filter: brightness(1.08); }
+.login-submit:active { transform: scale(.98); }
+
+.login-msg-error {
+    background: rgba(244,63,94,.1);
+    border: 1px solid rgba(244,63,94,.25);
+    color: #f87171;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: .8rem;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* ── Animações ── */
+@keyframes truck-drive {
+    0%   { transform: translateX(0); }
+    50%  { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+}
+@keyframes wheel-spin {
+    to { transform: rotate(360deg); }
+}
+@keyframes smoke {
+    0%   { opacity:.5; transform: translateY(0) scale(1); }
+    100% { opacity:0;  transform: translateY(-18px) scale(2.2); }
+}
+@keyframes stars-twinkle {
+    0%,100% { opacity:.6; }
+    50% { opacity:1; }
+}
+@keyframes driver-wave {
+    0%,100% { transform: rotate(0deg); transform-origin: 80% 90%; }
+    30% { transform: rotate(-18deg); transform-origin: 80% 90%; }
+    60% { transform: rotate(10deg); transform-origin: 80% 90%; }
+}
+
+.truck-group { animation: truck-drive 2.4s ease-in-out infinite; }
+.wheel-l { transform-origin: 113px 131px; animation: wheel-spin 1.4s linear infinite; }
+.wheel-r { transform-origin: 64px 131px; animation: wheel-spin 1.4s linear infinite; }
+.wheel-t1 { transform-origin: 215px 131px; animation: wheel-spin 1.4s linear infinite; }
+.wheel-t2 { transform-origin: 258px 131px; animation: wheel-spin 1.4s linear infinite; }
+.smoke1 { animation: smoke 1.6s ease-in infinite; }
+.smoke2 { animation: smoke 1.6s ease-in .5s infinite; }
+.smoke3 { animation: smoke 1.6s ease-in 1s infinite; }
+.star1 { animation: stars-twinkle 2.1s ease-in-out infinite; }
+.star2 { animation: stars-twinkle 3s ease-in-out .4s infinite; }
+.star3 { animation: stars-twinkle 2.7s ease-in-out .8s infinite; }
+.driver-arm { animation: driver-wave 2.8s ease-in-out infinite; }
+</style>
 {% endblock %}
 
+{% block topbar %}{% endblock %}
+
 {% block content %}
-<div class="mp-card" style="margin-top:40px;">
-    <h2 style="text-align:center;">Acesso do Motorista</h2>
-    <form method="post" autocomplete="off">
+<div class="login-page">
+
+  <!-- ═══════════════ CENA ILUSTRADA ═══════════════ -->
+  <svg class="login-scene" viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="lSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#030810"/>
+        <stop offset="100%" stop-color="#081420"/>
+      </linearGradient>
+      <linearGradient id="lRoad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0b1520"/>
+        <stop offset="100%" stop-color="#060d16"/>
+      </linearGradient>
+      <linearGradient id="lTruck" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0e2040"/>
+        <stop offset="100%" stop-color="#091525"/>
+      </linearGradient>
+      <linearGradient id="lCab" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#112236"/>
+        <stop offset="100%" stop-color="#08131e"/>
+      </linearGradient>
+      <radialGradient id="lHeadlight" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="rgba(255,230,100,.35)"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+      <radialGradient id="lGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="rgba(0,217,166,.18)"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Céu -->
+    <rect width="560" height="165" fill="url(#lSky)"/>
+    <!-- Estrelas -->
+    <circle class="star1" cx="30"  cy="18" r="1.2" fill="rgba(255,255,255,.7)"/>
+    <circle class="star2" cx="80"  cy="10" r=".9"  fill="rgba(255,255,255,.5)"/>
+    <circle class="star3" cx="150" cy="22" r="1"   fill="rgba(255,255,255,.6)"/>
+    <circle class="star1" cx="220" cy="8"  r=".8"  fill="rgba(255,255,255,.45)"/>
+    <circle class="star2" cx="300" cy="15" r="1.1" fill="rgba(255,255,255,.55)"/>
+    <circle class="star3" cx="380" cy="6"  r=".9"  fill="rgba(255,255,255,.5)"/>
+    <circle class="star1" cx="450" cy="20" r="1.2" fill="rgba(255,255,255,.65)"/>
+    <circle class="star2" cx="510" cy="11" r=".8"  fill="rgba(255,255,255,.4)"/>
+    <circle class="star3" cx="540" cy="28" r="1"   fill="rgba(255,255,166,.5)"/>
+    <!-- Lua -->
+    <circle cx="490" cy="35" r="22" fill="#1a2e48"/>
+    <circle cx="498" cy="29" r="22" fill="#030810"/>
+    <circle cx="488" cy="37" r="1.5" fill="rgba(255,255,255,.12)"/>
+    <circle cx="478" cy="45" r="1" fill="rgba(255,255,255,.08)"/>
+
+    <!-- Montanhas / silhueta -->
+    <path d="M0 140 L60 90 L120 130 L190 70 L260 120 L340 80 L410 115 L480 65 L560 110 L560 165 L0 165Z" fill="#060e1a"/>
+    <path d="M0 155 L80 115 L150 148 L230 100 L310 140 L390 108 L470 138 L560 120 L560 165 L0 165Z" fill="#07101e"/>
+
+    <!-- Estrada -->
+    <rect x="0" y="165" width="560" height="65" fill="url(#lRoad)"/>
+    <!-- Beira da estrada (grama/terra) -->
+    <rect x="0" y="165" width="560" height="5" fill="#0a1a0a"/>
+    <rect x="0" y="225" width="560" height="5" fill="#0a1a0a"/>
+    <!-- Faixa central tracejada -->
+    <rect x="0"   y="193" width="60" height="4" rx="2" fill="rgba(255,255,100,.18)"/>
+    <rect x="80"  y="193" width="60" height="4" rx="2" fill="rgba(255,255,100,.18)"/>
+    <rect x="160" y="193" width="60" height="4" rx="2" fill="rgba(255,255,100,.18)"/>
+    <rect x="240" y="193" width="60" height="4" rx="2" fill="rgba(255,255,100,.18)"/>
+    <rect x="320" y="193" width="60" height="4" rx="2" fill="rgba(255,255,100,.18)"/>
+    <rect x="400" y="193" width="60" height="4" rx="2" fill="rgba(255,255,100,.18)"/>
+    <rect x="480" y="193" width="80" height="4" rx="2" fill="rgba(255,255,100,.18)"/>
+    <!-- Faixas laterais -->
+    <rect x="0" y="170" width="560" height="2" fill="rgba(255,255,255,.07)"/>
+    <rect x="0" y="221" width="560" height="2" fill="rgba(255,255,255,.07)"/>
+
+    <!-- ══════════ MOTORISTA (à direita) ══════════ -->
+    <g transform="translate(390, 42)">
+      <!-- Sombra motorista -->
+      <ellipse cx="68" cy="125" rx="46" ry="6" fill="rgba(0,0,0,.4)"/>
+      <!-- Corpo / uniforme -->
+      <path d="M42 122 Q40 105 38 92 L18 89 Q12 102 10 122 Z" fill="#0d3040"/>
+      <path d="M94 122 Q96 105 98 92 L116 89 Q122 102 124 122 Z" fill="#0d3040"/>
+      <rect x="10" y="99" width="114" height="24" rx="4" fill="#0d3040" stroke="rgba(0,217,166,.12)" stroke-width=".5"/>
+      <text x="67" y="115" text-anchor="middle" fill="rgba(0,217,166,.5)" font-size="7" font-family="Inter,Arial,sans-serif" font-weight="700">COSTA DO DENDÊ</text>
+      <!-- Colarinho -->
+      <path d="M56 85 L67 78 L80 85" fill="none" stroke="rgba(0,217,166,.55)" stroke-width="1.5"/>
+      <!-- Braço levantado (joinha) -->
+      <g class="driver-arm">
+        <path d="M18 88 Q4 78 -8 62 Q-12 52 -5 50 Q0 48 4 54 Q11 66 22 78" fill="#c07858" stroke="#a05030" stroke-width=".5"/>
+        <!-- Mão / polegar pra cima -->
+        <rect x="-18" y="30" width="17" height="20" rx="3" fill="#c07858"/>
+        <path d="M-18 30 Q-24 23 -22 16 Q-20 10 -15 11 Q-10 12 -11 18 L-11 30" fill="#c07858" stroke="#a05030" stroke-width=".5"/>
+        <rect x="-16" y="28" width="14" height="5"  rx="2.5" fill="#b06040"/>
+        <rect x="-16" y="34" width="14" height="4"  rx="2"   fill="#b06040"/>
+        <line x1="-11" y1="29" x2="-11" y2="34" stroke="#9a5030" stroke-width=".5"/>
+        <line x1="-7"  y1="29" x2="-7"  y2="34" stroke="#9a5030" stroke-width=".5"/>
+      </g>
+      <!-- Pescoço -->
+      <rect x="58" y="60" width="18" height="20" rx="4" fill="#c07858"/>
+      <!-- CABEÇA -->
+      <ellipse cx="67" cy="42" rx="28" ry="26" fill="#c07858" stroke="#a05030" stroke-width=".5"/>
+      <!-- Orelhas -->
+      <ellipse cx="40" cy="43" rx="5" ry="7" fill="#c07858" stroke="#a05030" stroke-width=".5"/>
+      <ellipse cx="94" cy="43" rx="5" ry="7" fill="#c07858" stroke="#a05030" stroke-width=".5"/>
+      <!-- BARBA -->
+      <path d="M42 50 Q40 63 47 69 Q67 79 67 79 Q67 79 87 69 Q94 63 92 50 Q78 66 67 66 Q56 66 42 50Z" fill="#2e1a10"/>
+      <!-- Bigode -->
+      <path d="M52 50 Q67 57 82 50" fill="#2e1a10" stroke="#1e1008" stroke-width=".5"/>
+      <!-- Sorriso (amplo, feliz) -->
+      <path d="M53 55 Q67 68 81 55" fill="none" stroke="#e8a080" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Dentes -->
+      <path d="M56 58 Q67 67 78 58" fill="white" opacity=".6"/>
+      <!-- Olhos -->
+      <!-- Olho E -->
+      <ellipse cx="55" cy="37" rx="5.5" ry="5" fill="white"/>
+      <circle cx="57" cy="37" r="3.5" fill="#2e1a10"/>
+      <circle cx="58" cy="36" r="1.5" fill="#0f0805"/>
+      <circle cx="59" cy="35" r=".6" fill="white"/>
+      <!-- Pálpebra feliz E -->
+      <path d="M50 35 Q55 30 60 34" fill="none" stroke="#2e1a10" stroke-width="1" stroke-linecap="round"/>
+      <!-- Olho D -->
+      <ellipse cx="79" cy="37" rx="5.5" ry="5" fill="white"/>
+      <circle cx="81" cy="37" r="3.5" fill="#2e1a10"/>
+      <circle cx="82" cy="36" r="1.5" fill="#0f0805"/>
+      <circle cx="83" cy="35" r=".6" fill="white"/>
+      <!-- Pálpebra feliz D -->
+      <path d="M74 35 Q79 30 84 34" fill="none" stroke="#2e1a10" stroke-width="1" stroke-linecap="round"/>
+      <!-- Bochechas rosadas -->
+      <ellipse cx="47" cy="47" rx="6" ry="4" fill="rgba(220,100,80,.25)"/>
+      <ellipse cx="87" cy="47" rx="6" ry="4" fill="rgba(220,100,80,.25)"/>
+      <!-- Nariz -->
+      <path d="M64 43 Q61 50 67 52 Q73 50 70 43" fill="none" stroke="#a05030" stroke-width="1.2" stroke-linecap="round"/>
+      <!-- BONÉ motorista -->
+      <path d="M40 22 Q67 8 94 22" fill="#0a2244" stroke="rgba(0,217,166,.4)" stroke-width="1"/>
+      <rect x="38" y="18" width="58" height="10" rx="2" fill="#0a2244" stroke="rgba(0,217,166,.28)" stroke-width="1"/>
+      <path d="M33 28 Q67 26 101 28 L103 32 Q67 30 31 32Z" fill="#071830" stroke="rgba(0,217,166,.2)" stroke-width=".5"/>
+      <text x="67" y="26" text-anchor="middle" fill="rgba(0,217,166,.9)" font-size="6" font-family="Inter,Arial,sans-serif" font-weight="700" letter-spacing=".3">COSTA DO DENDÊ</text>
+    </g>
+
+    <!-- ══════════ CAMINHÃO ══════════ -->
+    <g class="truck-group">
+      <!-- Sombra caminhão -->
+      <ellipse cx="195" cy="221" rx="195" ry="5" fill="rgba(0,0,0,.4)"/>
+      <!-- CARRETA / TRAILER -->
+      <rect x="20" y="148" width="260" height="70" rx="4" fill="url(#lTruck)" stroke="#00d9a6" stroke-width="1.5"/>
+      <!-- Faixa topo trailer -->
+      <rect x="20" y="148" width="260" height="4" fill="rgba(0,217,166,.4)"/>
+      <rect x="20" y="164" width="260" height="2" fill="rgba(0,217,166,.15)"/>
+      <rect x="20" y="211" width="260" height="2" fill="rgba(0,217,166,.15)"/>
+      <!-- Painéis laterais -->
+      <rect x="25"  y="150" width="20" height="66" rx="2" fill="rgba(0,0,0,.15)" stroke="rgba(0,217,166,.1)" stroke-width=".4"/>
+      <rect x="50"  y="150" width="20" height="66" rx="2" fill="rgba(0,0,0,.12)" stroke="rgba(0,217,166,.08)" stroke-width=".4"/>
+      <rect x="75"  y="150" width="20" height="66" rx="2" fill="rgba(0,0,0,.12)" stroke="rgba(0,217,166,.08)" stroke-width=".4"/>
+      <!-- Logo central no trailer -->
+      <text x="188" y="188" text-anchor="middle" fill="rgba(0,217,166,.8)" font-size="16" font-weight="800" font-family="Inter,Arial,sans-serif" letter-spacing="2">COSTA DO DENDÊ</text>
+      <text x="188" y="203" text-anchor="middle" fill="rgba(0,217,166,.32)" font-size="9" font-family="Inter,Arial,sans-serif" letter-spacing="3.5">TRANSPORTE &amp; LOGÍSTICA</text>
+      <!-- Faixa reflexiva lateral -->
+      <rect x="20" y="208" width="260" height="5" fill="rgba(255,200,0,.14)"/>
+      <!-- Conector cab/trailer -->
+      <rect x="278" y="171" width="12" height="14" rx="1" fill="#060e1a"/>
+      <rect x="278" y="175" width="12" height="2"  fill="rgba(0,217,166,.3)"/>
+
+      <!-- CABINE -->
+      <path d="M286 150 L320 141 L384 141 L408 158 L408 218 L286 218 Z" fill="url(#lCab)" stroke="#00d9a6" stroke-width="1.5"/>
+      <!-- Capô -->
+      <path d="M384 141 L408 158 L408 141 Z" fill="#0a1E30" stroke="#00d9a6" stroke-width="1"/>
+      <!-- Para-brisa -->
+      <path d="M305 146 L376 143 L400 160 L305 160 Z" fill="rgba(0,217,166,.09)" stroke="#00d9a6" stroke-width="1"/>
+      <path d="M314 148 L355 146 L355 153 L314 153 Z" fill="rgba(255,255,255,.03)"/>
+      <!-- Porta cab -->
+      <rect x="290" y="165" width="52" height="44" rx="3" fill="rgba(0,217,166,.03)" stroke="rgba(0,217,166,.2)" stroke-width=".8"/>
+      <!-- Janela porta -->
+      <rect x="295" y="167" width="42" height="20" rx="2" fill="rgba(0,217,166,.07)" stroke="rgba(0,217,166,.18)" stroke-width=".5"/>
+      <!-- Maçaneta -->
+      <rect x="333" y="196" width="11" height="3" rx="1.5" fill="rgba(0,217,166,.55)"/>
+      <!-- Espelho -->
+      <rect x="407" y="155" width="13" height="9" rx="1" fill="#091828" stroke="rgba(0,217,166,.3)" stroke-width=".7"/>
+      <!-- Escapamento -->
+      <rect x="390" y="120" width="7" height="34" rx="3" fill="#091828" stroke="rgba(0,217,166,.3)" stroke-width="1"/>
+      <!-- Fumaças -->
+      <ellipse class="smoke1" cx="393" cy="116" rx="5" ry="4" fill="rgba(180,200,220,.18)"/>
+      <ellipse class="smoke2" cx="395" cy="108" rx="4" ry="3" fill="rgba(180,200,220,.12)"/>
+      <ellipse class="smoke3" cx="392" cy="101" rx="3" ry="2.5" fill="rgba(180,200,220,.07)"/>
+      <!-- Farol dianteiro -->
+      <rect x="399" y="180" width="8" height="13" rx="2" fill="rgba(255,230,80,.2)" stroke="rgba(255,230,80,.6)" stroke-width="1"/>
+      <ellipse cx="395" cy="186" rx="22" ry="14" fill="url(#lHeadlight)"/>
+      <!-- Para-choque -->
+      <rect x="397" y="208" width="13" height="7" rx="1" fill="#091828" stroke="rgba(0,217,166,.3)" stroke-width=".8"/>
+      <!-- Placa -->
+      <rect x="391" y="201" width="22" height="9" rx="2" fill="rgba(255,255,255,.9)"/>
+      <text x="402" y="209" text-anchor="middle" fill="#0a1929" font-size="5.5" font-weight="800" font-family="Inter,Arial,sans-serif">RCV2A7</text>
+
+      <!-- RODAS CABINE -->
+      <g class="wheel-l">
+        <circle cx="373" cy="221" r="16" fill="#020810" stroke="#00d9a6" stroke-width="1.8"/>
+        <circle cx="373" cy="221" r="9"  fill="#060d1a" stroke="rgba(0,217,166,.4)" stroke-width="1.2"/>
+        <circle cx="373" cy="221" r="3.5" fill="#00d9a6" opacity=".8"/>
+        <line x1="373" y1="213" x2="373" y2="229" stroke="rgba(0,217,166,.35)" stroke-width="1.5"/>
+        <line x1="365" y1="221" x2="381" y2="221" stroke="rgba(0,217,166,.35)" stroke-width="1.5"/>
+        <line x1="368" y1="215" x2="378" y2="227" stroke="rgba(0,217,166,.2)" stroke-width="1"/>
+        <line x1="378" y1="215" x2="368" y2="227" stroke="rgba(0,217,166,.2)" stroke-width="1"/>
+      </g>
+      <!-- RODAS TRAILER -->
+      <g class="wheel-t1">
+        <circle cx="215" cy="221" r="16" fill="#020810" stroke="#00d9a6" stroke-width="1.8"/>
+        <circle cx="215" cy="221" r="9"  fill="#060d1a" stroke="rgba(0,217,166,.4)" stroke-width="1.2"/>
+        <circle cx="215" cy="221" r="3.5" fill="#00d9a6" opacity=".8"/>
+        <line x1="215" y1="213" x2="215" y2="229" stroke="rgba(0,217,166,.35)" stroke-width="1.5"/>
+        <line x1="207" y1="221" x2="223" y2="221" stroke="rgba(0,217,166,.35)" stroke-width="1.5"/>
+        <line x1="210" y1="215" x2="220" y2="227" stroke="rgba(0,217,166,.2)" stroke-width="1"/>
+        <line x1="220" y1="215" x2="210" y2="227" stroke="rgba(0,217,166,.2)" stroke-width="1"/>
+      </g>
+      <g class="wheel-t2">
+        <circle cx="258" cy="221" r="16" fill="#020810" stroke="#00d9a6" stroke-width="1.8"/>
+        <circle cx="258" cy="221" r="9"  fill="#060d1a" stroke="rgba(0,217,166,.4)" stroke-width="1.2"/>
+        <circle cx="258" cy="221" r="3.5" fill="#00d9a6" opacity=".8"/>
+        <line x1="258" y1="213" x2="258" y2="229" stroke="rgba(0,217,166,.35)" stroke-width="1.5"/>
+        <line x1="250" y1="221" x2="266" y2="221" stroke="rgba(0,217,166,.35)" stroke-width="1.5"/>
+        <line x1="253" y1="215" x2="263" y2="227" stroke="rgba(0,217,166,.2)" stroke-width="1"/>
+        <line x1="263" y1="215" x2="253" y2="227" stroke="rgba(0,217,166,.2)" stroke-width="1"/>
+      </g>
+      <!-- Brilho asfalto por reflexo dos faróis -->
+      <ellipse cx="380" cy="225" rx="40" ry="5" fill="rgba(255,230,80,.06)"/>
+    </g>
+
+    <!-- Glow geral do chão -->
+    <ellipse cx="200" cy="226" rx="190" ry="4" fill="rgba(0,217,166,.06)"/>
+  </svg>
+
+  <!-- ═══════════════ TEXTO DE BOAS-VINDAS ═══════════════ -->
+  <div style="text-align:center;padding:4px 16px 22px;max-width:400px;margin:0 auto;">
+    <div style="font-size:.72rem;font-weight:700;color:#00d9a6;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Portal do Motorista</div>
+    <div style="font-size:1.5rem;font-weight:800;color:#e2e8f0;line-height:1.2;">Bem-vindo de volta! 👋</div>
+    <div style="font-size:.8rem;color:rgba(255,255,255,.38);margin-top:6px;">Faça login para acessar suas viagens, checklists e despesas.</div>
+  </div>
+
+  <!-- ═══════════════ CARD DE LOGIN ═══════════════ -->
+  <div class="login-card-wrap">
+    <div class="login-card">
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="login-msg-error">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="login-card-header">
+        <div class="brand">COSTA DO DENDÊ</div>
+        <h1>Acesso do Motorista</h1>
+        <p>Entre com seu CPF e senha</p>
+      </div>
+
+      <form method="post" autocomplete="off">
         {% csrf_token %}
-        <div class="mp-field">
-            <label for="cpf">CPF</label>
-            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" inputmode="numeric" required autofocus>
+        <div class="login-field">
+          <label for="cpf">CPF</label>
+          <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" inputmode="numeric" required autofocus>
         </div>
-        <div class="mp-field">
-            <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
+        <div class="login-field">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
         </div>
-        <button type="submit" class="mp-btn mp-btn-primary mp-btn-block" style="margin-top:6px;">Entrar</button>
-    </form>
+        <button type="submit" class="login-submit">Entrar no Portal</button>
+      </form>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
 
