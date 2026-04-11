@@ -130,7 +130,7 @@
             {% endif %}
             <span style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.caminhao__placa }}</span>
           </div>
-          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#22c55e;">{% if item.viagens == 1 %}viagem{% else %}viagens{% endif %}</span></span>
+          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#a855f7;">{% if item.viagens == 1 %}viagem{% else %}viagens{% endif %}</span></span>
         </div>
       {% empty %}
         <p style="margin:0;color:var(--muted);">Sem viagens no período selecionado.</p>
@@ -165,7 +165,7 @@
             {% endif %}
             <span style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.motorista__nome }}</span>
           </div>
-          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#22c55e;">{% if item.viagens == 1 %}viagem{% else %}viagens{% endif %}</span></span>
+          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#a855f7;">{% if item.viagens == 1 %}viagem{% else %}viagens{% endif %}</span></span>
         </div>
       {% empty %}
         <p style="margin:0;color:var(--muted);">Sem viagens no período selecionado.</p>
@@ -174,10 +174,68 @@
   </div>
 </section>
 
-<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(50%,1fr));gap:14px;margin-bottom:24px;">
+<section style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;">
+  <!-- Frete Médio com Troféus -->
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    {% if top_frete_medio_produtos %}
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+        {% for item in top_frete_medio_produtos %}
+          {% if forloop.counter == 1 %}
+            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);border-radius:6px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#8b6f47;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#d4af37"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              {{ item.produto__nome }}
+            </span>
+          {% elif forloop.counter == 2 %}
+            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(192,192,192,.1);border:1px solid rgba(192,192,192,.3);border-radius:6px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#7a7a7a;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#c0c0c0"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              {{ item.produto__nome }}
+            </span>
+          {% elif forloop.counter == 3 %}
+            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(205,127,50,.1);border:1px solid rgba(205,127,50,.3);border-radius:6px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#a85a2a;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#cd7f32"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              {{ item.produto__nome }}
+            </span>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div style="min-height:400px;">{{ grafico_frete_medio|safe }}</div>
+  </div>
+
+  <!-- Volume por Posto com Troféus -->
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    {% if top_postos_volume %}
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+        {% for item in top_postos_volume %}
+          {% if forloop.counter == 1 %}
+            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);border-radius:6px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#8b6f47;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#d4af37"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              {{ item.caminhao__local_carregamento__nome }}
+            </span>
+          {% elif forloop.counter == 2 %}
+            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(192,192,192,.1);border:1px solid rgba(192,192,192,.3);border-radius:6px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#7a7a7a;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#c0c0c0"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              {{ item.caminhao__local_carregamento__nome }}
+            </span>
+          {% elif forloop.counter == 3 %}
+            <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(205,127,50,.1);border:1px solid rgba(205,127,50,.3);border-radius:6px;padding:4px 8px;font-size:.75rem;font-weight:700;color:#a85a2a;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#cd7f32"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              {{ item.caminhao__local_carregamento__nome }}
+            </span>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div style="min-height:400px;">{{ grafico_volume_posto|safe }}</div>
+  </div>
+</section>
+
+<section style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;">
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_cliente_produto|safe }}</div>
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_frete_medio|safe }}</div>
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_fornecedor|safe }}</div>
+</section>
+
+<section style="margin-bottom:24px;">
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_volume_fornecedor|safe }}</div>
 </section>
 

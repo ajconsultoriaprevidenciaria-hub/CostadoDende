@@ -1,3 +1,4 @@
+# Updated: fixed volume_por_posto query
 from datetime import date, datetime
 from decimal import Decimal
 
@@ -108,6 +109,9 @@ def build_dashboard_context(params):
     frete_medio_produto = list(
         queryset.values('produto__nome').annotate(frete_medio=Avg('valor_frete_litro')).order_by('-frete_medio')
     )
+    volume_por_posto = list(
+        queryset.values('caminhao__local_carregamento__nome').annotate(total_litros=Sum('litros')).order_by('-total_litros')
+    )
     tabela_relatorio = list(
         queryset.values('cliente__nome', 'produto__nome', 'fornecedor__nome').annotate(
             litros=Sum('litros'),
@@ -154,6 +158,18 @@ def build_dashboard_context(params):
     else:
         grafico_frete_medio = _empty_chart('Valor médio do frete por produto')
 
+    if volume_por_posto:
+        fig_volume_posto = px.bar(
+            volume_por_posto,
+            x='caminhao__local_carregamento__nome',
+            y='total_litros',
+            title='Volume de carregamento por posto',
+            labels={'caminhao__local_carregamento__nome': 'Posto', 'total_litros': 'Litros'},
+        )
+        grafico_volume_posto = _figure_to_html(fig_volume_posto)
+    else:
+        grafico_volume_posto = _empty_chart('Volume de carregamento por posto')
+
     if fornecedor_litros:
         fig_volume_fornecedor = px.bar(
             fornecedor_litros,
@@ -180,9 +196,12 @@ def build_dashboard_context(params):
         'total_postos_cadastrados': LocalCarregamento.objects.filter(ativo=True).count(),
         'viagens_por_caminhao': viagens_por_caminhao,
         'viagens_por_motorista': viagens_por_motorista,
+        'top_frete_medio_produtos': frete_medio_produto[:3],
+        'top_postos_volume': volume_por_posto[:3],
         'grafico_cliente_produto': grafico_cliente_produto,
         'grafico_fornecedor': grafico_fornecedor,
         'grafico_frete_medio': grafico_frete_medio,
+        'grafico_volume_posto': grafico_volume_posto,
         'grafico_volume_fornecedor': grafico_volume_fornecedor,
         'tabela_relatorio': tabela_relatorio,
         'hoje': date.today(),
