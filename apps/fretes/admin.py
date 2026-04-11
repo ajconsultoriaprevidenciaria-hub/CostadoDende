@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from django.urls import path, reverse
 from django.shortcuts import get_object_or_404, render
 from apps.motorista_portal.models import AbastecimentoViagem, ChecklistViagem
+from apps.dashboard.services import build_dashboard_context
 
 from .models import (
 	Caminhao,
@@ -21,6 +22,18 @@ from .models import (
 admin.site.site_header = 'Costa do Dendê | Administração'
 admin.site.site_title = 'Costa do Dendê'
 admin.site.index_title = 'Painel administrativo de fretes'
+
+
+_default_admin_index = admin.site.index
+
+
+def dashboard_admin_index(request, extra_context=None):
+	extra_context = extra_context or {}
+	extra_context.update(build_dashboard_context(request.GET))
+	return _default_admin_index(request, extra_context=extra_context)
+
+
+admin.site.index = dashboard_admin_index
 
 
 @admin.register(Compartimento)

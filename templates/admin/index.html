@@ -1,72 +1,217 @@
 {% extends "admin/base_site.html" %}
 {% load i18n log %}
 
-{% block title %}Painel de Cadastros | Costa do Dendê{% endblock %}
+{% block title %}Dashboard | Costa do Dendê{% endblock %}
 {% block coltype %}colM{% endblock %}
 {% block content_title %}{% endblock %}
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+{% endblock %}
 
 {% block content %}
-<div style="padding:4px 0;">
-
-  <!-- ── Boas-vindas ────────────────────────────────────────── -->
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px 30px;margin-bottom:28px;display:flex;align-items:center;gap:20px;overflow:hidden;position:relative;">
-    <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(0,217,166,.12) 0%,transparent 70%);pointer-events:none;"></div>
-    <div style="width:60px;height:60px;background:rgba(0,217,166,.1);border:1px solid rgba(0,217,166,.25);border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
+<section style="margin-bottom:22px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button type="button" class="js-quick-range" data-range="7" style="background:rgba(0,217,166,.1);color:var(--primary);border:1px solid rgba(0,217,166,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Últimos 7 dias</button>
+      <button type="button" class="js-quick-range" data-range="30" style="background:rgba(0,217,166,.1);color:var(--primary);border:1px solid rgba(0,217,166,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Últimos 30 dias</button>
+      <button type="button" class="js-quick-range" data-range="0" style="background:rgba(0,217,166,.1);color:var(--primary);border:1px solid rgba(0,217,166,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Hoje</button>
+      <button type="button" class="js-clear-filters" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Limpar filtros</button>
     </div>
-    <div style="flex:1;">
-      <p style="margin:0 0 3px;font-size:1.35rem;font-weight:800;color:var(--text);letter-spacing:-.01em;">Bem-vindo ao Painel de Cadastros</p>
-      <p style="margin:0;color:var(--muted);font-size:.86rem;">Use o <strong style="color:var(--primary);">menu à esquerda</strong> para navegar entre os cadastros da Rede Costa do Dendê.</p>
-    </div>
-    <div style="margin-left:auto;background:rgba(0,217,166,.08);border:1px solid rgba(0,217,166,.2);border-radius:12px;padding:10px 18px;text-align:center;flex-shrink:0;">
-      <p style="margin:0;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">Sistema</p>
-      <p style="margin:0;font-size:1.05rem;font-weight:800;color:var(--primary);">Admin</p>
+    <div style="display:flex;gap:8px;">
+      <button type="button" onclick="window.print()" style="background:rgba(59,130,246,.1);color:#3b82f6;border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Imprimir</button>
     </div>
   </div>
 
-  <!-- ── Ações Recentes ─────────────────────────────────────── -->
-  {% get_admin_log 10 as admin_log for_user user %}
-  {% if admin_log %}
-  <div style="margin-bottom:24px;">
-    <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 12px;">Suas ações recentes</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;">
-      {% for entry in admin_log %}
-      <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;transition:border-color .18s;"
-           onmouseover="this.style.borderColor='rgba(0,217,166,.3)'" onmouseout="this.style.borderColor='rgba(0,217,166,.14)'">
-        <div style="width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-          {% if entry.is_addition %}background:rgba(0,217,166,.1);border:1px solid rgba(0,217,166,.25);
-          {% elif entry.is_change %}background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);
-          {% else %}background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);{% endif %}">
-          {% if entry.is_addition %}
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          {% elif entry.is_change %}
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-          {% else %}
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-          {% endif %}
-        </div>
-        <div style="min-width:0;flex:1;">
-          {% if entry.is_deletion or not entry.get_admin_url %}
-          <p style="margin:0;font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ entry.object_repr }}</p>
-          {% else %}
-          <a href="{{ entry.get_admin_url }}" style="display:block;font-size:.8rem;font-weight:600;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;">{{ entry.object_repr }}</a>
-          {% endif %}
-          <p style="margin:2px 0 0;font-size:.67rem;color:var(--muted);">{{ entry.content_type.app_labeled_name }}</p>
-        </div>
-      </div>
-      {% endfor %}
+  <form method="get" id="form-dashboard-filtros" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:flex-end;">
+    <div>
+      <label for="data_inicial" style="display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:var(--muted);">Data inicial</label>
+      <input type="date" id="data_inicial" name="data_inicial" value="{{ filtros.data_inicial|date:'Y-m-d' }}" class="form-control" style="background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
     </div>
-  </div>
-  {% else %}
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;">
-    <p style="color:var(--muted);font-size:.88rem;margin:0;">Nenhuma ação recente. Selecione um item no menu à esquerda para começar.</p>
-  </div>
-  {% endif %}
+    <div>
+      <label for="data_final" style="display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:var(--muted);">Data final</label>
+      <input type="date" id="data_final" name="data_final" value="{{ filtros.data_final|date:'Y-m-d' }}" class="form-control" style="background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
+    </div>
+    <div>
+      <label for="cliente" style="display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:var(--muted);">Cliente</label>
+      <select id="cliente" name="cliente" class="form-select" style="background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
+        <option value="">Todos</option>
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}" {% if filtros.cliente == cliente.id|stringformat:'s' %}selected{% endif %}>{{ cliente.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="produto" style="display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:var(--muted);">Produto</label>
+      <select id="produto" name="produto" class="form-select" style="background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
+        <option value="">Todos</option>
+        {% for produto in produtos %}
+          <option value="{{ produto.id }}" {% if filtros.produto == produto.id|stringformat:'s' %}selected{% endif %}>{{ produto.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="fornecedor" style="display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:var(--muted);">Fornecedor</label>
+      <select id="fornecedor" name="fornecedor" class="form-select" style="background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
+        <option value="">Todos</option>
+        {% for fornecedor in fornecedores %}
+          <option value="{{ fornecedor.id }}" {% if filtros.fornecedor == fornecedor.id|stringformat:'s' %}selected{% endif %}>{{ fornecedor.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="rota" style="display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:var(--muted);">Rota</label>
+      <select id="rota" name="rota" class="form-select" style="background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
+        <option value="">Todas</option>
+        {% for rota in rotas %}
+          <option value="{{ rota.id }}" {% if filtros.rota == rota.id|stringformat:'s' %}selected{% endif %}>{{ rota.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <button type="submit" style="background:#00d9a6;color:#070d1a;border:none;border-radius:8px;padding:8px 16px;font-weight:600;cursor:pointer;font-size:.85rem;transition:all .2s;">Atualizar</button>
+    </div>
+  </form>
+  <div class="loading-note" id="loading-note" aria-live="polite" style="margin-top:8px;font-size:.8rem;color:var(--muted);"></div>
+</section>
 
-</div>
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;">
+  <article style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <span style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Total carregado</span>
+    <strong style="display:block;font-size:1.8rem;font-weight:900;color:#f59e0b;">{{ total_litros|floatformat:2 }} L</strong>
+  </article>
+  <article style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <span style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Faturamento total</span>
+    <strong style="display:block;font-size:1.8rem;font-weight:900;color:#10b981;">R$ {{ total_frete|floatformat:2 }}</strong>
+  </article>
+  <article style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <span style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Frete médio / litro</span>
+    <strong style="display:block;font-size:1.8rem;font-weight:900;color:#3b82f6;">R$ {{ frete_medio|floatformat:4 }}</strong>
+  </article>
+  <article style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <span style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Total de cargas</span>
+    <strong style="display:block;font-size:1.8rem;font-weight:900;color:#a855f7;">{{ quantidade_cargas }}</strong>
+  </article>
+</section>
+
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(50%,1fr));gap:14px;margin-bottom:24px;">
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_cliente_produto|safe }}</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_frete_medio|safe }}</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_fornecedor|safe }}</div>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;min-height:400px;">{{ grafico_volume_fornecedor|safe }}</div>
+</section>
+
+<section style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap;">
+    <h2 style="margin:0;font-size:1.2rem;font-weight:700;color:var(--text);">Relatório consolidado</h2>
+    <input type="text" id="busca-relatorio" class="form-control" placeholder="Buscar por cliente, produto ou fornecedor..." style="max-width:300px;background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
+  </div>
+  <div style="overflow-x:auto;">
+    <table id="tabela-relatorio" style="width:100%;border-collapse:collapse;font-size:.85rem;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:8px;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;">Cliente</th>
+          <th style="text-align:left;padding:8px;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;">Produto</th>
+          <th style="text-align:left;padding:8px;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;">Fornecedor</th>
+          <th style="text-align:right;padding:8px;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;">Cargas</th>
+          <th style="text-align:right;padding:8px;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;">Litros</th>
+          <th style="text-align:right;padding:8px;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;">Frete médio</th>
+          <th style="text-align:right;padding:8px;font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;">Frete total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in tabela_relatorio %}
+          <tr style="border-bottom:1px solid rgba(0,217,166,.08);">
+            <td style="padding:8px;color:var(--text);">{{ item.cliente__nome }}</td>
+            <td style="padding:8px;color:var(--text);">{{ item.produto__nome }}</td>
+            <td style="padding:8px;color:var(--text);">{{ item.fornecedor__nome }}</td>
+            <td style="padding:8px;text-align:right;color:var(--text);">{{ item.cargas }}</td>
+            <td style="padding:8px;text-align:right;color:var(--text);">{{ item.litros|floatformat:2 }}</td>
+            <td style="padding:8px;text-align:right;color:var(--primary);">R$ {{ item.frete_medio|floatformat:4 }}</td>
+            <td style="padding:8px;text-align:right;color:var(--primary);">R$ {{ item.frete_total|floatformat:2 }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" style="padding:20px;text-align:center;color:var(--muted);">Sem registros para o período selecionado.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const form = document.getElementById('form-dashboard-filtros');
+    const loadingNote = document.getElementById('loading-note');
+    const filterFields = form ? form.querySelectorAll('select, input[type="date"]') : [];
+    let submitTimeout;
+
+    function submitWithFeedback() {
+      if (!form) return;
+      if (loadingNote) {
+        loadingNote.textContent = 'Atualizando dashboard...';
+      }
+      form.submit();
+    }
+
+    filterFields.forEach((field) => {
+      field.addEventListener('change', () => {
+        clearTimeout(submitTimeout);
+        submitTimeout = setTimeout(submitWithFeedback, 250);
+      });
+    });
+
+    const quickButtons = document.querySelectorAll('.js-quick-range');
+    const clearButton = document.querySelector('.js-clear-filters');
+    const dataInicial = document.getElementById('data_inicial');
+    const dataFinal = document.getElementById('data_final');
+
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    quickButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const range = Number(button.dataset.range || '0');
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(today.getDate() - range);
+        if (dataInicial) dataInicial.value = formatDate(start);
+        if (dataFinal) dataFinal.value = formatDate(today);
+        submitWithFeedback();
+      });
+    });
+
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        if (!form) return;
+        form.querySelectorAll('select').forEach((select) => {
+          select.value = '';
+        });
+        if (dataInicial) dataInicial.value = '';
+        if (dataFinal) dataFinal.value = '';
+        submitWithFeedback();
+      });
+    }
+
+    const searchInput = document.getElementById('busca-relatorio');
+    const table = document.getElementById('tabela-relatorio');
+    if (searchInput && table) {
+      searchInput.addEventListener('input', () => {
+        const term = searchInput.value.trim().toLowerCase();
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach((row) => {
+          const text = row.innerText.toLowerCase();
+          row.style.display = text.includes(term) ? '' : 'none';
+        });
+      });
+    }
+  })();
+</script>
 {% endblock %}
 
 {% block sidebar %}{% endblock %}
