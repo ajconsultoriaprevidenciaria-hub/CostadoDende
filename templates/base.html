@@ -90,13 +90,6 @@
 
             <p class="menu-section-label">Menu</p>
             <nav class="menu">
-                <a href="{% url 'dashboard:index' %}" class="{% if request.path|slice:':11' == '/dashboard/' %}active{% endif %}">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-                    </svg>
-                    Dashboard
-                </a>
                 <a href="{% url 'fretes:carga-list' %}" class="{% if request.path|slice:':9' == '/operacao' %}active{% endif %}">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
