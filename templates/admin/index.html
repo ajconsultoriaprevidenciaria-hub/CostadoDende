@@ -92,6 +92,86 @@
     <span style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Total de cargas</span>
     <strong style="display:block;font-size:1.8rem;font-weight:900;color:#a855f7;">{{ quantidade_cargas }}</strong>
   </article>
+  <article style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <span style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Motoristas cadastrados</span>
+    <strong style="display:block;font-size:1.8rem;font-weight:900;color:#22d3ee;">{{ total_motoristas }}</strong>
+  </article>
+  <article style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <span style="display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;">Postos cadastrados</span>
+    <strong style="display:block;font-size:1.8rem;font-weight:900;color:#fb7185;">{{ total_postos_cadastrados }}</strong>
+  </article>
+</section>
+
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-bottom:24px;">
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <h3 style="margin:0 0 14px 0;font-size:1rem;font-weight:800;color:var(--text);">Viagens por caminhão</h3>
+    <div style="display:grid;gap:8px;">
+      {% for item in viagens_por_caminhao %}
+        <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,217,166,.06);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:10px 12px;">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+            {% if forloop.counter == 1 %}
+              <span style="display:inline-flex;align-items:center;color:#d4af37;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% elif forloop.counter == 2 %}
+              <span style="display:inline-flex;align-items:center;color:#c0c0c0;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% elif forloop.counter == 3 %}
+              <span style="display:inline-flex;align-items:center;color:#cd7f32;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% elif forloop.counter == 4 %}
+              <span style="display:inline-flex;align-items:center;color:#8b5a2b;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% else %}
+              <span style="font-size:1rem;">😞</span>
+            {% endif %}
+            <span style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.caminhao__placa }}</span>
+          </div>
+          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} viagem{% if item.viagens != 1 %}ens{% endif %}</span>
+        </div>
+      {% empty %}
+        <p style="margin:0;color:var(--muted);">Sem viagens no período selecionado.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <h3 style="margin:0 0 14px 0;font-size:1rem;font-weight:800;color:var(--text);">Viagens por motorista</h3>
+    <div style="display:grid;gap:8px;">
+      {% for item in viagens_por_motorista %}
+        <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,217,166,.06);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:10px 12px;">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+            {% if forloop.counter == 1 %}
+              <span style="display:inline-flex;align-items:center;color:#d4af37;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% elif forloop.counter == 2 %}
+              <span style="display:inline-flex;align-items:center;color:#c0c0c0;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% elif forloop.counter == 3 %}
+              <span style="display:inline-flex;align-items:center;color:#cd7f32;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% elif forloop.counter == 4 %}
+              <span style="display:inline-flex;align-items:center;color:#8b5a2b;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2H6v2H3v3c0 2.2 1.8 4 4 4h.2A5 5 0 0 0 11 13.9V17H8v2h8v-2h-3v-3.1A5 5 0 0 0 16.8 11H17c2.2 0 4-1.8 4-4V4h-3V2zM5 7V6h1v2.6A2 2 0 0 1 5 7zm14 0a2 2 0 0 1-1 1.6V6h1v1z"/></svg>
+              </span>
+            {% else %}
+              <span style="font-size:1rem;">😞</span>
+            {% endif %}
+            <span style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.motorista__nome }}</span>
+          </div>
+          <span style="color:var(--primary);font-weight:800;">{{ item.viagens }} viagem{% if item.viagens != 1 %}ens{% endif %}</span>
+        </div>
+      {% empty %}
+        <p style="margin:0;color:var(--muted);">Sem viagens no período selecionado.</p>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
 <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(50%,1fr));gap:14px;margin-bottom:24px;">

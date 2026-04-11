@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from django.db.models import Avg, Count, Sum
 
-from apps.fretes.models import Carga, Cliente, Fornecedor, Produto, Rota
+from apps.fretes.models import Carga, Cliente, Fornecedor, LocalCarregamento, Motorista, Produto, Rota
 
 
 COLORWAY = ['#0f766e', '#f59e0b', '#1d4ed8', '#7c3aed', '#dc2626']
@@ -81,6 +81,13 @@ def get_filtered_cargas(params):
 
 def build_dashboard_context(params):
     queryset, filtros = get_filtered_cargas(params)
+
+    viagens_por_caminhao = list(
+        queryset.values('caminhao__placa').annotate(viagens=Count('id')).order_by('-viagens', 'caminhao__placa')
+    )
+    viagens_por_motorista = list(
+        queryset.values('motorista__nome').annotate(viagens=Count('id')).order_by('-viagens', 'motorista__nome')
+    )
 
     metricas = queryset.aggregate(
         total_litros=Sum('litros'),
@@ -169,6 +176,10 @@ def build_dashboard_context(params):
         'total_frete': metricas['total_frete'] or Decimal('0.00'),
         'frete_medio': metricas['frete_medio'] or Decimal('0.00'),
         'quantidade_cargas': metricas['quantidade_cargas'] or 0,
+        'total_motoristas': Motorista.objects.filter(ativo=True).count(),
+        'total_postos_cadastrados': LocalCarregamento.objects.filter(ativo=True).count(),
+        'viagens_por_caminhao': viagens_por_caminhao,
+        'viagens_por_motorista': viagens_por_motorista,
         'grafico_cliente_produto': grafico_cliente_produto,
         'grafico_fornecedor': grafico_fornecedor,
         'grafico_frete_medio': grafico_frete_medio,
