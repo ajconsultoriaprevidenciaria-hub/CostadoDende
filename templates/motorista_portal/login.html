@@ -397,7 +397,7 @@
   function drawDust(){dust.forEach(d=>{ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fillStyle=`rgba(${d.color},${d.life*.32})`;ctx.fill();});}
 
   /* ─── CAMINHÃO ───────────────────────────────────── */
-  function drawTruck(pr,ph){
+  function drawTruck(pr,ph,variant=0){
     if(pr<0||pr>0.97) return;
     const pts=roadPts(),pos=iRoad(pts,pr);
     const sc2=pos.w/(W*.16+.001);
@@ -412,34 +412,56 @@
     }
     ctx.save(); ctx.translate(pos.x,pos.y); ctx.rotate(pos.ang); ctx.scale(1,-1);
     const cw=tw*.53,trW=tw*.98,trH=th*.88;
-    const bC=LC([255,120,0],[210,70,0],ph*.5),bCS=LC([255,180,40],[235,95,20],ph*.5);
-    const cabC=LC([0,160,255],[0,110,220],ph*.5),acC=LC([0,230,118],[0,190,95],ph*.4);
+    const palettes = [
+      { tank1:[178,230,255], tank2:[85,176,238], tankBand:[215,244,255], cab1:[45,126,228], cab2:[22,86,185], accent:[255,150,38], stripe:[92,176,236] }
+    ];
+    const p = palettes[variant % palettes.length];
+    const tankC=LC(p.tank1,p.tank2,ph*.5),tankHL=LC(p.tankBand,p.tank1,ph*.45);
+    const cabC=LC(p.cab1,p.cab2,ph*.5),acC=LC(p.accent,[210,110,20],ph*.4);
     // sombra
     ctx.fillStyle='rgba(0,0,0,.4)';
-    ctx.beginPath(); ctx.roundRect(-trW*.5+3,-trH*.4+5,trW,trH,3*sc2); ctx.fill();
-    // trailer
-    const tg=ctx.createLinearGradient(0,-trH*.5,0,trH*.4);
-    tg.addColorStop(0,C(bCS)); tg.addColorStop(.5,C(bC)); tg.addColorStop(1,C(LC(bC,[0,0,0],.55)));
-    ctx.fillStyle=tg; ctx.beginPath(); ctx.roundRect(-trW*.5,-trH*.46,trW,trH,3*sc2); ctx.fill();
-    ctx.fillStyle=C(acC,.88); ctx.fillRect(-trW*.5,-trH*.46,trW,4*sc2);
-    ctx.fillStyle=`rgba(255,200,50,${.18+ph*.08})`; ctx.fillRect(-trW*.5,trH*.28,trW,3.5*sc2);
-    ctx.save(); ctx.fillStyle=C(acC,.72); ctx.font=`bold ${Math.max(5,11*sc2)}px Inter,Arial,sans-serif`;
-    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('COSTA DO DEND\u00CA',-trW*.07,-trH*.05); ctx.restore();
-    // cabine
+    ctx.beginPath(); ctx.roundRect(-trW*.62+3,-trH*.42+5,trW*1.26,trH*1.02,3*sc2); ctx.fill();
+    // tanque cilíndrico
+    const tankW=trW*1.04, tankH=trH*.82, tankX=-trW*.52, tankY=-trH*.40;
+    const tg=ctx.createLinearGradient(0,tankY,0,tankY+tankH);
+    tg.addColorStop(0,C(tankHL)); tg.addColorStop(.45,C(tankC)); tg.addColorStop(1,C(LC(tankC,[0,0,0],.35)));
+    ctx.fillStyle=tg;
+    ctx.beginPath();
+    ctx.roundRect(tankX,tankY,tankW,tankH,tankH*.5);
+    ctx.fill();
+    // faixa superior do tanque
+    ctx.fillStyle=`rgba(${p.tankBand[0]},${p.tankBand[1]},${p.tankBand[2]},${.75-ph*.18})`;
+    ctx.beginPath();
+    ctx.roundRect(tankX+tankW*.14,tankY+tankH*.16,tankW*.70,tankH*.18,tankH*.18);
+    ctx.fill();
+    // faixa lateral colorida
+    ctx.fillStyle=`rgba(${p.stripe[0]},${p.stripe[1]},${p.stripe[2]},${.82-ph*.12})`;
+    ctx.beginPath();
+    ctx.roundRect(tankX+tankW*.06,tankY+tankH*.56,tankW*.88,tankH*.10,tankH*.08);
+    ctx.fill();
+    // cabine estilo ilustração
     const cabX=trW*.48,ctY=-th*.55;
     ctx.beginPath();
     ctx.moveTo(cabX,trH*.4); ctx.lineTo(cabX,ctY+th*.12); ctx.lineTo(cabX+cw*.25,ctY+th*.05);
     ctx.lineTo(cabX+cw*.72,ctY); ctx.lineTo(cabX+cw*1.06,ctY+th*.2); ctx.lineTo(cabX+cw*1.06,trH*.4); ctx.closePath();
     const cg=ctx.createLinearGradient(cabX,ctY,cabX+cw,ctY+th);
-    cg.addColorStop(0,C(bCS)); cg.addColorStop(.55,C(cabC)); cg.addColorStop(1,C(LC(cabC,[0,0,0],.6)));
+    cg.addColorStop(0,C(LC(cabC,[255,255,255],.18))); cg.addColorStop(.55,C(cabC)); cg.addColorStop(1,C(LC(cabC,[0,0,0],.55)));
     ctx.fillStyle=cg; ctx.fill(); ctx.strokeStyle=C(acC,.5); ctx.lineWidth=sc2; ctx.stroke();
     // para-brisa
     ctx.beginPath();
     ctx.moveTo(cabX+cw*.14,ctY+th*.1); ctx.lineTo(cabX+cw*.68,ctY+th*.04);
     ctx.lineTo(cabX+cw*1.0,ctY+th*.22); ctx.lineTo(cabX+cw*.14,ctY+th*.33); ctx.closePath();
     const wg=ctx.createLinearGradient(cabX,ctY,cabX+cw,ctY+th*.3);
-    wg.addColorStop(0,`rgba(120,200,255,${.13+(1-ph)*.18})`); wg.addColorStop(1,'rgba(60,100,200,.04)');
+    wg.addColorStop(0,`rgba(130,205,255,${.25+(1-ph)*.2})`); wg.addColorStop(1,'rgba(45,90,180,.08)');
     ctx.fillStyle=wg; ctx.fill();
+    // grade frontal
+    ctx.fillStyle='rgba(35,40,48,.95)';
+    ctx.beginPath(); ctx.roundRect(cabX+cw*.05,ctY+th*.30,cw*.22,th*.27,2*sc2); ctx.fill();
+    ctx.strokeStyle='rgba(95,105,120,.9)';
+    for(let gi=0;gi<3;gi++){
+      const gy=ctY+th*(.35+gi*.08);
+      ctx.beginPath(); ctx.moveTo(cabX+cw*.08,gy); ctx.lineTo(cabX+cw*.24,gy); ctx.stroke();
+    }
     // farol LED
     const hla=.4+ph*.5;
     ctx.fillStyle=`rgba(255,230,120,${hla})`;
@@ -458,6 +480,8 @@
     // para-choque
     ctx.fillStyle=C(LC([40,50,60],[15,18,22],ph));
     ctx.beginPath(); ctx.roundRect(cabX+cw*.82,trH*.3,cw*.24,th*.12,2*sc2); ctx.fill();
+    ctx.fillStyle=C(acC,.95);
+    ctx.beginPath(); ctx.roundRect(cabX+cw*.72,trH*.26,cw*.18,th*.10,2*sc2); ctx.fill();
     // placa
     ctx.fillStyle='rgba(240,240,240,.92)'; ctx.beginPath(); ctx.roundRect(cabX+cw*.84,trH*.22,cw*.19,th*.09,1.5*sc2); ctx.fill();
     ctx.fillStyle='rgba(0,10,80,.9)'; ctx.font=`bold ${Math.max(4,7*sc2)}px monospace`;
@@ -515,7 +539,7 @@
       if(Math.random()<.28) spawnDust(pos2.x,pos2.y+8,pos2.w*.38);
     }
     updateDust(); drawDust();
-    if(truck.progress>0) drawTruck(truck.progress,ph);
+    if(truck.progress>0) drawTruck(truck.progress,ph,0);
     if(truck.progress>.95){
       ctx.fillStyle=`rgba(255,255,255,${((truck.progress-.95)/.05)*.07})`;
       ctx.fillRect(0,0,W,H);
