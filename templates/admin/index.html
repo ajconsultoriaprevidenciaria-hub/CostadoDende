@@ -7,9 +7,60 @@
 {% block extrahead %}
 {{ block.super }}
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root {
+    --panel: #ffffff;
+    --border: #e5e7eb;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --primary: #00d9a6;
+  }
+
+  [data-theme="dark"] {
+    --panel: #1f2937;
+    --border: #374151;
+    --text: #f3f4f6;
+    --muted: #d1d5db;
+    --primary: #10b981;
+  }
+
+  [data-theme="vibrant"] {
+    --panel: #ffffff;
+    --border: #db2777;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --primary: #db2777;
+  }
+
+  [data-theme="pastel"] {
+    --panel: #faf9f7;
+    --border: #f0e6d2;
+    --text: #5d4e4a;
+    --muted: #9a8880;
+    --primary: #ff9a8d;
+  }
+
+  [data-theme="ocean"] {
+    --panel: #e0f7ff;
+    --border: #7dd3fc;
+    --text: #0c4a6e;
+    --muted: #0369a1;
+    --primary: #0284c7;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
+<div style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;">
+  <select id="color-palette" style="background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-weight:600;font-size:.85rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1);">
+    <option value="default">Paleta Padrão</option>
+    <option value="dark">Escuro</option>
+    <option value="vibrant">Vibrante</option>
+    <option value="pastel">Pastel</option>
+    <option value="ocean">Oceano</option>
+  </select>
+</div>
+
 <section style="margin-bottom:22px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap;">
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -348,6 +399,23 @@
         });
       });
     }
+
+    // Gerenciar Paleta de Cores
+    const palettSelector = document.getElementById('color-palette');
+    const savedPalette = localStorage.getItem('dashboard-palette') || 'default';
+    
+    function applyPalette(palette) {
+      document.documentElement.setAttribute('data-theme', palette === 'default' ? '' : palette);
+      localStorage.setItem('dashboard-palette', palette);
+      palettSelector.value = palette;
+    }
+
+    applyPalette(savedPalette);
+    
+    palettSelector.addEventListener('change', (e) => {
+      applyPalette(e.target.value);
+      location.reload();
+    });
   })();
 </script>
 {% endblock %}
