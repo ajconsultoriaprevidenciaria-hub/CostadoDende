@@ -1,6 +1,7 @@
 {% extends "motorista_portal/base.html" %}
+{% load static %}
 
-{% block title %}Portal do Motorista | Costa do Dendê{% endblock %}
+{% block title %}Portal do Motorista | Gonçalves &amp; Fonseca{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -90,18 +91,8 @@
 
 <div class="login-overlay">
   <div class="login-card">
-    <div class="card-logo">
-      <div class="card-logo-dot">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#03100c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="1" y="3" width="15" height="13"/>
-          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-          <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-        </svg>
-      </div>
-      <div class="card-logo-text">
-        <strong>COSTA DO DEND&Ecirc;</strong>
-        <span>Portal do Motorista</span>
-      </div>
+    <div class="card-logo" style="justify-content:center; margin-bottom:22px;">
+      <img src="{% static 'img/logo_gf_white.png' %}" alt="Gonçalves &amp; Fonseca Transportadora" style="height:120px; width:auto;">
     </div>
 
     {% if messages %}

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.fretes.models import Carga, Cliente, Motorista
@@ -280,5 +281,19 @@ def despesa_detalhe(request, pk):
     despesa = get_object_or_404(DespesaViagem, pk=pk, motorista=motorista)
     return render(request, 'motorista_portal/despesa_detalhe.html', {
         'despesa': despesa,
+    })
+
+
+# ── Quadro de Avisos (API JSON) ──────────────────────────────
+
+@login_required(login_url='motorista_portal:login')
+def quadro_avisos_api(request):
+    from .services import obter_noticias, obter_previsao_tempo
+
+    tempo = obter_previsao_tempo()
+    noticias = obter_noticias()
+    return JsonResponse({
+        'tempo': tempo,
+        'noticias': noticias or [],
     })
 

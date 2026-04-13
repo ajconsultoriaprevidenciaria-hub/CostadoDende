@@ -242,6 +242,42 @@
             font-size: .78rem;
             padding: 24px 0;
         }
+        /* ── Ticker ── */
+        .mp-ticker-wrap {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+            height: 32px;
+            margin-bottom: 16px;
+        }
+        .mp-ticker-track {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            height: 100%;
+            animation: ticker-scroll 40s linear infinite;
+            gap: 40px;
+            padding-left: 100%;
+        }
+        .mp-ticker-track:hover { animation-play-state: paused; }
+        @keyframes ticker-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .mp-ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .68rem;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+        .mp-ticker-item .tk-icon { font-size: .85rem; }
+        .mp-ticker-item .tk-label { color: var(--primary); font-weight: 700; }
+        .mp-ticker-item .tk-sep { color: var(--border); margin: 0 4px; }
+        .mp-ticker-news { color: var(--text-sec); }
+        .mp-ticker-news:hover { color: var(--text); }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -250,8 +286,7 @@
         {% block topbar %}
         <div class="mp-topbar">
             <div>
-                <div class="brand-name">COSTA DO DENDÊ</div>
-                <div class="brand-sub">Portal do Motorista</div>
+                <img src="{% static 'img/logo_gf_white.png' %}" alt="Gonçalves &amp; Fonseca Transportadora" style="height:72px; width:auto;">
             </div>
             {% if request.user.is_authenticated %}
             <div class="mp-topbar-right">
@@ -261,6 +296,15 @@
             {% endif %}
         </div>
         {% endblock %}
+
+        {# ── Ticker de avisos ── #}
+        {% if request.user.is_authenticated %}
+        <div class="mp-ticker-wrap" id="mp-ticker">
+            <div class="mp-ticker-track" id="mp-ticker-track">
+                <span class="mp-ticker-item" style="color:var(--text-sec);">Carregando informações...</span>
+            </div>
+        </div>
+        {% endif %}
 
         {% if messages %}
         <div class="mp-messages">
@@ -273,5 +317,44 @@
         {% block content %}{% endblock %}
     </div>
     {% block extra_js %}{% endblock %}
+    {% if request.user.is_authenticated %}
+    <script>
+    (function() {
+        var track = document.getElementById('mp-ticker-track');
+        if (!track) return;
+        fetch("{% url 'motorista_portal:quadro-avisos-api' %}", {credentials:'same-origin'})
+            .then(function(r){ return r.json(); })
+            .then(function(data) {
+                var items = [];
+                var t = data.tempo;
+                if (t) {
+                    items.push('<span class="mp-ticker-item"><span class="tk-icon">' + t.icone + '</span><span class="tk-label">CLIMA</span> ' + t.temperatura + '°C · ' + t.descricao + ' · Vento ' + t.vento + 'km/h</span>');
+                    (t.proximos_dias||[]).forEach(function(d){
+                        items.push('<span class="mp-ticker-item">' + d.icone + ' ' + d.dia_semana + ' ' + d.data + ' ' + d.max + '°/' + d.min + '°</span>');
+                    });
+                }
+                if (data.noticias && data.noticias.length) {
+                    items.push('<span class="mp-ticker-item"><span class="tk-label">📰 NOTÍCIAS</span></span>');
+                    data.noticias.forEach(function(n){
+                        var safe = document.createElement('span');
+                        safe.textContent = n.titulo;
+                        items.push('<span class="mp-ticker-item mp-ticker-news">▸ ' + safe.innerHTML + '</span>');
+                    });
+                }
+                if (items.length) {
+                    // Duplicar itens para loop contínuo sem espaço vazio
+                    var html = items.join('') + items.join('');
+                    track.innerHTML = html;
+                    // Ajustar velocidade: ~50px/s
+                    var w = track.scrollWidth / 2;
+                    var dur = Math.max(w / 50, 20);
+                    track.style.animation = 'ticker-scroll ' + dur + 's linear infinite';
+                    track.style.paddingLeft = '480px';
+                }
+            })
+            .catch(function(){ track.innerHTML = '<span class="mp-ticker-item" style="color:var(--text-sec);">Avisos indisponíveis</span>'; });
+    })();
+    </script>
+    {% endif %}
 </body>
 </html>

@@ -223,6 +223,34 @@ body {
 /* ── Mobile nav ──────────────────────────────────────────── */
 .mobile-menu { display: none; }
 
+/* ── Auth layout (sem sidebar) ───────────────────────────── */
+body.auth-layout .layout-shell {
+    grid-template-columns: 1fr;
+    background:
+        radial-gradient(1200px 500px at 15% -10%, rgba(0,217,166,.08), transparent 60%),
+        radial-gradient(900px 420px at 85% -15%, rgba(59,130,246,.08), transparent 58%),
+        linear-gradient(180deg, #050c17 0%, #0b1422 100%);
+}
+
+body.auth-layout .auth-content {
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+}
+
+body.auth-layout .auth-panel {
+    width: 100%;
+    max-width: 460px;
+    border-radius: 22px;
+    border: 1px solid rgba(0,217,166,.22);
+    box-shadow: 0 24px 70px rgba(0,0,0,.5), 0 0 0 1px rgba(0,217,166,.05) inset;
+}
+
 /* ── Panels ──────────────────────────────────────────────── */
 .panel {
     background: var(--panel);

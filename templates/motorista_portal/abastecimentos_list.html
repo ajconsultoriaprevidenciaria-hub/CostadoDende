@@ -1,0 +1,27 @@
+{% extends "motorista_portal/base.html" %}
+{% block title %}Abastecimentos por Posto{% endblock %}
+{% block content %}
+<h2 style="font-size:1.1rem; font-weight:800; margin-bottom:18px;">Abastecimentos por Posto</h2>
+<table style="width:100%; background:var(--panel); border-radius:12px; border:1px solid var(--border);">
+    <thead>
+        <tr style="color:var(--primary); font-size:.92rem;">
+            <th style="text-align:left; padding:10px 8px;">Posto</th>
+            <th style="text-align:right; padding:10px 8px;">Total Litros</th>
+            <th style="text-align:right; padding:10px 8px;">Nº Abastecimentos</th>
+            <th style="text-align:right; padding:10px 8px;">Valor Total (R$)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in postos %}
+        <tr style="border-top:1px solid var(--border);">
+            <td style="padding:8px 8px;">{{ p.posto }}</td>
+            <td style="padding:8px 8px; text-align:right;">{{ p.total_litros|floatformat:2 }}</td>
+            <td style="padding:8px 8px; text-align:right;">{{ p.total_abastecimentos }}</td>
+            <td style="padding:8px 8px; text-align:right;">{{ p.total_valor|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="text-align:center; color:var(--text-sec); padding:18px;">Nenhum abastecimento registrado.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
