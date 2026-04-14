@@ -1,0 +1,139 @@
+{% load i18n admin_urls static admin_modify %}
+<div class="js-inline-admin-formset inline-group" id="{{ inline_admin_formset.formset.prefix }}-group"
+     data-inline-type="tabular"
+     data-inline-formset="{{ inline_admin_formset.inline_formset_data }}">
+  <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
+{{ inline_admin_formset.formset.management_form }}
+<fieldset class="module {{ inline_admin_formset.classes }}" aria-labelledby="{{ inline_admin_formset.formset.prefix }}-heading">
+   <h2 id="{{ inline_admin_formset.formset.prefix }}-heading">{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
+   {{ inline_admin_formset.formset.non_form_errors }}
+
+   {# ── HEADER ── #}
+   <div class="cpt-hdr">
+     <span class="cpt-hdr-id">Compartimento</span>
+     <span class="cpt-hdr-cap">Capacidade Litros</span>
+     <span class="cpt-hdr-act">Ações</span>
+   </div>
+
+   {# ── ROWS ── #}
+   {% for inline_admin_form in inline_admin_formset %}
+   <div class="cpt-row {% if forloop.last and inline_admin_formset.has_add_permission %}empty-form{% endif %}"
+        id="{{ inline_admin_formset.formset.prefix }}-{% if forloop.last and inline_admin_formset.has_add_permission %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
+
+     {# hidden fields #}
+     {% if inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+     {% if inline_admin_form.fk_field %}{{ inline_admin_form.fk_field.field }}{% endif %}
+
+     {# COL 1 — Placa Mercosul + Comp Nº #}
+     <div class="cpt-id">
+       <div class="cpt-placa {% if not inline_admin_form.original %}cpt-placa--new{% endif %}">
+         <span class="cpt-placa-bar">BRASIL</span>
+         <span class="cpt-placa-num">{% if inline_admin_form.original %}{{ inline_admin_form.original.caminhao.placa|upper }}{% else %}—{% endif %}</span>
+       </div>
+       {% if inline_admin_form.original %}
+         <span class="cpt-comp-num">Comp. {{ inline_admin_form.original.numero }}</span>
+       {% endif %}
+       {# numero field hidden for existing, visible for new #}
+       {% for fieldset in inline_admin_form %}{% for line in fieldset %}{% for field in line %}{% if field.field.name == 'numero' %}
+         <div class="cpt-nf {% if inline_admin_form.original %}cpt-nf--hide{% endif %}">{{ field.field }}</div>
+       {% endif %}{% endfor %}{% endfor %}{% endfor %}
+     </div>
+
+     {# COL 2 — Capacidade Litros #}
+     <div class="cpt-cap">
+       {% for fieldset in inline_admin_form %}{% for line in fieldset %}{% for field in line %}{% if field.field.name == 'capacidade_litros' %}
+         <div class="cpt-cap-wrap">{{ field.field }}<span class="cpt-cap-l">L</span></div>
+         {{ field.field.errors.as_ul }}
+       {% endif %}{% endfor %}{% endfor %}{% endfor %}
+     </div>
+
+     {# COL 3 — Ações #}
+     <div class="cpt-act">
+       {% if inline_admin_form.original %}
+         {% if inline_admin_formset.formset.can_delete and inline_admin_formset.has_delete_permission %}
+           {{ inline_admin_form.deletion_field.field }}
+           <a href="{% url inline_admin_form.model_admin.opts|admin_urlname:'delete' inline_admin_form.original.pk|admin_urlquote %}" class="cpt-del">Excluir</a>
+         {% endif %}
+         {% if inline_admin_form.model_admin.show_change_link and inline_admin_form.model_admin.has_registered_model %}
+           <a href="{% url inline_admin_form.model_admin.opts|admin_urlname:'change' inline_admin_form.original.pk|admin_urlquote %}" class="cpt-edit">Editar</a>
+         {% endif %}
+       {% else %}
+         <a href="#" class="cpt-del cpt-del-new">Excluir</a>
+         <span class="cpt-edit cpt-edit--disabled">Editar</span>
+       {% endif %}
+     </div>
+   </div>
+   {% endfor %}
+
+   {# ── ADD BUTTON ── #}
+   <div class="cpt-add">
+     <a href="#" id="{{ inline_admin_formset.formset.prefix }}-add-link">+ Adicionar Compartimento</a>
+   </div>
+</fieldset>
+  </div>
+</div>
+
+<script>
+(function(){
+  var pfx='{{ inline_admin_formset.formset.prefix }}';
+  var btn=document.getElementById(pfx+'-add-link');
+  if(!btn)return;
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    var total=document.getElementById('id_'+pfx+'-TOTAL_FORMS');
+    var empty=document.getElementById(pfx+'-empty');
+    if(!total||!empty)return;
+    var i=parseInt(total.value);
+    var row=empty.cloneNode(true);
+    row.id=pfx+'-'+i;
+    row.className=row.className.replace('empty-form','');
+    row.style.display='';
+    row.innerHTML=row.innerHTML.replace(/__prefix__/g,i);
+    var hf=row.querySelector('.cpt-nf--hide');
+    if(hf)hf.classList.remove('cpt-nf--hide');
+    var ni=row.querySelector('input[name$="-numero"]');
+    if(ni)ni.value=i+1;
+    /* espelhar placa no novo row */
+    var placaInput=document.getElementById('id_placa');
+    if(placaInput){
+      var pn=row.querySelector('.cpt-placa-num');
+      if(pn) pn.textContent=placaInput.value.toUpperCase()||'—';
+    }
+    /* bind excluir no novo row — remove a linha */
+    var delBtn=row.querySelector('.cpt-del-new');
+    if(delBtn){
+      delBtn.addEventListener('click',function(ev){
+        ev.preventDefault();
+        row.remove();
+        var t=document.getElementById('id_'+pfx+'-TOTAL_FORMS');
+        if(t) t.value=parseInt(t.value)-1;
+      });
+    }
+    empty.parentNode.insertBefore(row,empty);
+    total.value=i+1;
+  });
+
+  /* ── Espelhar placa do campo superior em todos os badges ── */
+  var placaInput=document.getElementById('id_placa');
+  if(placaInput){
+    function syncPlaca(){
+      var v=placaInput.value.toUpperCase().replace(/[-\s]/g,'');
+      document.querySelectorAll('.cpt-row:not(.empty-form) .cpt-placa-num').forEach(function(el){
+        el.textContent=v||'—';
+      });
+    }
+    placaInput.addEventListener('input',syncPlaca);
+  }
+
+  /* ── Bind excluir nos rows novos já renderizados (extra=1) ── */
+  document.querySelectorAll('.cpt-del-new').forEach(function(delBtn){
+    delBtn.addEventListener('click',function(ev){
+      ev.preventDefault();
+      var row=delBtn.closest('.cpt-row');
+      if(row) row.remove();
+      var t=document.getElementById('id_'+pfx+'-TOTAL_FORMS');
+      if(t) t.value=parseInt(t.value)-1;
+    });
+  });
+})();
+</script>

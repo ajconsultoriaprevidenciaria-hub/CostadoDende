@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Carga | Costa do Dendê{% endblock %}
+{% block page_title %}Excluir carga{% endblock %}
+{% block page_subtitle %}Essa ação não pode ser desfeita.{% endblock %}
+
+{% block content %}
+<section class="panel" style="max-width:520px;">
+    <div style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="width:44px;height:44px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                </svg>
+            </div>
+            <div>
+                <p style="margin:0;font-weight:700;color:var(--text);">Confirmar exclusão</p>
+                <p style="margin:0;font-size:.85rem;color:var(--muted);">Esta carga será removida permanentemente do sistema.</p>
+            </div>
+        </div>
+
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-bottom:20px;">
+            <p style="margin:0 0 6px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);">Carga a excluir</p>
+            <p style="margin:0;font-size:.92rem;color:var(--text);">
+                <strong>{{ object.cliente }}</strong> — {{ object.produto }}<br>
+                <span style="color:var(--muted);font-size:.85rem;">{{ object.data_carga|date:'d/m/Y' }} &bull; {{ object.litros|floatformat:2 }} L &bull; R$ {{ object.valor_total_frete|default:0|floatformat:2 }}</span>
+            </p>
+        </div>
+    </div>
+
+    <form method="post" style="display:flex;gap:10px;">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger" style="background:var(--danger);color:#fff;box-shadow:0 0 14px rgba(239,68,68,.3);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+            </svg>
+            Sim, excluir carga
+        </button>
+        <a href="{% url 'fretes:carga-list' %}" class="btn-secondary">Cancelar</a>
+    </form>
+</section>
+{% endblock %}

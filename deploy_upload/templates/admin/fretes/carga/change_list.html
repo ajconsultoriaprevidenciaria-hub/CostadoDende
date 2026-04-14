@@ -1,0 +1,46 @@
+{% extends "admin/change_list.html" %}
+
+{% block pagination %}
+{{ block.super }}
+
+<div style="margin-top:34px; background:rgba(16,185,129,.08); border:1px solid rgba(16,185,129,.28); border-radius:10px; padding:12px 14px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;">
+        <h3 style="margin:0; font-size:1rem; color:#10b981; font-weight:700;">✅ Cargas Concluídas</h3>
+        <span style="font-size:.78rem; color:#9ef5d0; font-weight:700;">{{ qtd_cargas_concluidas }} carga(s)</span>
+    </div>
+
+    {% if cargas_concluidas %}
+    <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;">
+        {% for carga in cargas_concluidas %}
+        <div style="min-width:320px; background:rgba(16,185,129,.10); border:1px solid rgba(16,185,129,.24); border-radius:10px; padding:10px 12px;">
+            <div style="font-size:.72rem; font-weight:700; color:#10b981; margin-bottom:7px;">✅ Carga Concluída</div>
+            <div style="font-size:.76rem; margin-bottom:5px;">
+                <span style="color:#9ef5d0;">Posto:</span>
+                <span style="color:#fff; font-weight:600;">{{ carga.cliente }}</span>
+            </div>
+            <div style="font-size:.76rem; margin-bottom:5px;">
+                <span style="color:#9ef5d0;">Data:</span>
+                <span style="color:#fff; font-weight:600;">{{ carga.data_carga|date:"d/m/Y" }}</span>
+            </div>
+            <div style="font-size:.76rem; margin-bottom:10px;">
+                <span style="color:#9ef5d0;">Placa:</span>
+                <span style="color:#fff; font-weight:700; letter-spacing:.03em;">{{ carga.caminhao.placa }}</span>
+            </div>
+            <a href="{% url 'admin:fretes_carga_info_viagem' carga.pk %}"
+               style="display:flex; align-items:center; justify-content:center; gap:6px;
+                      background:rgba(139,92,246,.18); border:1px solid rgba(139,92,246,.35);
+                      color:#c4b5fd; font-size:.7rem; font-weight:700; text-decoration:none;
+                      border-radius:7px; padding:6px 10px; transition:all .18s;
+                      text-transform:uppercase; letter-spacing:.4px;"
+               onmouseover="this.style.background='rgba(139,92,246,.32)'"
+               onmouseout="this.style.background='rgba(139,92,246,.18)'">
+                📋 Informações da Viagem
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="font-size:.78rem; color:#9ef5d0;">Nenhuma carga concluída no filtro atual.</div>
+    {% endif %}
+</div>
+{% endblock %}

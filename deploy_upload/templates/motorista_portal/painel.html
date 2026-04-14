@@ -1,0 +1,32 @@
+{% extends "motorista_portal/base.html" %}
+
+{% block title %}Painel - Portal do Motorista{% endblock %}
+
+{% block content %}
+<h2 style="font-size:.9rem; font-weight:700; margin-bottom:4px;">Olá, {{ motorista.nome }}!</h2>
+<p style="font-size:.72rem; color:var(--text-sec); margin-bottom:20px;">Suas cargas recentes</p>
+
+{% if cargas %}
+    {% for carga in cargas %}
+    <a href="{% url 'motorista_portal:carga-detalhe' pk=carga.pk %}" style="text-decoration:none; color:inherit;">
+        <div class="mp-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div style="font-size:.82rem; font-weight:600;">{{ carga }}</div>
+                <div style="font-size:.68rem; color:var(--text-sec); margin-top:2px;">
+                    {{ carga.caminhao }} &middot; {{ carga.rota }}
+                </div>
+            </div>
+            <div style="text-align:right;">
+                {% if carga.checklists.exists %}
+                    <span class="mp-badge mp-badge-ok">Checklist ✓</span>
+                {% else %}
+                    <span class="mp-badge mp-badge-pending">Pendente</span>
+                {% endif %}
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+{% else %}
+    <div class="mp-empty">Nenhuma carga atribuída a você.</div>
+{% endif %}
+{% endblock %}
