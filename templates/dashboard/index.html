@@ -68,6 +68,35 @@
     </form>
     <div class="loading-note" id="loading-note" aria-live="polite"></div>
 </section>
+<section class="panel" style="margin-top:24px;">
+    <div class="panel-title-row">
+        <h2>Abastecimentos por Posto</h2>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Posto</th>
+                    <th style="text-align:right">Total Litros</th>
+                    <th style="text-align:right">Nº Abastecimentos</th>
+                    <th style="text-align:right">Valor Total (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in relatorio_abastecimentos %}
+                <tr>
+                    <td>{{ p.posto }}</td>
+                    <td style="text-align:right">{{ p.total_litros|floatformat:2 }}</td>
+                    <td style="text-align:right">{{ p.total_abastecimentos }}</td>
+                    <td style="text-align:right">{{ p.total_valor|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" style="text-align:center; color:var(--text-sec); padding:18px;">Nenhum abastecimento registrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 
 <section class="stats-grid">
     <article class="stat-card">

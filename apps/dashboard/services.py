@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 from django.db.models import Avg, Count, Sum
 
 from apps.fretes.models import Carga, Cliente, Fornecedor, LocalCarregamento, Motorista, Produto, Rota
+from apps.motorista_portal.models import AbastecimentoViagem
 
 
 COLORWAY = ['#0f766e', '#f59e0b', '#1d4ed8', '#7c3aed', '#dc2626']
@@ -80,6 +81,26 @@ def get_filtered_cargas(params):
     }
 
 
+def get_relatorio_abastecimentos(params):
+    qs = AbastecimentoViagem.objects.select_related('despesa')
+
+    data_inicial = _parse_date(params.get('data_inicial'))
+    data_final = _parse_date(params.get('data_final'))
+
+    if data_inicial:
+        qs = qs.filter(despesa__data__gte=data_inicial)
+    if data_final:
+        qs = qs.filter(despesa__data__lte=data_final)
+
+    return list(
+        qs.values('posto').annotate(
+            total_litros=Sum('litros'),
+            total_abastecimentos=Count('id'),
+            total_valor=Sum('despesa__valor'),
+        ).order_by('-total_litros', 'posto')
+    )
+
+
 def build_dashboard_context(params):
     queryset, filtros = get_filtered_cargas(params)
 
@@ -106,6 +127,7 @@ def build_dashboard_context(params):
     fornecedor_litros = list(
         queryset.values('fornecedor__nome').annotate(total_litros=Sum('litros')).order_by('-total_litros')
     )
+
     frete_medio_produto = list(
         queryset.values('produto__nome').annotate(frete_medio=Avg('valor_frete_litro')).order_by('-frete_medio')
     )
@@ -204,5 +226,6 @@ def build_dashboard_context(params):
         'grafico_volume_posto': grafico_volume_posto,
         'grafico_volume_fornecedor': grafico_volume_fornecedor,
         'tabela_relatorio': tabela_relatorio,
+        'relatorio_abastecimentos': get_relatorio_abastecimentos(params),
         'hoje': date.today(),
     }
