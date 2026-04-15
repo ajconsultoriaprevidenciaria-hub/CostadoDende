@@ -143,3 +143,12 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]
+
+# Email via Gmail SMTP (gratuito — até 500 e-mails/dia)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ajconsultoriaprevidenciaria@gmail.com'
+EMAIL_HOST_PASSWORD = 'msac pjmt riur cvtm'
+DEFAULT_FROM_EMAIL = 'RECUPERACAO DE SENHA G&F TRANSPORTES <ajconsultoriaprevidenciaria@gmail.com>'

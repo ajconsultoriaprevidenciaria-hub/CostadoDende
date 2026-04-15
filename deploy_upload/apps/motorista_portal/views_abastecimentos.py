@@ -1,15 +1,18 @@
 from datetime import datetime
 
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Sum
 from django.shortcuts import render
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from apps.fretes.models import Cliente
 
 from .models import AbastecimentoViagem
 
 
+@ensure_csrf_cookie
 @login_required
 def lista_abastecimentos(request):
     posto = request.GET.get('posto', '').strip()
