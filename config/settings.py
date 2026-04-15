@@ -128,7 +128,7 @@ STATICFILES_DIRS = [BUNDLE_DIR / 'static']
 MEDIA_URL = 'media/'
 MEDIA_ROOT = RUNTIME_DIR / 'media'
 
-LOGIN_REDIRECT_URL = 'dashboard:index'
+LOGIN_REDIRECT_URL = '/admin/'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
 
