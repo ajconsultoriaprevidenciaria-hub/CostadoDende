@@ -114,8 +114,9 @@ class CaminhaoAdmin(admin.ModelAdmin):
 @admin.register(CaminhaoDocumento)
 class CaminhaoDocumentoAdmin(admin.ModelAdmin):
 	list_display = ('caminhao', 'tipo', 'descricao', 'arquivo_link', 'data_validade', 'ativo')
-	list_filter = ('tipo', 'caminhao', 'data_validade', 'ativo')
+	list_filter = ('tipo', 'data_validade', 'ativo')
 	search_fields = ('caminhao__placa', 'descricao')
+	search_help_text = 'Pesquise pela placa do caminhão ou descrição do documento'
 	autocomplete_fields = ('caminhao',)
 	ordering = ('caminhao__placa', 'tipo')
 
