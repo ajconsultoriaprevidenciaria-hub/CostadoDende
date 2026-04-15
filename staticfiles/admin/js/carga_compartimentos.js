@@ -302,5 +302,27 @@
     var style = document.createElement('style');
     style.textContent = '@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
     document.head.appendChild(style);
+
+    /* ── Cálculo automático: litros × valor_frete_litro = valor_total_frete ── */
+    var litrosField = document.getElementById('id_litros');
+    var freteField = document.getElementById('id_valor_frete_litro');
+    var totalField = document.getElementById('id_valor_total_frete');
+
+    function calcularTotal(){
+      if(!litrosField || !freteField || !totalField) return;
+      var litros = parseFloat(litrosField.value.replace(',', '.')) || 0;
+      var frete = parseFloat(freteField.value.replace(',', '.')) || 0;
+      if(litros > 0 && frete > 0){
+        var total = (litros * frete).toFixed(2).replace('.', ',');
+        totalField.value = total;
+      }
+    }
+
+    if(litrosField && freteField){
+      litrosField.addEventListener('input', calcularTotal);
+      freteField.addEventListener('input', calcularTotal);
+      litrosField.addEventListener('change', calcularTotal);
+      freteField.addEventListener('change', calcularTotal);
+    }
   });
 })();
