@@ -7,6 +7,7 @@ from apps.dashboard.services import build_dashboard_context
 
 from .models import (
 	Caminhao,
+	CaminhaoDocumento,
 	Carga,
 	CargaCompartimento,
 	Cliente,
@@ -50,12 +51,19 @@ class CompartimentoInline(admin.TabularInline):
 	show_change_link = True
 
 
+class CaminhaoDocumentoInline(admin.StackedInline):
+	model = CaminhaoDocumento
+	fields = ('tipo', 'descricao', 'arquivo', 'data_validade', 'observacoes')
+	extra = 1
+	show_change_link = True
+
+
 @admin.register(Caminhao)
 class CaminhaoAdmin(admin.ModelAdmin):
 	list_display = ('placa_mercosul', 'motorista_principal', 'local_carregamento', 'numero_compartimentos', 'capacidade_total_litros', 'ativo', 'acoes')
 	list_filter = ('ativo', 'local_carregamento')
 	search_fields = ('placa', 'motorista_principal__nome')
-	inlines = [CompartimentoInline]
+	inlines = [CompartimentoInline, CaminhaoDocumentoInline]
 
 	class Media:
 		js = ('admin/js/placa_mercosul.js',)
@@ -79,6 +87,7 @@ class CaminhaoAdmin(admin.ModelAdmin):
 	def acoes(self, obj):
 		edit_url = reverse('admin:fretes_caminhao_change', args=[obj.pk])
 		delete_url = reverse('admin:fretes_caminhao_delete', args=[obj.pk])
+		docs_url = reverse('admin:fretes_caminhaodocumento_changelist') + f'?caminhao__id__exact={obj.pk}'
 		return format_html(
 			'<a href="{}" style="background:var(--panel);color:var(--primary);border:1px solid var(--border);'
 			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
@@ -86,14 +95,35 @@ class CaminhaoAdmin(admin.ModelAdmin):
 			' onmouseover="this.style.background=\'var(--primary)\';this.style.color=\'#070d1a\'"'
 			' onmouseout="this.style.background=\'var(--panel)\';this.style.color=\'var(--primary)\'">'
 			'✏️ Editar</a>'
+			'<a href="{}" style="background:rgba(59,130,246,.1);color:#3b82f6;border:1px solid rgba(59,130,246,.25);'
+			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
+			'display:inline-block;transition:all .18s;margin-right:5px;'
+			' onmouseover="this.style.background=\'#3b82f6\';this.style.color=\'#fff\'"'
+			' onmouseout="this.style.background=\'rgba(59,130,246,.1)\';this.style.color=\'#3b82f6\'">'
+			'<span class="action-icon">�</span></a>'
 			'<a href="{}" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25);'
 			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
-			'display:inline-block;transition:all .18s;"'
+			'display:inline-block;transition:all .18s;'
 			' onmouseover="this.style.background=\'#ef4444\';this.style.color=\'#fff\'"'
 			' onmouseout="this.style.background=\'rgba(239,68,68,.1)\';this.style.color=\'#ef4444\'">'
 			'🗑️ Excluir</a>',
-			edit_url, delete_url
+			edit_url, docs_url, delete_url
 		)
+
+
+@admin.register(CaminhaoDocumento)
+class CaminhaoDocumentoAdmin(admin.ModelAdmin):
+	list_display = ('caminhao', 'tipo', 'descricao', 'arquivo_link', 'data_validade', 'ativo')
+	list_filter = ('tipo', 'caminhao', 'data_validade', 'ativo')
+	search_fields = ('caminhao__placa', 'descricao')
+	autocomplete_fields = ('caminhao',)
+	ordering = ('caminhao__placa', 'tipo')
+
+	@admin.display(description='Arquivo')
+	def arquivo_link(self, obj):
+		if obj.arquivo:
+			return format_html('<a href="{}" target="_blank" rel="noreferrer">Abrir</a>', obj.arquivo.url)
+		return '-'
 
 
 @admin.register(Cliente)

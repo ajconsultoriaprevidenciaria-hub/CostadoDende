@@ -105,6 +105,39 @@ class Caminhao(BaseModel):
 		return total or Decimal('0.00')
 
 
+class CaminhaoDocumento(BaseModel):
+	TIPO_DOCUMENTO = [
+		('crlv', 'CRLV'),
+		('licenca_ambiental', 'Licença Ambiental'),
+		('antt', 'ANTT'),
+		('contrato_social', 'Contrato Social da Transportadora'),
+		('civ', 'CIV'),
+		('cipp', 'CIPP'),
+		('tacografo', 'Tacógrafo'),
+		('outros', 'Outros'),
+	]
+
+	caminhao = models.ForeignKey(
+		Caminhao,
+		on_delete=models.CASCADE,
+		related_name='documentos',
+	)
+	tipo = models.CharField(max_length=32, choices=TIPO_DOCUMENTO)
+	descricao = models.CharField(max_length=150, blank=True)
+	arquivo = models.FileField(upload_to='documentos_caminhao/%Y/%m/')
+	data_validade = models.DateField(null=True, blank=True, verbose_name='Validade')
+	observacoes = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ['caminhao__placa', 'tipo', 'descricao']
+		verbose_name = 'Documento do caminhão'
+		verbose_name_plural = 'Documentos do caminhão'
+
+	def __str__(self):
+		desc = f' / {self.descricao}' if self.descricao else ''
+		return f'{self.caminhao.placa} – {self.get_tipo_display()}{desc}'
+
+
 class Compartimento(models.Model):
 	caminhao = models.ForeignKey(
 		Caminhao,
