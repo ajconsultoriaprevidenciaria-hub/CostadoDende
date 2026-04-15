@@ -142,6 +142,9 @@
         <main class="content {% block content_class %}{% endblock %}">
             {% block topbar %}
             <header class="topbar">
+                <button class="mobile-hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                </button>
                 <div>
                     <h1>{% block page_title %}Painel de Fretes{% endblock %}</h1>
                     <p>{% block page_subtitle %}Operação, cadastros e visão gerencial da transportadora.{% endblock %}</p>
@@ -163,5 +166,22 @@
             {% block content %}{% endblock %}
         </main>
     </div>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('active')"></div>
+    <script>
+    (function(){
+      var sb = document.querySelector('.sidebar');
+      if(!sb) return;
+      var ov = document.querySelector('.sidebar-overlay');
+      var ob = new MutationObserver(function(){
+        if(sb.classList.contains('open')) ov.classList.add('active');
+        else ov.classList.remove('active');
+      });
+      ob.observe(sb, {attributes:true, attributeFilter:['class']});
+      // fechar menu ao clicar em link
+      sb.querySelectorAll('.menu a, .sidebar-footer a').forEach(function(a){
+        a.addEventListener('click', function(){ sb.classList.remove('open'); });
+      });
+    })();
+    </script>
 </body>
 </html>
