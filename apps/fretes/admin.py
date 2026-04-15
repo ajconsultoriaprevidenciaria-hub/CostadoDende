@@ -122,7 +122,12 @@ class CaminhaoDocumentoAdmin(admin.ModelAdmin):
 	@admin.display(description='Arquivo')
 	def arquivo_link(self, obj):
 		if obj.arquivo:
-			return format_html('<a href="{}" target="_blank" rel="noreferrer">Abrir</a>', obj.arquivo.url)
+			return format_html(
+				'<a href="{}" download style="display:inline-flex;align-items:center;gap:6px;'
+				'background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.25);'
+				'border-radius:6px;padding:4px 10px;font-size:.78rem;font-weight:700;text-decoration:none;'
+				'transition:all .18s;" title="Baixar documento">'
+				'📥 Baixar</a>', obj.arquivo.url)
 		return '-'
 
 

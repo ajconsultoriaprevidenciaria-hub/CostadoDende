@@ -3,8 +3,15 @@
 {% block title %}Painel - Portal do Motorista{% endblock %}
 
 {% block content %}
-<h2 style="font-size:.9rem; font-weight:700; margin-bottom:4px;">Olá, {{ motorista.nome }}!</h2>
-<p style="font-size:.72rem; color:var(--text-sec); margin-bottom:20px;">Suas cargas recentes</p>
+<div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px;">
+    <div>
+        <h2 style="font-size:.9rem; font-weight:700; margin-bottom:4px;">Olá, {{ motorista.nome }}!</h2>
+        <p style="font-size:.72rem; color:var(--text-sec); margin:0;">Suas cargas recentes</p>
+    </div>
+    <a href="{% url 'motorista_portal:documentos-caminhoes' %}" class="mp-btn mp-btn-primary" style="padding:14px 18px; font-size:.82rem; font-weight:700; white-space:nowrap;">
+        📁 DOCUMENTOS DOS CAMINHÕES
+    </a>
+</div>
 
 {% if cargas %}
     {% for carga in cargas %}

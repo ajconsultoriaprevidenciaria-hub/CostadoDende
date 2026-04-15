@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.fretes.models import Carga, Cliente, Motorista
+from apps.fretes.models import Carga, Caminhao, Cliente, Motorista
 
 from .forms import ChecklistForm, DespesaForm, ItemChecklistForm
 from .models import (
@@ -62,6 +62,18 @@ def painel(request):
     return render(request, 'motorista_portal/painel.html', {
         'motorista': motorista,
         'cargas': cargas,
+    })
+
+
+@login_required(login_url='motorista_portal:login')
+def documentos_caminhoes(request):
+    motorista = _require_motorista(request)
+    if motorista is None:
+        return redirect('motorista_portal:login')
+    caminhoes = Caminhao.objects.filter(ativo=True).order_by('placa').prefetch_related('documentos')
+    return render(request, 'motorista_portal/documentos_caminhoes.html', {
+        'motorista': motorista,
+        'caminhoes': caminhoes,
     })
 
 
