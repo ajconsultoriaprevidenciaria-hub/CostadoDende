@@ -138,3 +138,8 @@ AUTHENTICATION_BACKENDS = [
     'apps.motorista_portal.backends.CPFBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
