@@ -1,0 +1,179 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Abastecimentos por Posto{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .abast-shell { max-width: 860px; }
+    .abast-filtros {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px; margin-bottom: 18px; align-items: end;
+    }
+    .abast-filtros .abast-full { grid-column: 1 / -1; }
+    .abast-periodo {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px; grid-column: 1 / -1;
+    }
+    .abast-acoes { display: flex; gap: 10px; align-items: end; }
+    .abast-mes-wrap {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) 120px 32px;
+        gap: 8px; align-items: center;
+    }
+    .abast-mes-bloco { grid-column: 1 / -1; }
+    .abast-mes-input { padding-right: 12px !important; }
+    .abast-ano-select {
+        width: 100%; background: var(--panel); border: 1px solid var(--border);
+        border-radius: 10px; padding: 10px 12px; color: var(--text);
+    }
+    .abast-mes-btn {
+        width: 32px; height: 32px; display: inline-flex; align-items: center;
+        justify-content: center; border: 1px solid var(--border); border-radius: 8px;
+        background: rgba(0,217,166,.08); color: var(--primary); cursor: pointer;
+    }
+    .abast-input {
+        width: 100%; background: var(--panel); border: 1px solid var(--border);
+        border-radius: 10px; padding: 10px 12px; color: var(--text);
+    }
+    .abast-label {
+        display: block; margin-bottom: 6px; font-size: .78rem; color: var(--muted);
+    }
+    .abast-btn-search {
+        background: var(--primary); color: #07111b; border: none; border-radius: 10px;
+        padding: 10px 14px; font-weight: 800; cursor: pointer;
+    }
+    .abast-btn-clear {
+        display: inline-flex; align-items: center; justify-content: center;
+        background: transparent; color: var(--muted); border: 1px solid var(--border);
+        border-radius: 10px; padding: 10px 14px; text-decoration: none; font-weight: 700;
+    }
+    .abast-table {
+        width: 100%; background: var(--panel); border-radius: 12px;
+        border: 1px solid var(--border); border-collapse: collapse;
+    }
+    .abast-table thead tr { color: var(--primary); font-size: .92rem; }
+    .abast-table th, .abast-table td { padding: 10px 8px; }
+    .abast-table th { text-align: left; }
+    .abast-table th.num { text-align: right; }
+    .abast-table td.num { text-align: right; }
+    .abast-table tbody tr { border-top: 1px solid var(--border); }
+    @media (max-width: 640px) {
+        .abast-shell { max-width: 100%; }
+        .abast-filtros, .abast-periodo { grid-template-columns: 1fr; }
+        .abast-mes-wrap { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content_title %}
+<div class="adm-page-header"><h1>Abastecimentos por Posto</h1></div>
+{% endblock %}
+
+{% block content %}
+<div class="abast-shell">
+<form method="get" class="abast-filtros">
+    <div class="abast-full">
+        <label for="posto" class="abast-label">Posto</label>
+        <input id="posto" name="posto" type="text" list="postos-cadastrados" value="{{ filtros.posto }}" placeholder="Pesquisar posto" class="abast-input">
+        <datalist id="postos-cadastrados">
+            {% for posto_nome in sugestoes_postos %}
+            <option value="{{ posto_nome }}"></option>
+            {% endfor %}
+        </datalist>
+    </div>
+    <div class="abast-periodo">
+        <div>
+            <label for="data_inicial" class="abast-label">Data inicial</label>
+            <input id="data_inicial" name="data_inicial" type="date" value="{{ filtros.data_inicial }}" class="abast-input">
+        </div>
+        <div>
+            <label for="data_final" class="abast-label">Data final</label>
+            <input id="data_final" name="data_final" type="date" value="{{ filtros.data_final }}" class="abast-input">
+        </div>
+    </div>
+    <div class="abast-mes-bloco">
+        <label for="mes" class="abast-label">Mês</label>
+        <div class="abast-mes-wrap">
+            <input id="mes" name="mes" type="month" value="{{ filtros.mes }}" class="abast-mes-input abast-input">
+            <select id="mes_ano" class="abast-ano-select" aria-label="Selecionar ano">
+                {% for ano in anos_disponiveis %}
+                <option value="{{ ano }}" {% if ano == selected_year %}selected{% endif %}>{{ ano }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" class="abast-mes-btn" id="abrir-calendario-mes" aria-label="Selecionar mês">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="abast-acoes">
+        <button type="submit" class="abast-btn-search">Pesquisar</button>
+        <a href="{% url 'admin-abastecimentos-list' %}" class="abast-btn-clear">Limpar</a>
+    </div>
+</form>
+<table class="abast-table">
+    <thead>
+        <tr>
+            <th>Posto</th>
+            <th class="num">Total Litros</th>
+            <th class="num">Nº Abastecimentos</th>
+            <th class="num">Valor Total (R$)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in postos %}
+        <tr>
+            <td>{{ p.posto }}</td>
+            <td class="num">{{ p.total_litros|floatformat:2 }}</td>
+            <td class="num">{{ p.total_abastecimentos }}</td>
+            <td class="num">{{ p.total_valor|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:18px;">Nenhum abastecimento registrado.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block extrabody %}
+<script>
+(function () {
+    const monthInput = document.getElementById('mes');
+    const yearSelect = document.getElementById('mes_ano');
+    const openButton = document.getElementById('abrir-calendario-mes');
+    if (!monthInput || !openButton || !yearSelect) return;
+
+    function syncMonthWithYear() {
+        const currentValue = monthInput.value || '';
+        const currentMonth = currentValue.split('-')[1] || '{{ selected_month|default:"01" }}' || '01';
+        monthInput.value = `${yearSelect.value}-${currentMonth}`;
+    }
+
+    yearSelect.addEventListener('change', syncMonthWithYear);
+
+    monthInput.addEventListener('change', function () {
+        const valueParts = monthInput.value.split('-');
+        if (valueParts.length === 2) {
+            yearSelect.value = valueParts[0];
+        }
+    });
+
+    openButton.addEventListener('click', function () {
+        if (typeof monthInput.showPicker === 'function') {
+            monthInput.showPicker();
+            return;
+        }
+        monthInput.focus();
+        monthInput.click();
+    });
+})();
+</script>
+{% endblock %}

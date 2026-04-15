@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Sum
 from django.shortcuts import render
@@ -56,7 +57,10 @@ def lista_abastecimentos(request):
         except ValueError:
             pass
 
-    return render(request, 'motorista_portal/abastecimentos_list.html', {
+    is_admin = request.user.is_staff
+    template = 'admin/abastecimentos_list.html' if is_admin else 'motorista_portal/abastecimentos_list.html'
+
+    context = {
         'postos': postos,
         'sugestoes_postos': sugestoes_postos,
         'anos_disponiveis': range(ano_atual - 10, ano_atual + 11),
@@ -68,4 +72,10 @@ def lista_abastecimentos(request):
             'data_final': data_final,
             'mes': mes,
         },
-    })
+    }
+
+    if is_admin:
+        context.update(admin.site.each_context(request))
+        context['title'] = 'Abastecimentos por Posto'
+
+    return render(request, template, context)
