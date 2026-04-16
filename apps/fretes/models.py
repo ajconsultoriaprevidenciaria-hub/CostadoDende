@@ -383,21 +383,36 @@ class Manutencao(BaseModel):
 
 class Pneu(BaseModel):
 	POSICAO_CHOICES = [
-		('DE', 'Dianteiro Esquerdo'),
-		('DD', 'Dianteiro Direito'),
-		('TEI', 'Traseiro Esquerdo Interno'),
-		('TEE', 'Traseiro Esquerdo Externo'),
-		('TDI', 'Traseiro Direito Interno'),
-		('TDE', 'Traseiro Direito Externo'),
-		('E1', 'Eixo 2 Esquerdo Interno'),
-		('E2', 'Eixo 2 Esquerdo Externo'),
-		('E3', 'Eixo 2 Direito Interno'),
-		('E4', 'Eixo 2 Direito Externo'),
-		('E5', 'Eixo 3 Esquerdo Interno'),
-		('E6', 'Eixo 3 Esquerdo Externo'),
-		('E7', 'Eixo 3 Direito Interno'),
-		('E8', 'Eixo 3 Direito Externo'),
-		('estepe', 'Estepe'),
+		('1E', '1° Eixo – Esquerdo'),
+		('1D', '1° Eixo – Direito'),
+		('2E', '2° Eixo – Esquerdo'),
+		('2D', '2° Eixo – Direito'),
+		('2EI', '2° Eixo – Esq. Interno'),
+		('2EE', '2° Eixo – Esq. Externo'),
+		('2DI', '2° Eixo – Dir. Interno'),
+		('2DE', '2° Eixo – Dir. Externo'),
+		('3EI', '3° Eixo – Esq. Interno'),
+		('3EE', '3° Eixo – Esq. Externo'),
+		('3DI', '3° Eixo – Dir. Interno'),
+		('3DE', '3° Eixo – Dir. Externo'),
+		('4EI', '4° Eixo – Esq. Interno'),
+		('4EE', '4° Eixo – Esq. Externo'),
+		('4DI', '4° Eixo – Dir. Interno'),
+		('4DE', '4° Eixo – Dir. Externo'),
+		('5EI', '5° Eixo – Esq. Interno'),
+		('5EE', '5° Eixo – Esq. Externo'),
+		('5DI', '5° Eixo – Dir. Interno'),
+		('5DE', '5° Eixo – Dir. Externo'),
+		('6EI', '6° Eixo – Esq. Interno'),
+		('6EE', '6° Eixo – Esq. Externo'),
+		('6DI', '6° Eixo – Dir. Interno'),
+		('6DE', '6° Eixo – Dir. Externo'),
+		('ESP', 'Estepe'),
+	]
+	STATUS_PNEU_CHOICES = [
+		('bom', 'Bom'),
+		('atencao', 'Atenção'),
+		('ruim', 'Ruim'),
 	]
 
 	caminhao = models.ForeignKey(Caminhao, on_delete=models.CASCADE, related_name='pneus')
@@ -409,10 +424,12 @@ class Pneu(BaseModel):
 	km_instalacao = models.PositiveIntegerField(null=True, blank=True, verbose_name='KM na instalação')
 	sulco_mm = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True, verbose_name='Sulco (mm)')
 	recapado = models.BooleanField(default=False)
+	status = models.CharField(max_length=10, choices=STATUS_PNEU_CHOICES, default='bom')
 	observacoes = models.TextField(blank=True)
 
 	class Meta:
 		ordering = ['caminhao__placa', 'posicao']
+		unique_together = ('caminhao', 'posicao')
 		verbose_name = 'Pneu'
 		verbose_name_plural = 'Pneus'
 

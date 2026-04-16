@@ -1,10 +1,13 @@
+import json
 from collections import OrderedDict
 
 from django.contrib import admin
 from django.forms.models import BaseInlineFormSet
+from django.http import JsonResponse
 from django.utils.html import format_html
 from django.urls import path, reverse
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_POST
 from apps.motorista_portal.models import AbastecimentoViagem, ChecklistViagem
 from apps.dashboard.services import build_dashboard_context
 
@@ -639,6 +642,11 @@ class ManutencaoAdmin(admin.ModelAdmin):
 				self.admin_site.admin_view(self.detalhe_view),
 				name='fretes_manutencao_detalhe',
 			),
+			path(
+				'caminhao/<int:caminhao_pk>/api-pneu/',
+				self.admin_site.admin_view(self.api_pneu),
+				name='fretes_manutencao_api_pneu',
+			),
 		]
 		return custom + urls
 
@@ -646,14 +654,56 @@ class ManutencaoAdmin(admin.ModelAdmin):
 		caminhao = get_object_or_404(Caminhao, pk=caminhao_pk)
 		manutencoes = caminhao.manutencoes.all()[:50]
 		pneus = caminhao.pneus.all()
+		pneus_data = {
+			p.posicao: {
+				'id': p.pk,
+				'status': p.status,
+				'marca': p.marca,
+				'modelo': p.modelo,
+				'sulco_mm': str(p.sulco_mm) if p.sulco_mm else '',
+				'recapado': p.recapado,
+				'numero_fogo': p.numero_fogo,
+			}
+			for p in pneus
+		}
 		context = {
 			**self.admin_site.each_context(request),
 			'title': f'Manutenção e Pneus — {caminhao.placa}',
 			'caminhao': caminhao,
 			'manutencoes': manutencoes,
 			'pneus': pneus,
+			'pneus_json': json.dumps(pneus_data),
+			'tipo_eixo': caminhao.tipo_eixo or 'truck',
 		}
 		return render(request, 'admin/fretes/manutencao/detalhe.html', context)
+
+	def api_pneu(self, request, caminhao_pk):
+		caminhao = get_object_or_404(Caminhao, pk=caminhao_pk)
+		if request.method == 'POST':
+			data = json.loads(request.body)
+			posicao = data.get('posicao', '')
+			valid_codes = [c[0] for c in Pneu.POSICAO_CHOICES]
+			if posicao not in valid_codes:
+				return JsonResponse({'error': 'Posição inválida'}, status=400)
+			sulco = data.get('sulco_mm')
+			try:
+				sulco = float(sulco) if sulco not in (None, '') else None
+			except (ValueError, TypeError):
+				sulco = None
+			pneu, _ = Pneu.objects.update_or_create(
+				caminhao=caminhao,
+				posicao=posicao,
+				defaults={
+					'status': data.get('status', 'bom'),
+					'marca': data.get('marca', ''),
+					'modelo': data.get('modelo', ''),
+					'sulco_mm': sulco,
+					'recapado': bool(data.get('recapado')),
+					'numero_fogo': data.get('numero_fogo', ''),
+				}
+			)
+			return JsonResponse({'ok': True, 'id': pneu.pk})
+		return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
 @admin.register(Pneu)
