@@ -279,7 +279,7 @@ class CargaClienteInline(admin.StackedInline):
 	fields = ('ordem', 'cliente')
 	autocomplete_fields = ('cliente',)
 	verbose_name = 'Cliente adicional'
-	verbose_name_plural = 'Clientes 2 a 7'
+	verbose_name_plural = 'Clientes 01 a 07'
 
 
 class CargaCompartimentoInline(admin.StackedInline):
@@ -313,7 +313,7 @@ class CargaAdmin(admin.ModelAdmin):
 	def formfield_for_foreignkey(self, db_field, request, **kwargs):
 		formfield = super().formfield_for_foreignkey(db_field, request, **kwargs)
 		if db_field.name == 'cliente':
-			formfield.label = 'Cliente 1'
+			formfield.label = 'Cliente 01'
 		return formfield
 
 	def get_queryset(self, request):
@@ -356,14 +356,17 @@ class CargaAdmin(admin.ModelAdmin):
 
 		# Atualizar litros e total_frete da carga principal com base nas bocas do cliente 1
 		comps_principal = por_cliente.get(carga_principal.cliente_id, [])
+		principal_ids = [c.pk for c in comps_principal if c.pk]
+		carga_principal.carga_compartimentos.exclude(pk__in=principal_ids).delete()
 		if comps_principal:
-			litros_p = sum(c.compartimento.capacidade_litros for c in comps_principal)
-			frl = carga_principal.valor_frete_litro
-			total_p = litros_p * frl if frl else None
-			Carga.objects.filter(pk=carga_principal.pk).update(
-				litros=litros_p,
-				valor_total_frete=total_p,
-			)
+			CargaCompartimento.objects.filter(pk__in=principal_ids).update(cliente_id=carga_principal.cliente_id)
+		litros_p = sum(c.compartimento.capacidade_litros for c in comps_principal)
+		frl = carga_principal.valor_frete_litro
+		total_p = litros_p * frl if frl else None
+		Carga.objects.filter(pk=carga_principal.pk).update(
+			litros=litros_p,
+			valor_total_frete=total_p,
+		)
 
 		# Criar carga individual para cada cliente adicional
 		for cliente_id, comps in por_cliente.items():

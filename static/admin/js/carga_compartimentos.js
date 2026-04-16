@@ -8,6 +8,46 @@
     var caminhaoSelect = document.querySelector('#id_caminhao');
     if(!caminhaoSelect) return;
 
+    function moverClientePrincipalParaModulo(){
+      var clienteField = document.getElementById('id_cliente');
+      var clientesGroup = document.getElementById('clientes_adicionais-group');
+      if(!clienteField || !clientesGroup){
+        return;
+      }
+
+      var groupHeader = clientesGroup.querySelector('h2');
+      if(groupHeader){
+        groupHeader.textContent = 'CLIENTES 01 A 07';
+      }
+
+      if(clientesGroup.querySelector('.cliente-principal-slot')){
+        return;
+      }
+
+      var sourceRow = clienteField.closest('.form-row') || clienteField.closest('.fieldBox') || clienteField.parentNode;
+      var targetContainer = clientesGroup.querySelector('.inline-related') || clientesGroup.querySelector('.module') || clientesGroup;
+      if(!sourceRow || !targetContainer){
+        return;
+      }
+
+      var slot = document.createElement('div');
+      slot.className = 'cliente-principal-slot';
+      slot.style.cssText = 'margin:12px 0 16px;padding:14px 16px;border:1px solid rgba(0,217,166,.16);border-radius:10px;background:rgba(7,13,26,.45);';
+
+      var titulo = document.createElement('div');
+      titulo.textContent = 'Cliente 01';
+      titulo.style.cssText = 'font-size:.78rem;font-weight:800;color:#8ec5ff;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;';
+      slot.appendChild(titulo);
+
+      sourceRow.style.margin = '0';
+      sourceRow.style.padding = '0';
+      sourceRow.style.border = '0';
+      slot.appendChild(sourceRow);
+      targetContainer.parentNode.insertBefore(slot, targetContainer);
+    }
+
+    moverClientePrincipalParaModulo();
+
     var produtos = [];      // [{id, nome}]
     var compartimentos = []; // [{id, numero, capacidade_litros}]
     var selecionados = {};   // {compId: {produto_id, cliente_id, cliente_label, cliente_nome}}
