@@ -16,48 +16,6 @@
 .ck-cat-icon--documentos    { background:rgba(16,185,129,.12); color:#10b981; }
 .ck-cat-icon--outros        { background:rgba(148,163,184,.12); color:#94a3b8; }
 .ck-cat-name { font-size:.82rem; font-weight:700; color:var(--primary); }
-
-/* Botão abastecimento apartado */
-.ck-fuel-standalone {
-    display:flex; align-items:center; gap:14px;
-    background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.22);
-    border-radius:14px; padding:16px 20px; margin:16px 0 4px;
-    cursor:pointer; text-decoration:none; transition:all .2s;
-}
-.ck-fuel-standalone:hover { background:rgba(245,158,11,.16); border-color:rgba(245,158,11,.4); transform:translateY(-1px); }
-.ck-fuel-standalone svg { width:60px; height:60px; color:#f59e0b; flex-shrink:0; }
-.ck-fuel-standalone-text { font-size:.82rem; font-weight:800; color:#f59e0b; line-height:1.3; letter-spacing:.3px; }
-
-/* Painel abastecimento */
-.ck-fuel-panel {
-    display:none; background:rgba(245,158,11,.04);
-    border:1px solid rgba(245,158,11,.18); border-radius:12px;
-    padding:16px; margin:14px 0;
-}
-.ck-fuel-panel.open { display:block; animation: slideDown .25s ease; }
-@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-.ck-fuel-title {
-    display:flex; align-items:center; gap:8px;
-    font-size:.78rem; font-weight:700; color:#f59e0b; margin-bottom:12px;
-}
-
-/* Lista de abastecimentos */
-.ck-abast-list { margin:14px 0 0; }
-.ck-abast-item {
-    display:flex; align-items:center; justify-content:space-between;
-    background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.12);
-    border-radius:10px; padding:10px 14px; margin-bottom:8px;
-}
-.ck-abast-info { display:flex; flex-direction:column; gap:2px; }
-.ck-abast-posto { font-size:.74rem; font-weight:700; color:#f59e0b; }
-.ck-abast-detail { font-size:.62rem; color:var(--text-sec); }
-.ck-abast-valor { font-size:.78rem; font-weight:700; color:#f59e0b; }
-.ck-abast-count {
-    display:inline-flex; align-items:center; justify-content:center;
-    min-width:18px; height:18px; border-radius:9px;
-    background:#f59e0b; color:#000; font-size:.6rem; font-weight:800;
-    padding:0 4px;
-}
 </style>
 {% endblock %}
 
@@ -71,85 +29,7 @@
     </p>
 </div>
 
-<a href="#" id="fuel-toggle" class="ck-fuel-standalone">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 22V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17"/><path d="M3 22h12"/>
-        <path d="M15 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9l-3-3"/>
-        <path d="M6 8h6"/><path d="M6 11h6"/>
-    </svg>
-    <div>
-        <div class="ck-fuel-standalone-text">⛽ REGISTRAR ABASTECIMENTO DA VIAGEM</div>
-        {% if abastecimentos %}<span style="font-size:.64rem; color:rgba(245,158,11,.6); margin-top:2px; display:block;">{{ abastecimentos|length }} abastecimento{{ abastecimentos|length|pluralize }} registrado{{ abastecimentos|length|pluralize }}</span>{% endif %}
-    </div>
-</a>
-
 <div class="mp-card" style="margin-top:4px;">
-
-    <!-- ── Painel Abastecimento Rápido ── -->
-    <div id="fuel-panel" class="ck-fuel-panel">
-        <div class="ck-fuel-title">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 22V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17"/><path d="M3 22h12"/>
-                <path d="M15 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9l-3-3"/>
-                <path d="M6 8h6"/><path d="M6 11h6"/>
-            </svg>
-            Registrar Abastecimento desta Viagem
-        </div>
-
-        <form method="post" enctype="multipart/form-data" action="{% url 'motorista_portal:abastecimento-rapido' carga_pk=carga.pk %}">
-            {% csrf_token %}
-            <div class="mp-field">
-                <label for="ab_posto">Nome do Posto *</label>
-                <select name="posto" id="ab_posto" required>
-                    <option value="">Selecione o cliente/posto...</option>
-                    {% for cli in clientes %}
-                    <option value="{{ cli.nome }}">{{ cli.nome }}{% if cli.cidade %} — {{ cli.cidade }}/{{ cli.uf }}{% endif %}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mp-grid-2">
-                <div class="mp-field">
-                    <label for="ab_valor">Valor da Nota (R$) *</label>
-                    <input type="number" name="valor" id="ab_valor" step="0.01" min="0" required inputmode="decimal">
-                </div>
-                <div class="mp-field">
-                    <label for="ab_litros">Litros</label>
-                    <input type="number" name="litros" id="ab_litros" step="0.01" min="0" inputmode="decimal">
-                </div>
-            </div>
-            <div class="mp-field">
-                <label for="ab_preco">Preço por Litro (R$)</label>
-                <input type="number" name="preco_litro" id="ab_preco" step="0.0001" min="0" inputmode="decimal">
-            </div>
-            <div class="mp-field">
-                <label for="ab_cupom">Foto do Cupom Fiscal *</label>
-                <input type="file" name="foto_cupom" id="ab_cupom" accept="image/*" capture="environment" required>
-                <img id="preview_cupom_inline" class="mp-thumb" style="display:none; margin-top:8px;">
-            </div>
-            <button type="submit" class="mp-btn mp-btn-primary mp-btn-block" style="background:rgba(245,158,11,.9); border-color:#f59e0b;">
-                ⛽ Salvar Abastecimento
-            </button>
-        </form>
-
-        {% if abastecimentos %}
-        <div class="ck-abast-list">
-            <div style="font-size:.7rem; font-weight:600; color:var(--text-sec); margin:14px 0 8px; text-transform:uppercase; letter-spacing:.3px;">
-                Abastecimentos registrados nesta viagem
-            </div>
-            {% for ab in abastecimentos %}
-            <div class="ck-abast-item">
-                <div class="ck-abast-info">
-                    <span class="ck-abast-posto">⛽ {{ ab.posto }}</span>
-                    <span class="ck-abast-detail">
-                        {{ ab.litros|floatformat:1 }}L &middot; R$ {{ ab.preco_litro|floatformat:2 }}/L &middot; {{ ab.despesa.data|date:"d/m/Y" }}
-                    </span>
-                </div>
-                <span class="ck-abast-valor">R$ {{ ab.despesa.valor|floatformat:2 }}</span>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
 
     <!-- ── Formulário do Checklist ── -->
     <form method="post" enctype="multipart/form-data" style="margin-top:14px;">
@@ -219,40 +99,6 @@
 
 {% block extra_js %}
 <script>
-// Toggle painel abastecimento
-document.getElementById('fuel-toggle').addEventListener('click', function(e) {
-    e.preventDefault();
-    const panel = document.getElementById('fuel-panel');
-    panel.classList.toggle('open');
-    if (panel.classList.contains('open')) {
-        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-});
-
-// Preview cupom fiscal inline
-document.getElementById('ab_cupom').addEventListener('change', function() {
-    const preview = document.getElementById('preview_cupom_inline');
-    if (this.files && this.files[0]) {
-        const reader = new FileReader();
-        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
-        reader.readAsDataURL(this.files[0]);
-    }
-});
-
-// Cálculo automático preço por litro
-const abValor = document.getElementById('ab_valor');
-const abLitros = document.getElementById('ab_litros');
-const abPreco = document.getElementById('ab_preco');
-function calcPrecoLitro() {
-    const v = parseFloat(abValor.value);
-    const l = parseFloat(abLitros.value);
-    if (v > 0 && l > 0) {
-        abPreco.value = (v / l).toFixed(4);
-    }
-}
-abValor.addEventListener('input', calcPrecoLitro);
-abLitros.addEventListener('input', calcPrecoLitro);
-
 // Preview de foto do checklist ao selecionar
 document.querySelectorAll('.mp-checklist-grid input[type="file"]').forEach(input => {
     input.addEventListener('change', function() {

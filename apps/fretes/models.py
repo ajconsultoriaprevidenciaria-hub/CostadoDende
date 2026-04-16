@@ -72,7 +72,16 @@ class LocalCarregamento(BaseModel):
 
 
 class Caminhao(BaseModel):
+	TIPO_EIXO_CHOICES = [
+		('truck', 'Truck'),
+		('bi_truck', 'Bi Truck'),
+		('carreta', 'Carreta'),
+	]
+
 	placa = models.CharField(max_length=8, unique=True)
+	modelo = models.CharField(max_length=100, blank=True)
+	ano_fabricacao = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Ano de fabricação')
+	tipo_eixo = models.CharField(max_length=20, choices=TIPO_EIXO_CHOICES, blank=True, verbose_name='Tipo do eixo')
 	motorista_principal = models.ForeignKey(
 		Motorista,
 		on_delete=models.SET_NULL,
@@ -198,9 +207,17 @@ class Rota(BaseModel):
 	nome = models.CharField(max_length=150)
 	origem = models.CharField(max_length=150, choices=ORIGEM_CHOICES)
 	destino = models.CharField(max_length=150)
+	parada_1 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 1')
+	parada_2 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 2')
+	parada_3 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 3')
+	parada_4 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 4')
+	parada_5 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 5')
+	parada_6 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 6')
+	parada_7 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 7')
 	destino_lat = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, verbose_name='Latitude destino')
 	destino_lng = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, verbose_name='Longitude destino')
 	distancia_km = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+	tempo_total_min = models.PositiveIntegerField(null=True, blank=True, verbose_name='Tempo total (min)')
 
 	class Meta:
 		ordering = ['nome']

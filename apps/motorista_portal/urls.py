@@ -30,6 +30,7 @@ urlpatterns = [
     path('carga/<int:pk>/', views.carga_detalhe, name='carga-detalhe'),
     path('carga/<int:carga_pk>/checklist/', views.checklist_criar, name='checklist-criar'),
     path('carga/<int:carga_pk>/abastecimento/', views.abastecimento_rapido, name='abastecimento-rapido'),
+    path('carga/<int:carga_pk>/abastecimento-embutido/', views.abastecimento_embutido, name='abastecimento-embutido'),
     path('checklist/<int:pk>/', views.checklist_detalhe, name='checklist-detalhe'),
     path('carga/<int:carga_pk>/despesa/', views.despesa_criar, name='despesa-criar'),
     path('despesa/<int:pk>/', views.despesa_detalhe, name='despesa-detalhe'),

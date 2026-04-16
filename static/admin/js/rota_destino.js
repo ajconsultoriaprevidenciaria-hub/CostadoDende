@@ -6,8 +6,10 @@
     var destinoField = document.getElementById('id_destino');
     var origemField  = document.getElementById('id_origem');
     var distField    = document.getElementById('id_distancia_km');
+    var tempoField   = document.getElementById('id_tempo_total_min');
     var latField     = document.getElementById('id_destino_lat');
     var lngField     = document.getElementById('id_destino_lng');
+    var paradaFields = [1,2,3,4,5,6,7].map(function(i){ return document.getElementById('id_parada_' + i); }).filter(Boolean);
     if(!destinoField) return;
 
     var ORIGENS = {
@@ -59,13 +61,19 @@
       +'<div style="background:#070d1a;border:1px solid rgba(245,158,11,.12);border-radius:12px;padding:16px;text-align:center;">'
       +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">⏱️ Tempo Estimado</div>'
       +'<div id="rota-tempo" style="font-size:2rem;font-weight:800;color:#f59e0b;">—</div>'
-      +'<div style="font-size:.6rem;color:#8892a4;">Velocidade máx. 80 km/h (caminhão)</div>'
+  		+'<div style="font-size:.6rem;color:#8892a4;">Tempo total da rota com paradas</div>'
       +'</div>'
 
       /* Card Trajeto */
       +'<div style="background:#070d1a;border:1px solid rgba(59,130,246,.12);border-radius:12px;padding:16px;text-align:center;">'
       +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">🚛 Trajeto</div>'
       +'<div id="rota-trajeto" style="font-size:.85rem;font-weight:700;color:#3b82f6;line-height:1.6;">—</div>'
+      +'</div>'
+
+      /* Card Ordem de Entrega */
+      +'<div style="background:#070d1a;border:1px solid rgba(16,185,129,.12);border-radius:12px;padding:16px;text-align:center;">'
+      +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">📋 Ordem de Entrega</div>'
+      +'<div id="rota-ordem" style="font-size:.85rem;font-weight:700;color:#10b981;line-height:1.8;">—</div>'
       +'</div>'
 
       /* Instrução */
@@ -263,8 +271,9 @@
     function calcularDistancia(clickLat, clickLng){
       var origem = origemField ? origemField.value : '';
       var destino = destinoField.value.trim();
+      var paradaIds = paradaFields.map(function(f){ return (f.value || '').trim(); }).filter(function(v){ return v && v !== ''; });
       if(!origem) return;
-      if(!destino && !clickLat) return;
+      if(!destino && !clickLat && !paradaIds.length) return;
 
       var spinner = document.getElementById('rota-spinner');
       spinner.style.display = 'inline';
@@ -272,11 +281,15 @@
       calcBtn.style.pointerEvents = 'none';
       if(distField) distField.value = '...';
 
-      var url = '/operacao/api/distancia/?origem=' + encodeURIComponent(origem)
-        + '&destino=' + encodeURIComponent(destino);
+      var params = new URLSearchParams();
+      params.set('origem', origem);
+      if(destino) params.set('destino', destino);
+      paradaIds.forEach(function(id){ params.append('parada_id', id); });
       if(clickLat && clickLng){
-        url += '&lat=' + clickLat + '&lng=' + clickLng;
+        params.set('lat', clickLat);
+        params.set('lng', clickLng);
       }
+      var url = '/operacao/api/distancia/?' + params.toString();
 
       fetch(url)
         .then(function(r){ return r.json(); })
@@ -292,6 +305,7 @@
 
           // Campos do form
           if(distField) distField.value = data.distancia_km;
+          if(tempoField) tempoField.value = data.tempo_total_min;
           if(latField)  latField.value  = data.destino_lat;
           if(lngField)  lngField.value  = data.destino_lng;
 
@@ -316,18 +330,35 @@
           // Cards
           document.getElementById('rota-dist').textContent =
             Number(data.distancia_km).toLocaleString('pt-BR');
-          var h = data.previsao_viagem_h, m = data.previsao_viagem_m;
+          var h = data.tempo_total_h, m = data.tempo_total_m;
           document.getElementById('rota-tempo').textContent =
             h + 'h ' + (m<10?'0':'') + m + 'min';
-          document.getElementById('rota-trajeto').innerHTML =
-            '<span style="color:#00d9a6;">🏭 '+(data.origem_nome||origem)+'</span>'
-            +'<br><span style="font-size:1.1rem;">⬇️</span><br>'
-            +'<span style="color:#f59e0b;">📍 '+(data.destino_nome||destino)+'</span>';
+          var trajetoNomes = data.trajeto_nomes || [data.origem_nome || origem, data.destino_nome || destino];
+          document.getElementById('rota-trajeto').innerHTML = trajetoNomes.map(function(nome, idx){
+            var prefix = idx === 0 ? '🏭 ' : (idx === trajetoNomes.length - 1 ? '📍 ' : '🛑 ');
+            var color = idx === 0 ? '#00d9a6' : (idx === trajetoNomes.length - 1 ? '#f59e0b' : '#3b82f6');
+            return '<span style="color:'+color+';">' + prefix + nome + '</span>';
+          }).join('<br><span style="font-size:.9rem;color:#8892a4;">⬇️</span><br>');
 
           // Google Maps link
           var gmBtn = document.getElementById('rota-gmaps');
           gmBtn.href = data.gmaps_url;
           gmBtn.style.display = 'inline-block';
+
+          // Ordem de entrega
+          var ordemEl = document.getElementById('rota-ordem');
+          if(data.ordem_entrega && data.ordem_entrega.length > 0){
+            ordemEl.innerHTML = data.ordem_entrega.map(function(item){
+              return '<div style="display:flex;align-items:center;gap:8px;justify-content:center;">'
+                +'<span style="background:#10b981;color:#070d1a;border-radius:50%;width:22px;height:22px;'
+                +'display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;">'
+                +item.ordem+'</span>'
+                +'<span>'+item.nome+'</span>'
+                +'</div>';
+            }).join('');
+          } else {
+            ordemEl.innerHTML = '—';
+          }
 
           // Animação
           container.style.animation = 'none';
@@ -346,6 +377,20 @@
     if(origemField){
       origemField.addEventListener('change', function(){
         if(destinoField.value.trim()) calcularDistancia();
+      });
+    }
+
+    paradaFields.forEach(function(field){
+      field.addEventListener('change', function(){
+        if(destinoField.value.trim() || paradaFields.some(function(f){ return f.value; })) calcularDistancia();
+      });
+    });
+    // Select2 (autocomplete_fields) dispara change via jQuery
+    if(window.django && window.django.jQuery){
+      paradaFields.forEach(function(field){
+        django.jQuery(field).on('change', function(){
+          if(destinoField.value.trim() || paradaFields.some(function(f){ return f.value; })) calcularDistancia();
+        });
       });
     }
 

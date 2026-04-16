@@ -43,8 +43,29 @@ admin.site.index = dashboard_admin_index
 
 @admin.register(Compartimento)
 class CompartimentoAdmin(admin.ModelAdmin):
+	change_list_template = 'admin/fretes/compartimento/change_list.html'
 	list_display = ('caminhao', 'numero', 'capacidade_litros')
 	list_filter = ('caminhao',)
+
+	def changelist_view(self, request, extra_context=None):
+		extra_context = extra_context or {}
+		caminhoes = (
+			Caminhao.objects.filter(ativo=True)
+			.prefetch_related('compartimentos')
+			.order_by('placa')
+		)
+		grupos = []
+		for cam in caminhoes:
+			comps = cam.compartimentos.order_by('numero')
+			if not comps.exists():
+				continue
+			grupos.append({
+				'caminhao': cam,
+				'compartimentos': comps,
+				'total_litros': sum(c.capacidade_litros for c in comps),
+			})
+		extra_context['grupos'] = grupos
+		return super().changelist_view(request, extra_context=extra_context)
 
 
 class CompartimentoInline(admin.TabularInline):
@@ -64,9 +85,9 @@ class CaminhaoDocumentoInline(admin.StackedInline):
 
 @admin.register(Caminhao)
 class CaminhaoAdmin(admin.ModelAdmin):
-	list_display = ('placa_mercosul', 'motorista_principal', 'local_carregamento', 'numero_compartimentos', 'capacidade_total_litros', 'ativo', 'acoes')
-	list_filter = ('ativo', 'local_carregamento')
-	search_fields = ('placa', 'motorista_principal__nome')
+	list_display = ('placa_mercosul', 'modelo', 'ano_fabricacao', 'tipo_eixo', 'motorista_principal', 'local_carregamento', 'numero_compartimentos', 'capacidade_total_litros', 'ativo', 'acoes')
+	list_filter = ('ativo', 'local_carregamento', 'tipo_eixo')
+	search_fields = ('placa', 'modelo', 'motorista_principal__nome')
 	inlines = [CompartimentoInline, CaminhaoDocumentoInline]
 
 	class Media:
@@ -220,8 +241,13 @@ class RotaAdmin(admin.ModelAdmin):
 	list_filter = ('ativo', 'origem')
 	search_fields = ('nome', 'origem', 'destino')
 	readonly_fields = ('destino_lat', 'destino_lng')
+	autocomplete_fields = ('parada_1', 'parada_2', 'parada_3', 'parada_4', 'parada_5', 'parada_6', 'parada_7')
 	fieldsets = (
-		(None, {'fields': ('nome', 'origem', 'destino', 'distancia_km', 'ativo')}),
+		(None, {'fields': (
+			'nome', 'origem', 'destino',
+			'parada_1', 'parada_2', 'parada_3', 'parada_4', 'parada_5', 'parada_6', 'parada_7',
+			'distancia_km', 'tempo_total_min', 'ativo',
+		)}),
 		('Coordenadas (preenchido automaticamente)', {
 			'classes': ('collapse',),
 			'fields': ('destino_lat', 'destino_lng'),
