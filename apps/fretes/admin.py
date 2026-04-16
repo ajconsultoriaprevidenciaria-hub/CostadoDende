@@ -303,7 +303,7 @@ class CargaAdmin(admin.ModelAdmin):
 		'total_frete_fmt',
 		'acoes',
 	)
-	list_filter = ('data_carga', 'cliente', 'fornecedor', 'rota')
+	list_filter = ()
 	search_fields = ('cliente__nome', 'fornecedor__nome', 'caminhao__placa', 'numero_documento')
 	exclude = ('produto',)
 	autocomplete_fields = ('cliente', 'fornecedor', 'caminhao', 'motorista', 'rota')
