@@ -16,22 +16,32 @@
 {% if cargas_agrupadas %}
     {% for grupo in cargas_agrupadas %}
     <details class="mp-card" style="padding:0; overflow:hidden;">
-        <summary style="list-style:none; cursor:pointer; padding:14px; display:grid; grid-template-columns:1fr 1fr 1.2fr 1.2fr; gap:10px; align-items:center;">
+        <summary style="list-style:none; cursor:pointer; padding:16px 18px; display:grid; grid-template-columns:1.1fr 1.1fr 1.4fr 1.4fr auto; gap:14px; align-items:center;">
             <div>
                 <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Placa do caminhão</div>
-                <div style="font-size:.86rem; font-weight:800;">{{ grupo.placa }}</div>
+                <div style="font-size:.92rem; font-weight:800;">{{ grupo.placa }}</div>
             </div>
             <div>
                 <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Horário de lançamento</div>
-                <div style="font-size:.86rem; font-weight:800;">{{ grupo.horario_lancamento|date:"H:i" }}</div>
+                <div style="font-size:.92rem; font-weight:800;">{{ grupo.horario_lancamento|date:"H:i" }}</div>
             </div>
             <div>
                 <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Motorista</div>
-                <div style="font-size:.78rem; font-weight:700;">{{ grupo.motorista }}</div>
+                <div style="font-size:.82rem; font-weight:700; line-height:1.2;">{{ grupo.motorista }}</div>
             </div>
             <div>
                 <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Distribuidora</div>
-                <div style="font-size:.78rem; font-weight:700;">{{ grupo.distribuidora }}</div>
+                <div style="font-size:.82rem; font-weight:700; line-height:1.2;">{{ grupo.distribuidora }}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; justify-self:end;">
+                <a href="{% url 'motorista_portal:checklist-criar' carga_pk=grupo.carga_pk %}"
+                   title="Checklist da viagem"
+                   onclick="event.stopPropagation();"
+                   style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:10px; border:1px solid rgba(0,217,166,.32); background:rgba(0,217,166,.12); color:var(--primary); text-decoration:none; font-size:1.9rem; font-weight:800; flex-shrink:0;">✓</a>
+                <a href="{% url 'motorista_portal:abastecimento-rapido' carga_pk=grupo.carga_pk %}"
+                   title="Registrar abastecimento da viagem"
+                   onclick="event.stopPropagation();"
+                   style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:10px; border:1px solid rgba(245,158,11,.35); background:rgba(245,158,11,.14); color:#f59e0b; text-decoration:none; font-size:1.9rem; font-weight:800; flex-shrink:0;">⛽</a>
             </div>
         </summary>
 
@@ -43,7 +53,15 @@
                     <span style="font-size:.8rem; font-weight:800; color:var(--text);">{{ item.nome }}</span>
                     <span class="mp-badge mp-badge-ok">{{ item.qtd_bocas }} boca{{ item.qtd_bocas|pluralize }}</span>
                 </div>
-                <div style="font-size:.72rem; color:var(--text-sec);">Bocas: {{ item.bocas_numeros }}</div>
+                {% if item.produtos_resumo %}
+                <div style="margin-top:8px; display:grid; gap:4px;">
+                    {% for linha in item.produtos_resumo %}
+                    <div style="font-size:.72rem; color:var(--text-sec);">
+                        <span style="color:var(--text); font-weight:700;">{{ linha.produto }}</span> - {{ linha.volume_fmt }} L
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

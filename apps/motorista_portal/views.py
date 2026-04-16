@@ -64,7 +64,7 @@ def painel(request):
     cargas = list(
         Carga.objects.filter(motorista=motorista, ativo=True)
         .select_related('cliente', 'fornecedor', 'caminhao', 'motorista')
-        .prefetch_related('carga_compartimentos__compartimento')
+        .prefetch_related('carga_compartimentos__compartimento', 'carga_compartimentos__produto')
         .order_by('-data_carga', '-criado_em', '-id')[:20]
     )
 
@@ -80,6 +80,7 @@ def painel(request):
             marcador,
         )
         grupo = grupos.setdefault(chave, {
+            'carga_pk': carga.pk,
             'placa': carga.caminhao.placa if carga.caminhao_id else '-',
             'horario_lancamento': carga.criado_em,
             'motorista': carga.motorista.nome if carga.motorista_id else '-',
@@ -88,10 +89,32 @@ def painel(request):
         })
         bocas = list(carga.carga_compartimentos.all())
         numeros = [str(item.compartimento.numero) for item in bocas if item.compartimento_id]
+        detalhes_bocas = []
+        produtos_volume = OrderedDict()
+        for item in sorted(bocas, key=lambda x: x.compartimento.numero if x.compartimento_id else 0):
+            produto_nome = item.produto.nome if item.produto_id else '-'
+            capacidade = item.compartimento.capacidade_litros if item.compartimento_id else 0
+            detalhes_bocas.append({
+                'numero': item.compartimento.numero if item.compartimento_id else '-',
+                'produto': produto_nome,
+            })
+            if item.produto_id and item.compartimento_id:
+                produtos_volume[produto_nome] = produtos_volume.get(produto_nome, 0) + capacidade
+
+        produtos_resumo = []
+        for produto_nome, volume in produtos_volume.items():
+            volume_fmt = f"{int(volume):,}".replace(',', '.')
+            produtos_resumo.append({
+                'produto': produto_nome,
+                'volume_fmt': volume_fmt,
+            })
+
         grupo['clientes'].append({
             'nome': carga.cliente.nome if carga.cliente_id else '-',
             'qtd_bocas': len(bocas),
             'bocas_numeros': ', '.join(numeros) if numeros else '-',
+            'detalhes_bocas': detalhes_bocas,
+            'produtos_resumo': produtos_resumo,
         })
 
     cargas_agrupadas = list(grupos.values())
