@@ -318,6 +318,7 @@ class CargaCompartimento(models.Model):
 	carga = models.ForeignKey(Carga, on_delete=models.CASCADE, related_name='carga_compartimentos')
 	compartimento = models.ForeignKey(Compartimento, on_delete=models.CASCADE)
 	produto = models.ForeignKey(Produto, on_delete=models.PROTECT)
+	cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, blank=True, null=True, related_name='+')
 
 	class Meta:
 		unique_together = ('carga', 'compartimento')

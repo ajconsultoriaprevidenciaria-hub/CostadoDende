@@ -442,6 +442,7 @@
         var formHtml =
           '<input type="hidden" name="'+prefix+'-'+idx+'-compartimento" value="'+compId+'">'
           +'<input type="hidden" name="'+prefix+'-'+idx+'-produto" value="'+produtoId+'">'
+          +'<input type="hidden" name="'+prefix+'-'+idx+'-cliente" value="'+(item.cliente_id||'')+'">'
           +'<input type="hidden" name="'+prefix+'-'+idx+'-id" value="">'
           +'<input type="hidden" name="'+prefix+'-'+idx+'-carga" value="">';
         var div = document.createElement('div');
@@ -475,9 +476,45 @@
     });
 
     /* Se já tem valor de caminhão (edição), carregar */
+    /* Detectar ID da carga (URL /admin/fretes/carga/24/change/) */
+    var cargaIdMatch = window.location.pathname.match(/\/carga\/(\d+)\/change\//);
+    var cargaId = cargaIdMatch ? parseInt(cargaIdMatch[1], 10) : null;
+
     if(caminhaoSelect.value){
       lastCaminhaoVal = '';
-      setTimeout(onCaminhaoChange, 500);
+      if(cargaId){
+        /* Modo edição: carregar compartimentos do caminhão e depois as seleções salvas */
+        var val = caminhaoSelect.value;
+        lastCaminhaoVal = val;
+        fetch('/operacao/caminhao/' + val + '/compartimentos/')
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            compartimentos = data.compartimentos || [];
+            if(!compartimentos.length){ return; }
+            /* Carregar seleções salvas */
+            return fetch('/operacao/carga/' + cargaId + '/selecoes/')
+              .then(function(r){ return r.json(); })
+              .then(function(selData){
+                selecionados = {};
+                (selData.selecoes || []).forEach(function(s){
+                  selecionados[s.compartimento_id] = {
+                    produto_id: s.produto_id,
+                    cliente_id: s.cliente_id,
+                    cliente_nome: s.cliente_nome || '',
+                    cliente_label: '',
+                  };
+                });
+                bocaAtiva = null;
+                container.style.display = 'block';
+                renderBocas();
+                renderProdutos();
+                updateResumo();
+              });
+          })
+          .catch(function(){});
+      } else {
+        setTimeout(onCaminhaoChange, 500);
+      }
     }
 
     /* Animação fade */

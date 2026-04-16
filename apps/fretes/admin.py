@@ -285,7 +285,7 @@ class CargaClienteInline(admin.StackedInline):
 class CargaCompartimentoInline(admin.StackedInline):
 	model = CargaCompartimento
 	extra = 0
-	fields = ('compartimento', 'produto')
+	fields = ('compartimento', 'produto', 'cliente')
 
 
 @admin.register(Carga)
@@ -295,7 +295,7 @@ class CargaAdmin(admin.ModelAdmin):
 	list_display = (
 		'data_carga_fmt',
 		'placa_fmt',
-		'cliente',
+		'cliente_bocas_fmt',
 		'motorista',
 		'rota',
 		'litros_fmt',
@@ -317,7 +317,7 @@ class CargaAdmin(admin.ModelAdmin):
 		return formfield
 
 	def get_queryset(self, request):
-		queryset = super().get_queryset(request)
+		queryset = super().get_queryset(request).prefetch_related('carga_compartimentos__compartimento')
 		placa = (request.GET.get('placa') or '').strip()
 		cliente_id = (request.GET.get('cliente_id') or '').strip()
 		data_inicio = (request.GET.get('data_inicio') or '').strip()
@@ -340,41 +340,63 @@ class CargaAdmin(admin.ModelAdmin):
 			return
 
 		carga_principal = form.instance
-		clientes_extras = list(
-			carga_principal.clientes_adicionais.select_related('cliente').order_by('ordem')
+
+		# Agrupar compartimentos por cliente
+		from collections import defaultdict
+		todos = list(
+			carga_principal.carga_compartimentos.select_related('compartimento').all()
 		)
-		if not clientes_extras:
+		if not todos:
 			return
 
-		compartimentos = list(carga_principal.carga_compartimentos.all())
+		por_cliente = defaultdict(list)
+		for comp in todos:
+			cid = comp.cliente_id or carga_principal.cliente_id
+			por_cliente[cid].append(comp)
 
-		for extra in clientes_extras:
+		# Atualizar litros e total_frete da carga principal com base nas bocas do cliente 1
+		comps_principal = por_cliente.get(carga_principal.cliente_id, [])
+		if comps_principal:
+			litros_p = sum(c.compartimento.capacidade_litros for c in comps_principal)
+			frl = carga_principal.valor_frete_litro
+			total_p = litros_p * frl if frl else None
+			Carga.objects.filter(pk=carga_principal.pk).update(
+				litros=litros_p,
+				valor_total_frete=total_p,
+			)
+
+		# Criar carga individual para cada cliente adicional
+		for cliente_id, comps in por_cliente.items():
+			if cliente_id == carga_principal.cliente_id:
+				continue
+			litros = sum(c.compartimento.capacidade_litros for c in comps)
+			frl = carga_principal.valor_frete_litro
+			total_frete = litros * frl if frl else None
 			nova_carga = Carga.objects.create(
 				data_carga=carga_principal.data_carga,
-				cliente=extra.cliente,
+				cliente_id=cliente_id,
 				fornecedor=carga_principal.fornecedor,
 				produto=carga_principal.produto,
 				caminhao=carga_principal.caminhao,
 				motorista=carga_principal.motorista,
 				rota=carga_principal.rota,
-				litros=carga_principal.litros,
-				valor_frete_litro=carga_principal.valor_frete_litro,
-				valor_total_frete=carga_principal.valor_total_frete,
+				litros=litros,
+				valor_frete_litro=frl,
+				valor_total_frete=total_frete,
 				numero_documento=carga_principal.numero_documento,
 				observacoes=carga_principal.observacoes,
 			)
+			CargaCompartimento.objects.bulk_create([
+				CargaCompartimento(
+					carga=nova_carga,
+					compartimento=c.compartimento,
+					produto=c.produto,
+					cliente_id=c.cliente_id,
+				)
+				for c in comps
+			])
 
-			if compartimentos:
-				CargaCompartimento.objects.bulk_create([
-					CargaCompartimento(
-						carga=nova_carga,
-						compartimento=item.compartimento,
-						produto=item.produto,
-					)
-					for item in compartimentos
-				])
-
-		# Após gerar as cargas individualizadas, limpa os clientes extras da carga principal.
+		# Limpar clientes adicionais após individualizar as cargas
 		carga_principal.clientes_adicionais.all().delete()
 
 	def changelist_view(self, request, extra_context=None):
@@ -416,6 +438,19 @@ class CargaAdmin(admin.ModelAdmin):
 	@admin.display(description='Placa', ordering='caminhao__placa')
 	def placa_fmt(self, obj):
 		return obj.caminhao.placa if obj.caminhao_id else '-'
+
+	@admin.display(description='Cliente', ordering='cliente__nome')
+	def cliente_bocas_fmt(self, obj):
+		nome = obj.cliente.nome if obj.cliente_id else '-'
+		qtd = obj.carga_compartimentos.count()
+		if not qtd:
+			return nome
+		return format_html(
+			'{} <span style="display:inline-block;background:rgba(59,130,246,.14);color:#93c5fd;'
+			'border:1px solid rgba(59,130,246,.3);border-radius:999px;'
+			'padding:1px 8px;font-size:.68rem;font-weight:800;margin-left:5px;">{} boca{}</span>',
+			nome, qtd, '' if qtd == 1 else 's',
+		)
 
 	@admin.display(description='R$/Litro', ordering='valor_frete_litro')
 	def frete_litro_fmt(self, obj):

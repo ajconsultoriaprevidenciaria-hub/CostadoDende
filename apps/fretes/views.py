@@ -12,6 +12,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CargaForm
 from .models import Caminhao, Carga, Compartimento, Produto
+from .models import CargaCompartimento
 
 
 @login_required
@@ -32,6 +33,25 @@ def caminhao_compartimentos_json(request, pk):
 def produtos_json(request):
     produtos = list(Produto.objects.filter(ativo=True).order_by('nome').values('id', 'nome'))
     return JsonResponse({'produtos': produtos})
+
+
+@login_required
+def carga_selecoes_json(request, pk):
+	selecoes = list(
+		CargaCompartimento.objects
+		.filter(carga_id=pk)
+		.select_related('compartimento', 'produto', 'cliente')
+		.order_by('compartimento__numero')
+	)
+	result = []
+	for s in selecoes:
+		result.append({
+			'compartimento_id': s.compartimento_id,
+			'produto_id': s.produto_id,
+			'cliente_id': s.cliente_id,
+			'cliente_nome': s.cliente.nome if s.cliente_id else '',
+		})
+	return JsonResponse({'selecoes': result})
 
 
 def _salvar_compartimentos(caminhao, dados_raw):
