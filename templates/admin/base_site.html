@@ -679,6 +679,12 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
               </div>
               <span class="adm-nav-label">Abastecimentos</span>
             </a>
+            <a href="{% url 'admin:fretes_manutencao_changelist' %}" class="adm-nav-link{% if '/admin/fretes/manutencao/' in request.path %} active{% endif %}">
+              <div class="adm-nav-icon" style="background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              </div>
+              <span class="adm-nav-label">Manutenção e Pneus</span>
+            </a>
             {% endwith %}
           {% elif model.object_name == 'Carga' %}
             {% with ic="#f59e0b" bg="rgba(245,158,11,.12)" %}
@@ -780,6 +786,8 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
               {% if model.add_url %}<span class="adm-nav-add" onclick="event.preventDefault();event.stopPropagation();location.href='{{ model.add_url }}'"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>{% endif %}
             </a>
             {% endwith %}
+          {% elif model.object_name == 'Manutencao' or model.object_name == 'Pneu' %}
+            {# Hidden – accessed via "Manutenção e Pneus" link under Caminhão #}
           {% else %}
             {% with ic="#00d9a6" bg="rgba(0,217,166,.12)" %}
             <a href="{{ model.admin_url }}" class="adm-nav-link">

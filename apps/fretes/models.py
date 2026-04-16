@@ -345,3 +345,76 @@ class CargaCompartimento(models.Model):
 
 	def __str__(self):
 		return f'Boca {self.compartimento.numero} - {self.produto.nome}'
+
+
+class Manutencao(BaseModel):
+	TIPO_CHOICES = [
+		('preventiva', 'Preventiva'),
+		('corretiva', 'Corretiva'),
+		('pneus', 'Pneus'),
+		('eletrica', 'Elétrica'),
+		('funilaria', 'Funilaria'),
+		('outros', 'Outros'),
+	]
+	STATUS_CHOICES = [
+		('pendente', 'Pendente'),
+		('em_andamento', 'Em andamento'),
+		('concluida', 'Concluída'),
+	]
+
+	caminhao = models.ForeignKey(Caminhao, on_delete=models.CASCADE, related_name='manutencoes')
+	tipo = models.CharField(max_length=30, choices=TIPO_CHOICES)
+	descricao = models.TextField()
+	data_servico = models.DateField(default=timezone.localdate)
+	km_atual = models.PositiveIntegerField(null=True, blank=True, verbose_name='KM atual')
+	valor = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+	oficina = models.CharField(max_length=150, blank=True)
+	status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
+	observacoes = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ['-data_servico', '-id']
+		verbose_name = 'Manutenção'
+		verbose_name_plural = 'Manutenções'
+
+	def __str__(self):
+		return f'{self.caminhao.placa} – {self.get_tipo_display()} ({self.data_servico:%d/%m/%Y})'
+
+
+class Pneu(BaseModel):
+	POSICAO_CHOICES = [
+		('DE', 'Dianteiro Esquerdo'),
+		('DD', 'Dianteiro Direito'),
+		('TEI', 'Traseiro Esquerdo Interno'),
+		('TEE', 'Traseiro Esquerdo Externo'),
+		('TDI', 'Traseiro Direito Interno'),
+		('TDE', 'Traseiro Direito Externo'),
+		('E1', 'Eixo 2 Esquerdo Interno'),
+		('E2', 'Eixo 2 Esquerdo Externo'),
+		('E3', 'Eixo 2 Direito Interno'),
+		('E4', 'Eixo 2 Direito Externo'),
+		('E5', 'Eixo 3 Esquerdo Interno'),
+		('E6', 'Eixo 3 Esquerdo Externo'),
+		('E7', 'Eixo 3 Direito Interno'),
+		('E8', 'Eixo 3 Direito Externo'),
+		('estepe', 'Estepe'),
+	]
+
+	caminhao = models.ForeignKey(Caminhao, on_delete=models.CASCADE, related_name='pneus')
+	posicao = models.CharField(max_length=10, choices=POSICAO_CHOICES, verbose_name='Posição')
+	marca = models.CharField(max_length=80, blank=True)
+	modelo = models.CharField(max_length=80, blank=True)
+	numero_fogo = models.CharField(max_length=50, blank=True, verbose_name='Número de fogo (DOT)')
+	data_instalacao = models.DateField(null=True, blank=True, verbose_name='Data de instalação')
+	km_instalacao = models.PositiveIntegerField(null=True, blank=True, verbose_name='KM na instalação')
+	sulco_mm = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True, verbose_name='Sulco (mm)')
+	recapado = models.BooleanField(default=False)
+	observacoes = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ['caminhao__placa', 'posicao']
+		verbose_name = 'Pneu'
+		verbose_name_plural = 'Pneus'
+
+	def __str__(self):
+		return f'{self.caminhao.placa} – {self.get_posicao_display()}'

@@ -1,0 +1,230 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+.mp-back{
+  display:inline-flex;align-items:center;gap:6px;
+  color:#00d9a6;font-size:.78rem;font-weight:700;
+  text-decoration:none;margin-bottom:16px;
+}
+.mp-back:hover{opacity:.8;}
+.mp-hero{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  margin-bottom:24px;
+}
+.mp-placa{
+  font-family:monospace;font-weight:800;font-size:1.25rem;
+  background:#0d1929;border:2px solid #3b82f6;border-radius:8px;padding:7px 16px;
+  display:inline-block;letter-spacing:.1em;color:#fff;text-align:center;
+  border-top:18px solid #3b82f6;position:relative;
+}
+.mp-placa .br-label{
+  position:absolute;top:-16px;left:0;right:0;font-size:.5rem;
+  color:#fff;font-weight:700;letter-spacing:.18em;
+}
+.mp-hero-info{display:flex;gap:8px;flex-wrap:wrap;}
+.mp-tag{
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;
+  padding:4px 10px;border-radius:6px;display:inline-block;
+}
+.mp-tag-modelo{background:rgba(59,130,246,.12);color:#3b82f6;border:1px solid rgba(59,130,246,.25);}
+.mp-tag-ano{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2);}
+.mp-tag-eixo{background:rgba(139,92,246,.12);color:#a78bfa;border:1px solid rgba(139,92,246,.25);text-transform:uppercase;}
+
+.mp-section{
+  background:linear-gradient(145deg,#0d1929 40%,#0f2235);
+  border:1px solid rgba(0,217,166,.15);
+  border-radius:14px;
+  margin-bottom:18px;overflow:hidden;
+}
+.mp-section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;cursor:pointer;user-select:none;
+}
+.mp-section-header:hover{background:rgba(0,217,166,.04);}
+.mp-section-title{
+  font-size:.85rem;font-weight:800;color:#e2e8f0;
+  display:flex;align-items:center;gap:8px;
+}
+.mp-section-title .badge{
+  font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;
+  background:rgba(0,217,166,.12);color:#00d9a6;border:1px solid rgba(0,217,166,.2);
+}
+.mp-arrow{
+  font-size:1rem;color:#00d9a6;transition:transform .25s;
+}
+.mp-arrow.open{transform:rotate(90deg);}
+.mp-section-body{
+  display:none;border-top:1px solid rgba(0,217,166,.08);
+  padding:14px 20px;
+}
+.mp-section-body.open{display:block;}
+.mp-add-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(0,217,166,.1);color:#00d9a6;
+  border:1px solid rgba(0,217,166,.25);border-radius:8px;
+  padding:6px 14px;font-size:.72rem;font-weight:700;
+  text-decoration:none;transition:background .2s;
+}
+.mp-add-btn:hover{background:rgba(0,217,166,.2);}
+.mp-table{width:100%;border-collapse:collapse;}
+.mp-table th{
+  text-align:left;font-size:.6rem;text-transform:uppercase;
+  letter-spacing:.1em;color:#8892a4;padding:6px 12px;
+  border-bottom:1px solid rgba(0,217,166,.08);
+}
+.mp-table td{
+  padding:8px 12px;font-size:.78rem;color:#e2e8f0;
+  border-bottom:1px solid rgba(0,217,166,.04);
+}
+.mp-table tr:hover td{background:rgba(0,217,166,.03);}
+.mp-status{
+  font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;
+  display:inline-block;
+}
+.mp-status-pendente{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.2);}
+.mp-status-em_andamento{background:rgba(59,130,246,.12);color:#3b82f6;border:1px solid rgba(59,130,246,.25);}
+.mp-status-concluida{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.2);}
+.mp-empty-msg{color:#8892a4;padding:20px 0;font-size:.78rem;text-align:center;}
+</style>
+
+<a href="{% url 'admin:fretes_manutencao_changelist' %}" class="mp-back">← Voltar às placas</a>
+
+<div class="mp-hero">
+  <div class="mp-placa">
+    <span class="br-label">BRASIL</span>
+    {{ caminhao.placa|upper }}
+  </div>
+  <div class="mp-hero-info">
+    {% if caminhao.modelo %}
+      <span class="mp-tag mp-tag-modelo">🚛 {{ caminhao.modelo }}</span>
+    {% endif %}
+    {% if caminhao.ano_fabricacao %}
+      <span class="mp-tag mp-tag-ano">📅 {{ caminhao.ano_fabricacao }}</span>
+    {% endif %}
+    {% if caminhao.tipo_eixo %}
+      <span class="mp-tag mp-tag-eixo">⚙️ {{ caminhao.get_tipo_eixo_display }}</span>
+    {% endif %}
+  </div>
+</div>
+
+<!-- MANUTENÇÕES -->
+<div class="mp-section">
+  <div class="mp-section-header" onclick="toggleMpSection(this)">
+    <div class="mp-section-title">
+      <span class="mp-arrow open">▶</span>
+      🔧 Manutenções
+      <span class="badge">{{ manutencoes|length }}</span>
+    </div>
+    <a href="{% url 'admin:fretes_manutencao_add' %}?caminhao={{ caminhao.pk }}" class="mp-add-btn">
+      + Nova Manutenção
+    </a>
+  </div>
+  <div class="mp-section-body open">
+    {% if manutencoes %}
+    <table class="mp-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Tipo</th>
+          <th>Descrição</th>
+          <th>KM</th>
+          <th>Valor</th>
+          <th>Oficina</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in manutencoes %}
+        <tr>
+          <td style="font-weight:700;white-space:nowrap;">{{ m.data_servico|date:"d/m/Y" }}</td>
+          <td>{{ m.get_tipo_display }}</td>
+          <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ m.descricao|truncatechars:60 }}</td>
+          <td>{% if m.km_atual %}{{ m.km_atual|floatformat:0 }}{% else %}-{% endif %}</td>
+          <td>{% if m.valor %}R$ {{ m.valor|floatformat:2 }}{% else %}-{% endif %}</td>
+          <td>{{ m.oficina|default:"-" }}</td>
+          <td><span class="mp-status mp-status-{{ m.status }}">{{ m.get_status_display }}</span></td>
+          <td>
+            <a href="{% url 'admin:fretes_manutencao_change' m.pk %}"
+               style="color:#3b82f6;font-size:.72rem;font-weight:700;text-decoration:none;">
+              ✏️ Editar
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="mp-empty-msg">Nenhuma manutenção registrada para este caminhão.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- PNEUS -->
+<div class="mp-section">
+  <div class="mp-section-header" onclick="toggleMpSection(this)">
+    <div class="mp-section-title">
+      <span class="mp-arrow open">▶</span>
+      🛞 Pneus
+      <span class="badge">{{ pneus|length }}</span>
+    </div>
+    <a href="{% url 'admin:fretes_pneu_add' %}?caminhao={{ caminhao.pk }}" class="mp-add-btn">
+      + Novo Pneu
+    </a>
+  </div>
+  <div class="mp-section-body open">
+    {% if pneus %}
+    <table class="mp-table">
+      <thead>
+        <tr>
+          <th>Posição</th>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>DOT</th>
+          <th>Instalação</th>
+          <th>KM Inst.</th>
+          <th>Sulco</th>
+          <th>Recapado</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in pneus %}
+        <tr>
+          <td style="font-weight:700;">{{ p.get_posicao_display }}</td>
+          <td>{{ p.marca|default:"-" }}</td>
+          <td>{{ p.modelo|default:"-" }}</td>
+          <td style="font-family:monospace;font-size:.7rem;">{{ p.numero_fogo|default:"-" }}</td>
+          <td>{% if p.data_instalacao %}{{ p.data_instalacao|date:"d/m/Y" }}{% else %}-{% endif %}</td>
+          <td>{% if p.km_instalacao %}{{ p.km_instalacao|floatformat:0 }}{% else %}-{% endif %}</td>
+          <td>{% if p.sulco_mm %}{{ p.sulco_mm }} mm{% else %}-{% endif %}</td>
+          <td>{% if p.recapado %}<span style="color:#22c55e;font-weight:700;">Sim</span>{% else %}Não{% endif %}</td>
+          <td>
+            <a href="{% url 'admin:fretes_pneu_change' p.pk %}"
+               style="color:#3b82f6;font-size:.72rem;font-weight:700;text-decoration:none;">
+              ✏️ Editar
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="mp-empty-msg">Nenhum pneu registrado para este caminhão.</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function toggleMpSection(header){
+  var arrow = header.querySelector('.mp-arrow');
+  var body = header.nextElementSibling;
+  arrow.classList.toggle('open');
+  body.classList.toggle('open');
+}
+</script>
+{% endblock %}

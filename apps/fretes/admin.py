@@ -18,7 +18,9 @@ from .models import (
 	Compartimento,
 	Fornecedor,
 	LocalCarregamento,
+	Manutencao,
 	Motorista,
+	Pneu,
 	Produto,
 	Rota,
 	TabelaFrete,
@@ -602,3 +604,61 @@ class CargaAdmin(admin.ModelAdmin):
 			'opts': self.model._meta,
 		}
 		return render(request, 'admin/fretes/carga/info_viagem.html', context)
+
+
+# ─────────────────────────────────────────────────────────
+# Manutenção e Pneus
+# ─────────────────────────────────────────────────────────
+
+@admin.register(Manutencao)
+class ManutencaoAdmin(admin.ModelAdmin):
+	change_list_template = 'admin/fretes/manutencao/landing.html'
+	list_display = ('caminhao', 'tipo', 'data_servico', 'km_atual', 'valor_fmt', 'status')
+	list_filter = ()
+	search_fields = ('caminhao__placa', 'descricao', 'oficina')
+	autocomplete_fields = ('caminhao',)
+
+	@admin.display(description='Valor', ordering='valor')
+	def valor_fmt(self, obj):
+		if obj.valor is None:
+			return '-'
+		v = f'{obj.valor:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+		return f'R$ {v}'
+
+	def changelist_view(self, request, extra_context=None):
+		extra_context = extra_context or {}
+		caminhoes = Caminhao.objects.filter(ativo=True).order_by('placa')
+		extra_context['caminhoes'] = caminhoes
+		return super().changelist_view(request, extra_context=extra_context)
+
+	def get_urls(self):
+		urls = super().get_urls()
+		custom = [
+			path(
+				'caminhao/<int:caminhao_pk>/',
+				self.admin_site.admin_view(self.detalhe_view),
+				name='fretes_manutencao_detalhe',
+			),
+		]
+		return custom + urls
+
+	def detalhe_view(self, request, caminhao_pk):
+		caminhao = get_object_or_404(Caminhao, pk=caminhao_pk)
+		manutencoes = caminhao.manutencoes.all()[:50]
+		pneus = caminhao.pneus.all()
+		context = {
+			**self.admin_site.each_context(request),
+			'title': f'Manutenção e Pneus — {caminhao.placa}',
+			'caminhao': caminhao,
+			'manutencoes': manutencoes,
+			'pneus': pneus,
+		}
+		return render(request, 'admin/fretes/manutencao/detalhe.html', context)
+
+
+@admin.register(Pneu)
+class PneuAdmin(admin.ModelAdmin):
+	list_display = ('caminhao', 'posicao', 'marca', 'modelo', 'sulco_mm', 'recapado')
+	list_filter = ('caminhao', 'recapado')
+	search_fields = ('caminhao__placa', 'marca', 'modelo', 'numero_fogo')
+	autocomplete_fields = ('caminhao',)
