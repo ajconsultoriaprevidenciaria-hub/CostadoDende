@@ -90,13 +90,34 @@ class CaminhaoDocumentoInline(admin.StackedInline):
 
 @admin.register(Caminhao)
 class CaminhaoAdmin(admin.ModelAdmin):
+	change_list_template = 'admin/fretes/caminhao/change_list.html'
 	list_display = ('placa_mercosul', 'modelo', 'ano_fabricacao', 'tipo_eixo', 'motorista_principal', 'local_carregamento', 'numero_compartimentos', 'capacidade_total_litros', 'ativo', 'acoes')
-	list_filter = ('ativo', 'local_carregamento', 'tipo_eixo')
+	list_filter = ()
 	search_fields = ('placa', 'modelo', 'motorista_principal__nome')
+	list_per_page = 25
 	inlines = [CompartimentoInline, CaminhaoDocumentoInline]
 
 	class Media:
 		js = ('admin/js/placa_mercosul.js',)
+		css = {'all': ()}
+
+	def changelist_view(self, request, extra_context=None):
+		extra_context = extra_context or {}
+		extra_context['cl_extra_css'] = (
+			'<style>'
+			'#result_list table{table-layout:auto;width:100%}'
+			'#result_list th,#result_list td{padding:4px 5px;font-size:.7rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'
+			'.cam-acoes{display:flex;gap:3px;flex-wrap:nowrap}'
+			'.cam-btn{border-radius:5px;padding:3px 7px;font-size:.72rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;transition:all .18s;border:1px solid;cursor:pointer}'
+			'.cam-btn-edit{background:var(--panel);color:var(--primary);border-color:var(--border)}'
+			'.cam-btn-edit:hover{background:var(--primary);color:#070d1a}'
+			'.cam-btn-doc{background:rgba(59,130,246,.1);color:#3b82f6;border-color:rgba(59,130,246,.25)}'
+			'.cam-btn-doc:hover{background:#3b82f6;color:#fff}'
+			'.cam-btn-del{background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.25)}'
+			'.cam-btn-del:hover{background:#ef4444;color:#fff}'
+			'</style>'
+		)
+		return super().changelist_view(request, extra_context=extra_context)
 
 	@admin.display(description='Placa', ordering='placa')
 	def placa_mercosul(self, obj):
@@ -119,24 +140,11 @@ class CaminhaoAdmin(admin.ModelAdmin):
 		delete_url = reverse('admin:fretes_caminhao_delete', args=[obj.pk])
 		docs_url = reverse('admin:fretes_caminhaodocumento_changelist') + f'?caminhao__id__exact={obj.pk}'
 		return format_html(
-			'<a href="{}" style="background:var(--panel);color:var(--primary);border:1px solid var(--border);'
-			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
-			'margin-right:5px;display:inline-block;transition:all .18s;"'
-			' onmouseover="this.style.background=\'var(--primary)\';this.style.color=\'#070d1a\'"'
-			' onmouseout="this.style.background=\'var(--panel)\';this.style.color=\'var(--primary)\'">'
-			'✏️ Editar</a>'
-			'<a href="{}" style="background:rgba(59,130,246,.1);color:#3b82f6;border:1px solid rgba(59,130,246,.25);'
-			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
-			'display:inline-block;transition:all .18s;margin-right:5px;'
-			' onmouseover="this.style.background=\'#3b82f6\';this.style.color=\'#fff\'"'
-			' onmouseout="this.style.background=\'rgba(59,130,246,.1)\';this.style.color=\'#3b82f6\'">'
-			'<span class="action-icon">�</span></a>'
-			'<a href="{}" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25);'
-			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
-			'display:inline-block;transition:all .18s;'
-			' onmouseover="this.style.background=\'#ef4444\';this.style.color=\'#fff\'"'
-			' onmouseout="this.style.background=\'rgba(239,68,68,.1)\';this.style.color=\'#ef4444\'">'
-			'🗑️ Excluir</a>',
+			'<div class="cam-acoes">'
+			'<a href="{}" class="cam-btn cam-btn-edit" title="Editar">✏️</a>'
+			'<a href="{}" class="cam-btn cam-btn-doc" title="Documentos do Caminhão">📄</a>'
+			'<a href="{}" class="cam-btn cam-btn-del" title="Excluir">🗑️</a>'
+			'</div>',
 			edit_url, docs_url, delete_url
 		)
 

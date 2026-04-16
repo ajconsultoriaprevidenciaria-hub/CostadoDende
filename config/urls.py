@@ -4,13 +4,14 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
-from apps.motorista_portal.views_abastecimentos import lista_abastecimentos
+from apps.motorista_portal.views_abastecimentos import lista_abastecimentos, exportar_abastecimentos_pdf
 
 urlpatterns = [
     path('', include('apps.core.urls')),
     path('operacao/', include('apps.fretes.urls')),
     path('motorista/', include('apps.motorista_portal.urls')),
     path('admin/fretes/abastecimentos/', lista_abastecimentos, name='admin-abastecimentos-list'),
+    path('admin/fretes/abastecimentos/pdf/', exportar_abastecimentos_pdf, name='admin-abastecimentos-pdf'),
     path('login/', auth_views.LoginView.as_view(template_name='auth/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login', http_method_names=['get', 'post', 'options']), name='logout'),
     path('recuperar-senha/', auth_views.PasswordResetView.as_view(

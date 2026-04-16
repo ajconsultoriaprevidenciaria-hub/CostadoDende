@@ -120,7 +120,7 @@
 
             <div class="field">
                 <label for="ab_preco">Preço por Litro (R$)</label>
-                <input type="number" name="preco_litro" id="ab_preco" step="0.0001" min="0" inputmode="decimal">
+                <input type="number" name="preco_litro" id="ab_preco" step="0.0001" min="0" inputmode="decimal" readonly style="background:rgba(255,255,255,.05);color:#aaa;">
             </div>
 
             <div class="field">
@@ -130,6 +130,20 @@
 
             <button type="submit" class="btn">⛽ Salvar Abastecimento</button>
         </form>
+        <script>
+        (function(){
+            var valor=document.getElementById('ab_valor');
+            var litros=document.getElementById('ab_litros');
+            var preco=document.getElementById('ab_preco');
+            function calc(){
+                var v=parseFloat(valor.value)||0;
+                var l=parseFloat(litros.value)||0;
+                preco.value=l>0?(v/l).toFixed(4):'';
+            }
+            valor.addEventListener('input',calc);
+            litros.addEventListener('input',calc);
+        })();
+        </script>
     </div>
 </body>
 </html>

@@ -5,57 +5,57 @@
 
 {% block extrastyle %}
 <style>
-    .abast-shell { max-width: 860px; }
+    .abast-shell { max-width: 1032px; }
     .abast-filtros {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px; margin-bottom: 18px; align-items: end;
+        gap: 14px; margin-bottom: 22px; align-items: end;
     }
     .abast-filtros .abast-full { grid-column: 1 / -1; }
     .abast-periodo {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px; grid-column: 1 / -1;
+        gap: 14px; grid-column: 1 / -1;
     }
-    .abast-acoes { display: flex; gap: 10px; align-items: end; }
+    .abast-acoes { display: flex; gap: 12px; align-items: end; }
     .abast-mes-wrap {
         display: grid;
-        grid-template-columns: minmax(220px, 1fr) 120px 32px;
-        gap: 8px; align-items: center;
+        grid-template-columns: minmax(264px, 1fr) 144px 38px;
+        gap: 10px; align-items: center;
     }
     .abast-mes-bloco { grid-column: 1 / -1; }
-    .abast-mes-input { padding-right: 12px !important; }
+    .abast-mes-input { padding-right: 14px !important; }
     .abast-ano-select {
         width: 100%; background: var(--panel); border: 1px solid var(--border);
-        border-radius: 10px; padding: 10px 12px; color: var(--text);
+        border-radius: 12px; padding: 12px 14px; color: var(--text); font-size: .94rem;
     }
     .abast-mes-btn {
-        width: 32px; height: 32px; display: inline-flex; align-items: center;
-        justify-content: center; border: 1px solid var(--border); border-radius: 8px;
+        width: 38px; height: 38px; display: inline-flex; align-items: center;
+        justify-content: center; border: 1px solid var(--border); border-radius: 10px;
         background: rgba(0,217,166,.08); color: var(--primary); cursor: pointer;
     }
     .abast-input {
         width: 100%; background: var(--panel); border: 1px solid var(--border);
-        border-radius: 10px; padding: 10px 12px; color: var(--text);
+        border-radius: 12px; padding: 12px 14px; color: var(--text); font-size: .94rem;
     }
     .abast-label {
-        display: block; margin-bottom: 6px; font-size: .78rem; color: var(--muted);
+        display: block; margin-bottom: 7px; font-size: .94rem; color: var(--muted);
     }
     .abast-btn-search {
-        background: var(--primary); color: #07111b; border: none; border-radius: 10px;
-        padding: 10px 14px; font-weight: 800; cursor: pointer;
+        background: var(--primary); color: #07111b; border: none; border-radius: 12px;
+        padding: 12px 17px; font-weight: 800; font-size: .94rem; cursor: pointer;
     }
     .abast-btn-clear {
         display: inline-flex; align-items: center; justify-content: center;
         background: transparent; color: var(--muted); border: 1px solid var(--border);
-        border-radius: 10px; padding: 10px 14px; text-decoration: none; font-weight: 700;
+        border-radius: 12px; padding: 12px 17px; text-decoration: none; font-weight: 700; font-size: .94rem;
     }
     .abast-table {
-        width: 100%; background: var(--panel); border-radius: 12px;
+        width: 100%; background: var(--panel); border-radius: 14px;
         border: 1px solid var(--border); border-collapse: collapse;
     }
-    .abast-table thead tr { color: var(--primary); font-size: .92rem; }
-    .abast-table th, .abast-table td { padding: 10px 8px; }
+    .abast-table thead tr { color: var(--primary); font-size: 1.1rem; }
+    .abast-table th, .abast-table td { padding: 12px 10px; font-size: .94rem; }
     .abast-table th { text-align: left; }
     .abast-table th.num { text-align: right; }
     .abast-table td.num { text-align: right; }
@@ -118,6 +118,12 @@
         <a href="{% url 'admin-abastecimentos-list' %}" class="abast-btn-clear">Limpar</a>
     </div>
 </form>
+<div style="display:flex;gap:10px;margin-bottom:14px;">
+    <a href="{% url 'admin-abastecimentos-pdf' %}?posto={{ filtros.posto|urlencode }}&data_inicial={{ filtros.data_inicial|urlencode }}&data_final={{ filtros.data_final|urlencode }}&mes={{ filtros.mes|urlencode }}"
+       class="abast-btn-search" style="display:inline-flex;align-items:center;gap:6px;font-size:.88rem;text-decoration:none;">
+        📄 Gerar PDF
+    </a>
+</div>
 <table class="abast-table">
     <thead>
         <tr>
