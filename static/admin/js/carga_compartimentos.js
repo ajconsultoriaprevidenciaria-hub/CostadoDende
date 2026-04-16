@@ -10,7 +10,7 @@
 
     var produtos = [];      // [{id, nome}]
     var compartimentos = []; // [{id, numero, capacidade_litros}]
-    var selecionados = {};   // {compId: produtoId}
+    var selecionados = {};   // {compId: {produto_id, cliente_id, cliente_label, cliente_nome}}
     var lastCaminhaoVal = '';
 
     /* ── Container principal ─────────────────────────────── */
@@ -21,33 +21,47 @@
       +'border:1px solid rgba(0,217,166,.18);border-radius:16px;overflow:hidden;'
       +'box-shadow:0 6px 30px rgba(0,0,0,.3);';
     container.innerHTML =
-      '<div style="padding:16px 22px;display:flex;align-items:center;gap:10px;'
-      +'border-bottom:1px solid rgba(0,217,166,.1);">'
-      +'<span style="font-size:1.3rem;">🛢️</span>'
-      +'<span style="font-size:.9rem;font-weight:800;color:#00d9a6;letter-spacing:.04em;">'
-      +'SELECIONAR BOCAS &amp; PRODUTOS</span>'
+      '<div style="padding:16px 22px;border-bottom:1px solid rgba(0,217,166,.1);">'
+      +'<div style="display:flex;align-items:center;gap:10px;">'
+      +'<span style="font-size:1.3rem;">🥗</span>'
+      +'<span style="font-size:.92rem;font-weight:900;color:#00d9a6;letter-spacing:.05em;">'
+      +'MONTE SUA CARGA: BOCA > PRODUTO > CLIENTE</span>'
       +'<span style="flex:1"></span>'
-      +'<span id="bocas-resumo" style="font-size:.7rem;color:#8892a4;"></span>'
+      +'<span id="bocas-resumo" style="font-size:.7rem;color:#9fb0c7;"></span>'
       +'</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr;min-height:200px;">'
+      +'<div id="fluxo-etapas" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">'
+      +'<span id="etapa-boca" style="font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:999px;'
+      +'background:rgba(59,130,246,.18);color:#8ec5ff;border:1px solid rgba(59,130,246,.32);">1. Boca</span>'
+      +'<span id="etapa-produto" style="font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:999px;'
+      +'background:rgba(148,163,184,.12);color:#94a3b8;border:1px solid rgba(148,163,184,.2);">2. Produto</span>'
+      +'<span id="etapa-cliente" style="font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:999px;'
+      +'background:rgba(148,163,184,.12);color:#94a3b8;border:1px solid rgba(148,163,184,.2);">3. Cliente</span>'
+      +'</div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;min-height:220px;">'
       /* Lado esquerdo: bocas */
       +'<div id="bocas-lista" style="padding:16px;border-right:1px solid rgba(0,217,166,.1);">'
       +'<div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8892a4;'
-      +'margin-bottom:12px;">📦 Bocas do Caminhão</div>'
+      +'margin-bottom:6px;">📦 Etapa 1: Escolha a Boca</div>'
+      +'<div style="font-size:.68rem;color:#5a6478;margin-bottom:12px;">'
+      +'Clique em uma boca para começar.</div>'
       +'<div id="bocas-grid" style="display:flex;flex-wrap:wrap;gap:10px;"></div>'
       +'</div>'
       /* Lado direito: produtos */
       +'<div id="produtos-lista" style="padding:16px;">'
       +'<div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8892a4;'
-      +'margin-bottom:12px;">🧪 Selecione o Produto</div>'
+      +'margin-bottom:6px;">🧪 Etapa 2 e 3: Produto e Cliente</div>'
+      +'<div style="font-size:.68rem;color:#5a6478;margin-bottom:12px;">'
+      +'Depois do produto, selecione o cliente da boca.</div>'
       +'<div id="produtos-grid" style="display:flex;flex-direction:column;gap:6px;"></div>'
       +'<div id="produtos-placeholder" style="font-size:.75rem;color:#5a6478;padding:20px;text-align:center;">'
-      +'👈 Clique em uma boca para ver os produtos</div>'
+      +'👈 Primeiro escolha a boca, igual montar salada.</div>'
       +'</div>'
       +'</div>';
 
-    // Inserir depois do campo caminhão
-    var inlineGroup = document.querySelector('.inline-group');
+    // Inserir antes do inline de compartimentos
+    var inlineGroup = document.getElementById('carga_compartimentos-group')
+      || document.querySelector('.inline-group');
     if(inlineGroup){
       inlineGroup.parentNode.insertBefore(container, inlineGroup);
     } else {
@@ -128,26 +142,37 @@
         var card = document.createElement('div');
         card.dataset.compId = c.id;
         var sel = selecionados[c.id];
-        var prodNome = sel ? getProdutoNome(sel) : null;
+        var prodNome = sel && sel.produto_id ? getProdutoNome(sel.produto_id) : null;
+        var cliNome = sel && sel.cliente_nome ? sel.cliente_nome : null;
+        var cliLabel = sel && sel.cliente_label ? sel.cliente_label : null;
+        var completo = !!(sel && sel.produto_id && sel.cliente_id);
+        var parcial = !!(sel && sel.produto_id && !sel.cliente_id);
 
         card.style.cssText =
           'cursor:pointer;border-radius:12px;padding:14px 16px;min-width:110px;text-align:center;'
           +'transition:all .2s;position:relative;'
-          + (sel
+          + (completo
             ? 'background:rgba(0,217,166,.12);border:2px solid #00d9a6;'
+            : (parcial
+              ? 'background:rgba(245,158,11,.12);border:2px solid #f59e0b;'
             : (bocaAtiva===c.id
               ? 'background:rgba(59,130,246,.12);border:2px solid #3b82f6;'
-              : 'background:#070d1a;border:2px solid rgba(0,217,166,.12);'));
+              : 'background:#070d1a;border:2px solid rgba(0,217,166,.12);')));
 
         card.innerHTML =
           '<div style="font-size:1.6rem;margin-bottom:4px;">🛢️</div>'
-          +'<div style="font-size:.82rem;font-weight:800;color:'+(sel?'#00d9a6':'#dde6f0')+';">'
+          +'<div style="font-size:.82rem;font-weight:800;color:'+(completo?'#00d9a6':(parcial?'#f59e0b':'#dde6f0'))+';">'
           +'Boca '+c.numero+'</div>'
           +'<div style="font-size:.62rem;color:#8892a4;margin-top:2px;">'
           +Number(c.capacidade_litros).toLocaleString('pt-BR')+' L</div>'
           +(prodNome
             ? '<div style="margin-top:6px;font-size:.6rem;font-weight:700;color:#00d9a6;'
               +'background:rgba(0,217,166,.08);border-radius:6px;padding:3px 8px;">'+prodNome+'</div>'
+              +(cliNome
+                ? '<div style="margin-top:4px;font-size:.58rem;font-weight:700;color:#f59e0b;'
+                  +'background:rgba(245,158,11,.08);border-radius:6px;padding:3px 8px;">'+(cliLabel ? cliLabel+': ' : 'Cliente: ')+cliNome+'</div>'
+                : '<div style="margin-top:4px;font-size:.58rem;font-weight:700;color:#f59e0b;'
+                  +'background:rgba(245,158,11,.08);border-radius:6px;padding:3px 8px;">Falta escolher cliente</div>')
               +'<div class="boca-remove" style="position:absolute;top:4px;right:6px;font-size:.65rem;'
               +'color:#ef4444;cursor:pointer;opacity:.7;" title="Remover">✕</div>'
             : '');
@@ -188,11 +213,15 @@
 
       if(!bocaAtiva){
         placeholder.style.display = 'block';
+        renderEtapas('boca');
         return;
       }
       placeholder.style.display = 'none';
+      renderEtapas('produto');
 
       var boca = compartimentos.find(function(c){ return c.id === bocaAtiva; });
+      var selAtual = selecionados[bocaAtiva] || null;
+      var produtoAtual = selAtual && selAtual.produto_id ? selAtual.produto_id : null;
       if(boca){
         var header = document.createElement('div');
         header.style.cssText = 'font-size:.75rem;color:#3b82f6;font-weight:700;margin-bottom:8px;';
@@ -202,7 +231,7 @@
 
       produtos.forEach(function(p){
         var item = document.createElement('div');
-        var isSelected = selecionados[bocaAtiva] === p.id;
+        var isSelected = produtoAtual === p.id;
         item.style.cssText =
           'padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;'
           +'transition:all .15s;display:flex;align-items:center;gap:8px;'
@@ -221,8 +250,70 @@
           if(!isSelected) item.style.background = '#070d1a';
         });
         item.addEventListener('click', function(){
-          selecionados[bocaAtiva] = p.id;
-          bocaAtiva = null; // volta para visão geral
+          var anterior = selecionados[bocaAtiva] || {};
+          selecionados[bocaAtiva] = {
+            produto_id: p.id,
+            cliente_id: anterior.cliente_id || null,
+            cliente_label: anterior.cliente_label || '',
+            cliente_nome: anterior.cliente_nome || '',
+          };
+          renderBocas();
+          renderProdutos();
+          updateResumo();
+          syncInlines();
+        });
+
+        grid.appendChild(item);
+      });
+
+      if(!produtoAtual){
+        return;
+      }
+
+      renderEtapas('cliente');
+
+      var clientes = getClientesDisponiveis();
+      var cliHeader = document.createElement('div');
+      cliHeader.style.cssText = 'font-size:.72rem;color:#f59e0b;font-weight:700;margin:12px 0 8px;';
+      cliHeader.textContent = '👤 Agora escolha o cliente desta boca:';
+      grid.appendChild(cliHeader);
+
+      if(!clientes.length){
+        var semCli = document.createElement('div');
+        semCli.style.cssText = 'padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.08);'
+          +'border:1px solid rgba(245,158,11,.25);color:#f59e0b;font-size:.72rem;font-weight:700;';
+        semCli.textContent = 'Selecione Cliente 1 ou Clientes 2 a 7 no formulário para continuar.';
+        grid.appendChild(semCli);
+        return;
+      }
+
+      clientes.forEach(function(c){
+        var item = document.createElement('div');
+        var isSelected = selAtual && selAtual.cliente_id === c.id && selAtual.cliente_label === c.label;
+        item.style.cssText =
+          'padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;'
+          +'transition:all .15s;display:flex;align-items:center;gap:8px;'
+          + (isSelected
+            ? 'background:rgba(245,158,11,.15);border:1px solid #f59e0b;color:#f59e0b;'
+            : 'background:#070d1a;border:1px solid rgba(245,158,11,.2);color:#dde6f0;');
+
+        item.innerHTML = '<span style="font-size:1rem;">'+(isSelected ? '✅' : '👤')+'</span>'
+          +'<span>'+c.label+': '+c.nome+'</span>';
+
+        item.addEventListener('mouseenter', function(){
+          if(!isSelected) item.style.background = 'rgba(245,158,11,.06)';
+        });
+        item.addEventListener('mouseleave', function(){
+          if(!isSelected) item.style.background = '#070d1a';
+        });
+        item.addEventListener('click', function(){
+          selecionados[bocaAtiva] = {
+            produto_id: produtoAtual,
+            cliente_id: c.id,
+            cliente_label: c.label,
+            cliente_nome: c.nome,
+          };
+          bocaAtiva = null;
           renderBocas();
           renderProdutos();
           updateResumo();
@@ -237,14 +328,89 @@
     function updateResumo(){
       var el = document.getElementById('bocas-resumo');
       var total = compartimentos.length;
-      var sel = Object.keys(selecionados).length;
-      el.textContent = sel + ' de ' + total + ' bocas com produto';
+      var selProduto = 0;
+      var selCompleto = 0;
+      Object.keys(selecionados).forEach(function(k){
+        var item = selecionados[k];
+        if(item && item.produto_id){
+          selProduto += 1;
+          if(item.cliente_id){
+            selCompleto += 1;
+          }
+        }
+      });
+      el.textContent = selCompleto + ' de ' + total + ' bocas completas ('+selProduto+' com produto)';
     }
 
     /* ── Helpers ─────────────────────────────────────────── */
     function getProdutoNome(id){
       var p = produtos.find(function(x){ return x.id === id; });
       return p ? p.nome : '';
+    }
+
+    function renderEtapas(etapa){
+      var boca = document.getElementById('etapa-boca');
+      var produto = document.getElementById('etapa-produto');
+      var cliente = document.getElementById('etapa-cliente');
+      if(!boca || !produto || !cliente) return;
+
+      var onBlue = 'background:rgba(59,130,246,.18);color:#8ec5ff;border:1px solid rgba(59,130,246,.32);';
+      var onGreen = 'background:rgba(0,217,166,.16);color:#00d9a6;border:1px solid rgba(0,217,166,.28);';
+      var onAmber = 'background:rgba(245,158,11,.16);color:#f59e0b;border:1px solid rgba(245,158,11,.3);';
+      var off = 'background:rgba(148,163,184,.12);color:#94a3b8;border:1px solid rgba(148,163,184,.2);';
+
+      boca.style.cssText = boca.style.cssText.replace(/background:[^;]*;color:[^;]*;border:[^;]*;/, '');
+      produto.style.cssText = produto.style.cssText.replace(/background:[^;]*;color:[^;]*;border:[^;]*;/, '');
+      cliente.style.cssText = cliente.style.cssText.replace(/background:[^;]*;color:[^;]*;border:[^;]*;/, '');
+
+      boca.style.cssText += onBlue;
+      produto.style.cssText += off;
+      cliente.style.cssText += off;
+
+      if(etapa === 'produto'){
+        produto.style.cssText = produto.style.cssText.replace(off, onGreen);
+      }
+      if(etapa === 'cliente'){
+        produto.style.cssText = produto.style.cssText.replace(off, onGreen);
+        cliente.style.cssText = cliente.style.cssText.replace(off, onAmber);
+      }
+    }
+
+    function getClientesDisponiveis(){
+      var out = [];
+
+      var cli1 = document.getElementById('id_cliente');
+      if(cli1 && cli1.value){
+        var txt1 = (cli1.options && cli1.selectedIndex >= 0)
+          ? (cli1.options[cli1.selectedIndex].text || '').trim()
+          : '';
+        out.push({
+          id: parseInt(cli1.value, 10),
+          nome: txt1 || 'Cliente selecionado',
+          label: 'Cliente 1'
+        });
+      }
+
+      var adicionais = document.querySelectorAll('select[name^="clientes_adicionais-"][name$="-cliente"]');
+      adicionais.forEach(function(sel){
+        if(!sel.value || sel.name.indexOf('__prefix__') !== -1){
+          return;
+        }
+        var ordemField = sel.form ? sel.form.querySelector('input[name="'+sel.name.replace('-cliente', '-ordem')+'"]') : null;
+        var ordemVal = ordemField && ordemField.value ? parseInt(ordemField.value, 10) : null;
+        var ordemMatch = sel.name.match(/clientes_adicionais-(\d+)-cliente/);
+        var idx = ordemMatch ? parseInt(ordemMatch[1], 10) : 0;
+        var txt = (sel.options && sel.selectedIndex >= 0)
+          ? (sel.options[sel.selectedIndex].text || '').trim()
+          : '';
+        out.push({
+          id: parseInt(sel.value, 10),
+          nome: txt || 'Cliente selecionado',
+          label: 'Cliente ' + (ordemVal || (idx + 2))
+        });
+      });
+
+      return out;
     }
 
     /* ── Sincronizar com Inline Django ───────────────────── */
@@ -271,9 +437,11 @@
 
       keys.forEach(function(compId, i){
         var idx = startIdx + i;
+        var item = selecionados[compId] || {};
+        var produtoId = item.produto_id || item;
         var formHtml =
           '<input type="hidden" name="'+prefix+'-'+idx+'-compartimento" value="'+compId+'">'
-          +'<input type="hidden" name="'+prefix+'-'+idx+'-produto" value="'+selecionados[compId]+'">'
+          +'<input type="hidden" name="'+prefix+'-'+idx+'-produto" value="'+produtoId+'">'
           +'<input type="hidden" name="'+prefix+'-'+idx+'-id" value="">'
           +'<input type="hidden" name="'+prefix+'-'+idx+'-carga" value="">';
         var div = document.createElement('div');
@@ -286,11 +454,25 @@
       totalForms.value = startIdx + keys.length;
     }
 
-    /* ── Esconder o inline padrão (manter funcional) ─────── */
-    var inlineGrp = document.querySelector('.inline-group');
+    /* ── Esconder apenas o inline padrão de compartimentos ─ */
+    var inlineGrp = document.getElementById('carga_compartimentos-group');
     if(inlineGrp){
       inlineGrp.style.display = 'none';
     }
+
+    // Quando cliente principal ou adicionais mudarem, atualizar etapa 3 visualmente
+    document.addEventListener('change', function(e){
+      var t = e.target;
+      if(!t) return;
+      if(t.id === 'id_cliente' || (t.name && t.name.indexOf('clientes_adicionais-') === 0 && t.name.indexOf('-cliente') > -1)){
+        if(bocaAtiva){
+          renderProdutos();
+        } else {
+          renderBocas();
+          updateResumo();
+        }
+      }
+    });
 
     /* Se já tem valor de caminhão (edição), carregar */
     if(caminhaoSelect.value){

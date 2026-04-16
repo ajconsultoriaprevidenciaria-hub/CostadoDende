@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.forms.models import BaseInlineFormSet
 from django.utils.html import format_html
 from django.urls import path, reverse
 from django.shortcuts import get_object_or_404, render
@@ -9,6 +10,7 @@ from .models import (
 	Caminhao,
 	CaminhaoDocumento,
 	Carga,
+	CargaCliente,
 	CargaCompartimento,
 	Cliente,
 	Compartimento,
@@ -260,6 +262,26 @@ class TabelaFreteAdmin(admin.ModelAdmin):
 	date_hierarchy = 'vigencia_inicio'
 
 
+class CargaClienteInlineFormSet(BaseInlineFormSet):
+	def add_fields(self, form, index):
+		super().add_fields(form, index)
+		if index is None:
+			return
+		if 'ordem' in form.fields and not form.instance.pk:
+			form.initial.setdefault('ordem', index + 2)
+
+
+class CargaClienteInline(admin.StackedInline):
+	model = CargaCliente
+	formset = CargaClienteInlineFormSet
+	extra = 6
+	max_num = 6
+	fields = ('ordem', 'cliente')
+	autocomplete_fields = ('cliente',)
+	verbose_name = 'Cliente adicional'
+	verbose_name_plural = 'Clientes 2 a 7'
+
+
 class CargaCompartimentoInline(admin.StackedInline):
 	model = CargaCompartimento
 	extra = 0
@@ -285,8 +307,14 @@ class CargaAdmin(admin.ModelAdmin):
 	search_fields = ('cliente__nome', 'fornecedor__nome', 'caminhao__placa', 'numero_documento')
 	exclude = ('produto',)
 	autocomplete_fields = ('cliente', 'fornecedor', 'caminhao', 'motorista', 'rota')
-	inlines = [CargaCompartimentoInline]
+	inlines = [CargaClienteInline, CargaCompartimentoInline]
 	date_hierarchy = 'data_carga'
+
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+		formfield = super().formfield_for_foreignkey(db_field, request, **kwargs)
+		if db_field.name == 'cliente':
+			formfield.label = 'Cliente 1'
+		return formfield
 
 	def changelist_view(self, request, extra_context=None):
 		response = super().changelist_view(request, extra_context=extra_context)

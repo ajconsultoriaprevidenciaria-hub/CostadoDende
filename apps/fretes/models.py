@@ -299,6 +299,21 @@ class Carga(BaseModel):
 		super().save(*args, **kwargs)
 
 
+class CargaCliente(models.Model):
+	carga = models.ForeignKey(Carga, on_delete=models.CASCADE, related_name='clientes_adicionais')
+	cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='cargas_adicional')
+	ordem = models.PositiveSmallIntegerField(default=2)
+
+	class Meta:
+		ordering = ['ordem']
+		unique_together = ('carga', 'ordem')
+		verbose_name = 'Cliente adicional'
+		verbose_name_plural = 'Clientes adicionais'
+
+	def __str__(self):
+		return f'Cliente {self.ordem:02d} - {self.cliente.nome}'
+
+
 class CargaCompartimento(models.Model):
 	carga = models.ForeignKey(Carga, on_delete=models.CASCADE, related_name='carga_compartimentos')
 	compartimento = models.ForeignKey(Compartimento, on_delete=models.CASCADE)
