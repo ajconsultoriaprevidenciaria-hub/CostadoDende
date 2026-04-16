@@ -294,10 +294,10 @@ class CargaAdmin(admin.ModelAdmin):
 
 	list_display = (
 		'data_carga_fmt',
+		'placa_fmt',
 		'cliente',
 		'motorista',
 		'rota',
-		'caminhao',
 		'litros_fmt',
 		'frete_litro_fmt',
 		'total_frete_fmt',
@@ -412,6 +412,10 @@ class CargaAdmin(admin.ModelAdmin):
 	def litros_fmt(self, obj):
 		val = f"{int(obj.litros):,}".replace(',', '.')
 		return f"{val} L"
+
+	@admin.display(description='Placa', ordering='caminhao__placa')
+	def placa_fmt(self, obj):
+		return obj.caminhao.placa if obj.caminhao_id else '-'
 
 	@admin.display(description='R$/Litro', ordering='valor_frete_litro')
 	def frete_litro_fmt(self, obj):
