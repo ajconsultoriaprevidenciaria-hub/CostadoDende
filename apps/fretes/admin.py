@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.contrib import admin
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import format_html
@@ -317,7 +319,9 @@ class CargaAdmin(admin.ModelAdmin):
 		return formfield
 
 	def get_queryset(self, request):
-		queryset = super().get_queryset(request).prefetch_related('carga_compartimentos__compartimento')
+		queryset = super().get_queryset(request).select_related(
+			'cliente', 'fornecedor', 'caminhao', 'motorista', 'rota'
+		).prefetch_related('carga_compartimentos__compartimento')
 		placa = (request.GET.get('placa') or '').strip()
 		cliente_id = (request.GET.get('cliente_id') or '').strip()
 		data_inicio = (request.GET.get('data_inicio') or '').strip()
@@ -333,6 +337,58 @@ class CargaAdmin(admin.ModelAdmin):
 			queryset = queryset.filter(data_carga__lte=data_fim)
 
 		return queryset
+
+	def _launch_group_key(self, carga):
+		marcador = carga.criado_em.replace(second=0, microsecond=0) if carga.criado_em else None
+		return (
+			carga.data_carga,
+			carga.caminhao_id,
+			carga.motorista_id,
+			carga.fornecedor_id,
+			carga.rota_id,
+			(carga.numero_documento or '').strip(),
+			marcador,
+		)
+
+	def _format_litros_display(self, valor):
+		if valor is None:
+			return '-'
+			
+		return f"{int(valor):,}".replace(',', '.') + ' L'
+
+	def _format_money_display(self, valor):
+		if valor is None:
+			return '-'
+		texto = f"{valor:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+		return f"R$ {texto}"
+
+	def _build_launch_groups(self, cargas):
+		grupos = OrderedDict()
+		for carga in cargas:
+			chave = self._launch_group_key(carga)
+			grupo = grupos.setdefault(chave, {
+				'pk': carga.pk,
+				'placa': carga.caminhao.placa if carga.caminhao_id else '-',
+				'horario_lancamento': carga.criado_em,
+				'motorista': carga.motorista.nome if carga.motorista_id else '-',
+				'fornecedor': carga.fornecedor.nome if carga.fornecedor_id else '-',
+				'clientes': [],
+			})
+			grupo['clientes'].append({
+				'pk': carga.pk,
+				'nome': carga.cliente.nome if carga.cliente_id else '-',
+				'bocas': carga.carga_compartimentos.count(),
+				'litros': self._format_litros_display(carga.litros),
+				'total_frete': self._format_money_display(carga.valor_total_frete),
+				'edit_url': reverse('admin:fretes_carga_change', args=[carga.pk]),
+				'delete_url': reverse('admin:fretes_carga_delete', args=[carga.pk]),
+			})
+
+		for grupo in grupos.values():
+			grupo['clientes'].sort(key=lambda item: item['nome'])
+			grupo['qtd_clientes'] = len(grupo['clientes'])
+
+		return list(grupos.values())
 
 	def save_related(self, request, form, formsets, change):
 		super().save_related(request, form, formsets, change)
@@ -408,6 +464,7 @@ class CargaAdmin(admin.ModelAdmin):
 			return response
 
 		response.context_data['clientes_filtro'] = Cliente.objects.filter(ativo=True).order_by('nome')
+		response.context_data['cargas_agrupadas'] = self._build_launch_groups(response.context_data['cl'].result_list)
 
 		base_qs = response.context_data['cl'].queryset
 		cargas_concluidas_ids = AbastecimentoViagem.objects.filter(
