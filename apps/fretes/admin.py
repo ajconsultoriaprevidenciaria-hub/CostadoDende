@@ -316,6 +316,49 @@ class CargaAdmin(admin.ModelAdmin):
 			formfield.label = 'Cliente 1'
 		return formfield
 
+	def save_related(self, request, form, formsets, change):
+		super().save_related(request, form, formsets, change)
+		if change:
+			return
+
+		carga_principal = form.instance
+		clientes_extras = list(
+			carga_principal.clientes_adicionais.select_related('cliente').order_by('ordem')
+		)
+		if not clientes_extras:
+			return
+
+		compartimentos = list(carga_principal.carga_compartimentos.all())
+
+		for extra in clientes_extras:
+			nova_carga = Carga.objects.create(
+				data_carga=carga_principal.data_carga,
+				cliente=extra.cliente,
+				fornecedor=carga_principal.fornecedor,
+				produto=carga_principal.produto,
+				caminhao=carga_principal.caminhao,
+				motorista=carga_principal.motorista,
+				rota=carga_principal.rota,
+				litros=carga_principal.litros,
+				valor_frete_litro=carga_principal.valor_frete_litro,
+				valor_total_frete=carga_principal.valor_total_frete,
+				numero_documento=carga_principal.numero_documento,
+				observacoes=carga_principal.observacoes,
+			)
+
+			if compartimentos:
+				CargaCompartimento.objects.bulk_create([
+					CargaCompartimento(
+						carga=nova_carga,
+						compartimento=item.compartimento,
+						produto=item.produto,
+					)
+					for item in compartimentos
+				])
+
+		# Após gerar as cargas individualizadas, limpa os clientes extras da carga principal.
+		carga_principal.clientes_adicionais.all().delete()
+
 	def changelist_view(self, request, extra_context=None):
 		response = super().changelist_view(request, extra_context=extra_context)
 		if not hasattr(response, 'context_data') or 'cl' not in response.context_data:
