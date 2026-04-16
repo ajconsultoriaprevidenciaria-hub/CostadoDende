@@ -10,7 +10,19 @@
         <form method="get" class="form-grid compact-grid" style="flex:1;">
             <div>
                 <label for="cliente">Cliente</label>
-                <input type="text" id="cliente" name="cliente" value="{{ request.GET.cliente }}" class="form-control" placeholder="Filtrar por cliente...">
+                <input type="text" id="cliente" name="cliente" value="{{ request.GET.cliente }}" class="form-control" placeholder="Digite o nome do cliente...">
+            </div>
+            <div>
+                <label for="placa">Placa do caminhão</label>
+                <input type="text" id="placa" name="placa" value="{{ request.GET.placa }}" class="form-control" placeholder="Ex.: ABC1D23">
+            </div>
+            <div>
+                <label for="data_inicio">Data inicial</label>
+                <input type="date" id="data_inicio" name="data_inicio" value="{{ request.GET.data_inicio }}" class="form-control">
+            </div>
+            <div>
+                <label for="data_fim">Data final</label>
+                <input type="date" id="data_fim" name="data_fim" value="{{ request.GET.data_fim }}" class="form-control">
             </div>
             <div>
                 <label for="produto">Produto</label>
@@ -23,6 +35,7 @@
                     </svg>
                     Filtrar
                 </button>
+                <a href="{% url 'fretes:carga-list' %}" class="btn-secondary" style="margin-left:6px;">Limpar</a>
             </div>
         </form>
         <a href="{% url 'fretes:carga-create' %}" class="btn-primary">

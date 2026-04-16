@@ -316,6 +316,24 @@ class CargaAdmin(admin.ModelAdmin):
 			formfield.label = 'Cliente 1'
 		return formfield
 
+	def get_queryset(self, request):
+		queryset = super().get_queryset(request)
+		placa = (request.GET.get('placa') or '').strip()
+		cliente_id = (request.GET.get('cliente_id') or '').strip()
+		data_inicio = (request.GET.get('data_inicio') or '').strip()
+		data_fim = (request.GET.get('data_fim') or '').strip()
+
+		if placa:
+			queryset = queryset.filter(caminhao__placa__icontains=placa)
+		if cliente_id:
+			queryset = queryset.filter(cliente_id=cliente_id)
+		if data_inicio:
+			queryset = queryset.filter(data_carga__gte=data_inicio)
+		if data_fim:
+			queryset = queryset.filter(data_carga__lte=data_fim)
+
+		return queryset
+
 	def save_related(self, request, form, formsets, change):
 		super().save_related(request, form, formsets, change)
 		if change:
@@ -363,6 +381,8 @@ class CargaAdmin(admin.ModelAdmin):
 		response = super().changelist_view(request, extra_context=extra_context)
 		if not hasattr(response, 'context_data') or 'cl' not in response.context_data:
 			return response
+
+		response.context_data['clientes_filtro'] = Cliente.objects.filter(ativo=True).order_by('nome')
 
 		base_qs = response.context_data['cl'].queryset
 		cargas_concluidas_ids = AbastecimentoViagem.objects.filter(

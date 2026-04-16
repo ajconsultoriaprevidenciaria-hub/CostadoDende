@@ -63,9 +63,18 @@ class CargaListView(LoginRequiredMixin, ListView):
 			'cliente', 'produto', 'fornecedor', 'caminhao', 'motorista', 'rota'
 		)
 		cliente = self.request.GET.get('cliente')
+		placa = self.request.GET.get('placa')
+		data_inicio = self.request.GET.get('data_inicio')
+		data_fim = self.request.GET.get('data_fim')
 		produto = self.request.GET.get('produto')
 		if cliente:
 			queryset = queryset.filter(cliente__nome__icontains=cliente)
+		if placa:
+			queryset = queryset.filter(caminhao__placa__icontains=placa)
+		if data_inicio:
+			queryset = queryset.filter(data_carga__gte=data_inicio)
+		if data_fim:
+			queryset = queryset.filter(data_carga__lte=data_fim)
 		if produto:
 			queryset = queryset.filter(produto__nome__icontains=produto)
 		return queryset
