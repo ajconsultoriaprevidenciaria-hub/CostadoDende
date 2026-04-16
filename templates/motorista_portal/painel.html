@@ -13,25 +13,41 @@
     </a>
 </div>
 
-{% if cargas %}
-    {% for carga in cargas %}
-    <a href="{% url 'motorista_portal:carga-detalhe' pk=carga.pk %}" style="text-decoration:none; color:inherit;">
-        <div class="mp-card" style="display:flex; justify-content:space-between; align-items:center;">
+{% if cargas_agrupadas %}
+    {% for grupo in cargas_agrupadas %}
+    <details class="mp-card" style="padding:0; overflow:hidden;">
+        <summary style="list-style:none; cursor:pointer; padding:14px; display:grid; grid-template-columns:1fr 1fr 1.2fr 1.2fr; gap:10px; align-items:center;">
             <div>
-                <div style="font-size:.82rem; font-weight:600;">{{ carga }}</div>
-                <div style="font-size:.68rem; color:var(--text-sec); margin-top:2px;">
-                    {{ carga.caminhao }} &middot; {{ carga.rota }}
+                <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Placa do caminhão</div>
+                <div style="font-size:.86rem; font-weight:800;">{{ grupo.placa }}</div>
+            </div>
+            <div>
+                <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Horário de lançamento</div>
+                <div style="font-size:.86rem; font-weight:800;">{{ grupo.horario_lancamento|date:"H:i" }}</div>
+            </div>
+            <div>
+                <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Motorista</div>
+                <div style="font-size:.78rem; font-weight:700;">{{ grupo.motorista }}</div>
+            </div>
+            <div>
+                <div style="font-size:.62rem; color:var(--text-sec); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px;">Distribuidora</div>
+                <div style="font-size:.78rem; font-weight:700;">{{ grupo.distribuidora }}</div>
+            </div>
+        </summary>
+
+        <div style="padding:0 14px 14px; border-top:1px solid var(--border);">
+            <div style="font-size:.66rem; color:var(--primary); font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin:10px 0 8px;">Relação de postos e bocas</div>
+            {% for item in grupo.clientes %}
+            <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:5px;">
+                    <span style="font-size:.8rem; font-weight:800; color:var(--text);">{{ item.nome }}</span>
+                    <span class="mp-badge mp-badge-ok">{{ item.qtd_bocas }} boca{{ item.qtd_bocas|pluralize }}</span>
                 </div>
+                <div style="font-size:.72rem; color:var(--text-sec);">Bocas: {{ item.bocas_numeros }}</div>
             </div>
-            <div style="text-align:right;">
-                {% if carga.checklists.exists %}
-                    <span class="mp-badge mp-badge-ok">Checklist ✓</span>
-                {% else %}
-                    <span class="mp-badge mp-badge-pending">Pendente</span>
-                {% endif %}
-            </div>
+            {% endfor %}
         </div>
-    </a>
+    </details>
     {% endfor %}
 {% else %}
     <div class="mp-empty">Nenhuma carga atribuída a você.</div>

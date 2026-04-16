@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -58,10 +60,46 @@ def painel(request):
     motorista = _require_motorista(request)
     if motorista is None:
         return redirect('motorista_portal:login')
-    cargas = Carga.objects.filter(motorista=motorista, ativo=True).order_by('-data_carga')[:10]
+
+    cargas = list(
+        Carga.objects.filter(motorista=motorista, ativo=True)
+        .select_related('cliente', 'fornecedor', 'caminhao', 'motorista')
+        .prefetch_related('carga_compartimentos__compartimento')
+        .order_by('-data_carga', '-criado_em', '-id')[:20]
+    )
+
+    grupos = OrderedDict()
+    for carga in cargas:
+        marcador = carga.criado_em.replace(second=0, microsecond=0) if carga.criado_em else None
+        chave = (
+            carga.data_carga,
+            carga.caminhao_id,
+            carga.motorista_id,
+            carga.fornecedor_id,
+            (carga.numero_documento or '').strip(),
+            marcador,
+        )
+        grupo = grupos.setdefault(chave, {
+            'placa': carga.caminhao.placa if carga.caminhao_id else '-',
+            'horario_lancamento': carga.criado_em,
+            'motorista': carga.motorista.nome if carga.motorista_id else '-',
+            'distribuidora': carga.fornecedor.nome if carga.fornecedor_id else '-',
+            'clientes': [],
+        })
+        bocas = list(carga.carga_compartimentos.all())
+        numeros = [str(item.compartimento.numero) for item in bocas if item.compartimento_id]
+        grupo['clientes'].append({
+            'nome': carga.cliente.nome if carga.cliente_id else '-',
+            'qtd_bocas': len(bocas),
+            'bocas_numeros': ', '.join(numeros) if numeros else '-',
+        })
+
+    cargas_agrupadas = list(grupos.values())
+
     return render(request, 'motorista_portal/painel.html', {
         'motorista': motorista,
         'cargas': cargas,
+        'cargas_agrupadas': cargas_agrupadas,
     })
 
 
