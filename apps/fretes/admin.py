@@ -607,7 +607,7 @@ class CargaAdmin(admin.ModelAdmin):
 		)
 
 	class Media:
-		js = ('admin/js/carga_compartimentos.js',)
+		js = ('admin/js/carga_compartimentos.js', 'admin/js/carga_rota.js')
 
 	def get_urls(self):
 		urls = super().get_urls()

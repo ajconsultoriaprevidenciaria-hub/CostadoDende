@@ -2,6 +2,19 @@
   'use strict';
   function ready(fn){ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn):fn(); }
 
+  /* ── Carregar Leaflet CSS/JS dinamicamente ──────────────── */
+  function loadLeaflet(callback){
+    if(window.L){ callback(); return; }
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    js.onload = callback;
+    document.head.appendChild(js);
+  }
+
   ready(function(){
     var destinoField = document.getElementById('id_destino');
     var origemField  = document.getElementById('id_origem');
@@ -12,6 +25,8 @@
     var nomeField    = document.getElementById('id_nome');
     var paradaFields = [1,2,3,4,5,6,7].map(function(i){ return document.getElementById('id_parada_'+i); }).filter(Boolean);
     if(!origemField) return;
+
+    var leafletMap = null;
 
     var ORIGENS = {
       'Candeias/BA':               {lat:-12.67218, lng:-38.54737},
@@ -52,7 +67,7 @@
     calcBtn.addEventListener('click', function(){ calcularDistancia(); });
 
     /* ═══════════════════════════════════════════════════════════
-       CONTAINER GOOGLE MAPS + PAINEL
+       CONTAINER MAPA + PAINEL
        ═══════════════════════════════════════════════════════════ */
     var container = document.createElement('div');
     container.id = 'rota-container';
@@ -65,7 +80,7 @@
       '<div style="padding:16px 22px;display:flex;align-items:center;gap:10px;'
       +'border-bottom:1px solid rgba(0,217,166,.1);">'
       +'<span style="font-size:1.5rem;">🗺️</span>'
-      +'<span style="font-size:.95rem;font-weight:800;color:#00d9a6;letter-spacing:.04em;">ROTA VIA GOOGLE MAPS</span>'
+      +'<span style="font-size:.95rem;font-weight:800;color:#00d9a6;letter-spacing:.04em;">ROTA DAS ENTREGAS</span>'
       +'<span style="flex:1"></span>'
       +'<span id="rota-spinner" style="font-size:.72rem;color:#f59e0b;font-weight:600;display:none;">⏳ Calculando...</span>'
       +'<a id="rota-gmaps" href="#" target="_blank" style="background:rgba(59,130,246,.12);color:#3b82f6;'
@@ -75,9 +90,7 @@
       +' onmouseout="this.style.background=\'rgba(59,130,246,.12)\';this.style.color=\'#3b82f6\'">🔗 Abrir no Google Maps</a>'
       +'</div>'
       +'<div style="display:grid;grid-template-columns:1fr 320px;min-height:480px;">'
-      +'<div id="rota-map-wrap" style="min-height:480px;background:#070d1a;position:relative;">'
-      +'<iframe id="rota-gmaps-iframe" style="width:100%;height:100%;border:none;" allowfullscreen loading="lazy"></iframe>'
-      +'</div>'
+      +'<div id="rota-map" style="min-height:480px;width:100%;height:100%;background:#070d1a;"></div>'
       +'<div id="rota-cards" style="padding:16px;display:flex;flex-direction:column;gap:12px;'
       +'border-left:1px solid rgba(0,217,166,.1);overflow-y:auto;">'
 
@@ -107,36 +120,64 @@
 
       +'<div style="padding:8px 22px;font-size:.58rem;color:#8892a4;text-align:center;'
       +'border-top:1px solid rgba(0,217,166,.06);">'
-      +'⚠️ Rota exibida no Google Maps. A ordem de entrega é otimizada automaticamente '
-      +'para o menor percurso total.'
+      +'⚠️ A ordem de entrega é otimizada automaticamente para o menor percurso total.'
       +'</div>';
 
     calcBtnWrap.parentNode.insertBefore(container, calcBtnWrap.nextSibling);
 
     /* ═══════════════════════════════════════════════════════════
-       GOOGLE MAPS — montar URL do iframe e link externo
+       GOOGLE MAPS — link externo
        ═══════════════════════════════════════════════════════════ */
     function buildGmapsUrl(pontos){
-      // pontos = [{lat, lng, nome}, ...] na ordem otimizada (origem primeiro)
       if(pontos.length < 2) return '';
       var parts = pontos.map(function(p){ return p.lat+','+p.lng; });
-      // Google Maps directions: /maps/dir/coord1/coord2/.../
       return 'https://www.google.com/maps/dir/' + parts.join('/') + '/';
     }
 
-    function buildGmapsEmbedUrl(pontos){
-      if(pontos.length < 2) return '';
-      var origin = pontos[0].lat+','+pontos[0].lng;
-      var dest = pontos[pontos.length-1].lat+','+pontos[pontos.length-1].lng;
-      var waypoints = '';
-      if(pontos.length > 2){
-        waypoints = pontos.slice(1, -1).map(function(p){ return p.lat+','+p.lng; }).join('|');
+    /* ═══════════════════════════════════════════════════════════
+       LEAFLET — desenhar mapa com rota
+       ═══════════════════════════════════════════════════════════ */
+    function renderMap(pontos, rotaCoords){
+      var mapDiv = document.getElementById('rota-map');
+      if(leafletMap){ leafletMap.remove(); leafletMap = null; }
+
+      leafletMap = L.map(mapDiv, {zoomControl:true, attributionControl:false});
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:18
+      }).addTo(leafletMap);
+
+      if(rotaCoords && rotaCoords.length > 1){
+        var latlngs = rotaCoords.map(function(c){ return [c[1], c[0]]; });
+        L.polyline(latlngs, {color:'#00d9a6', weight:5, opacity:0.9}).addTo(leafletMap);
       }
-      // Usar URL de embed gratuita do Google Maps (sem API key)
-      var url = 'https://www.google.com/maps/embed?pb=!1m'+(pontos.length*2+2);
-      // Alternativa mais confiável: usar a URL de direções como src do iframe
-      var dirUrl = 'https://www.google.com/maps/dir/' + pontos.map(function(p){ return p.lat+','+p.lng; }).join('/') + '/';
-      return dirUrl + '?entry=ttu';
+
+      var bounds = [];
+      pontos.forEach(function(p, idx){
+        var isOrigin = idx === 0;
+        var color = isOrigin ? '#00d9a6' : '#3b82f6';
+        var label = isOrigin ? '🏭' : (idx).toString();
+        var icon = L.divIcon({
+          className:'',
+          html:'<div style="background:'+color+';color:#070d1a;border-radius:50%;width:28px;height:28px;'
+            +'display:flex;align-items:center;justify-content:center;font-size:'+(isOrigin?'16px':'13px')+';font-weight:800;'
+            +'border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4);">'+label+'</div>',
+          iconSize:[28,28],
+          iconAnchor:[14,14]
+        });
+        L.marker([p.lat, p.lng], {icon:icon})
+          .bindPopup('<b>'+(isOrigin?'Origem: ':'Parada '+idx+': ')+p.nome+'</b>')
+          .addTo(leafletMap);
+        bounds.push([p.lat, p.lng]);
+      });
+
+      if(bounds.length > 0){
+        leafletMap.fitBounds(bounds, {padding:[30,30]});
+      }
+      // Forçar recalculo de tamanho após container visível
+      setTimeout(function(){
+        leafletMap.invalidateSize();
+        if(bounds.length > 0) leafletMap.fitBounds(bounds, {padding:[30,30]});
+      }, 300);
     }
 
     /* ═══════════════════════════════════════════════════════════
@@ -204,16 +245,15 @@
             pontos.push({nome:data.destino_nome||'Destino', lat:data.destino_lat, lng:data.destino_lng});
           }
 
-          // Google Maps iframe
+          // Mostrar container e renderizar mapa Leaflet
           container.style.display = 'block';
-          var iframe = document.getElementById('rota-gmaps-iframe');
-          var embedUrl = buildGmapsEmbedUrl(pontos);
-          iframe.src = embedUrl;
+          loadLeaflet(function(){
+            setTimeout(function(){ renderMap(pontos, data.rota_coords); }, 100);
+          });
 
-          // Link externo
+          // Link externo Google Maps
           var gmBtn = document.getElementById('rota-gmaps');
-          var externalUrl = buildGmapsUrl(pontos);
-          gmBtn.href = externalUrl;
+          gmBtn.href = buildGmapsUrl(pontos);
           gmBtn.style.display = 'inline-block';
 
           // Cards de informação
@@ -264,7 +304,7 @@
       el.textContent = msg;
     }
 
-    // Edição: se já tem dados, recalcular para mostrar Google Maps
+    // Edição: se já tem dados, recalcular para mostrar mapa
     if(latField && lngField && latField.value && lngField.value){
       var hasParadas = paradaFields.some(function(f){ return f.value; });
       if(hasParadas && origemField.value){
@@ -273,7 +313,8 @@
     }
 
     var style = document.createElement('style');
-    style.textContent = '@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
+    style.textContent = '@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}'
+      +'#rota-map .leaflet-tile-pane{filter:saturate(.3) brightness(.7);}';
     document.head.appendChild(style);
   });
 })();

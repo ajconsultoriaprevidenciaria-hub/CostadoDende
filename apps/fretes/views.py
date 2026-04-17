@@ -144,6 +144,21 @@ ORIGENS_COORDS = {
 
 
 @staff_member_required
+def rota_info(request, pk):
+	"""Retorna dados da rota (origem) para uso no formulário de Carga."""
+	from .models import Rota
+	try:
+		rota = Rota.objects.get(pk=pk)
+	except Rota.DoesNotExist:
+		return JsonResponse({'error': 'Rota não encontrada'}, status=404)
+	return JsonResponse({
+		'origem': rota.origem,
+		'distancia_km': float(rota.distancia_km) if rota.distancia_km else None,
+		'tempo_total_min': rota.tempo_total_min,
+	})
+
+
+@staff_member_required
 def buscar_cidades(request):
 	"""Busca cidades brasileiras via API IBGE."""
 	q = request.GET.get('q', '').strip()

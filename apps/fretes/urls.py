@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (
     CargaCreateView, CargaDeleteView, CargaListView, CargaUpdateView,
     buscar_cidades, calcular_distancia, caminhao_compartimentos_json,
-    carga_selecoes_json, produtos_json, reverse_geocode,
+    carga_selecoes_json, produtos_json, reverse_geocode, rota_info,
 )
 
 app_name = 'fretes'
@@ -19,4 +19,5 @@ urlpatterns = [
     path('carga/<int:pk>/selecoes/', carga_selecoes_json, name='carga-selecoes'),
     path('api/distancia/', calcular_distancia, name='calcular-distancia'),
     path('api/reverse-geocode/', reverse_geocode, name='reverse-geocode'),
+    path('api/rota/<int:pk>/info/', rota_info, name='rota-info'),
 ]
