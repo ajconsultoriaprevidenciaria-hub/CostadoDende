@@ -159,6 +159,33 @@ body {
 .adm-nav-link:hover .adm-nav-add { opacity: 1; }
 .adm-nav-add:hover { background: var(--primary) !important; }
 
+/* ── Sub-links hierárquicos (hover) ── */
+.adm-nav-group { position: relative; }
+.adm-nav-group .adm-nav-subs {
+  max-height: 0; overflow: hidden; transition: max-height .25s ease;
+}
+.adm-nav-group:hover .adm-nav-subs,
+.adm-nav-group.has-active .adm-nav-subs {
+  max-height: 300px;
+}
+.adm-nav-sub {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 8px 5px 40px;
+  border-radius: 7px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: .78rem; font-weight: 600;
+  transition: all .15s;
+}
+.adm-nav-sub:hover { color: #fff; background: rgba(0,217,166,.06); }
+.adm-nav-sub.active { color: var(--primary); }
+.adm-nav-sub-icon {
+  width: 20px; height: 20px; min-width: 20px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
 .adm-sb-footer {
   padding: 12px 14px;
   border-top: 1px solid var(--border);
@@ -666,6 +693,7 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
         {% for model in app.models %}
           {% if model.object_name == 'Caminhao' %}
             {% with ic="#3b82f6" bg="rgba(59,130,246,.12)" %}
+            <div class="adm-nav-group{% if '/admin/fretes/abastecimentos/' in request.path or '/admin/fretes/manutencao/' in request.path or '/admin/fretes/compartimento/' in request.path or '/admin/fretes/caminhaodocumento/' in request.path %} has-active{% endif %}">
             <a href="{{ model.admin_url }}" class="adm-nav-link">
               <div class="adm-nav-icon" style="background:{{ bg }};border:1px solid {{ ic }}33;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{ ic }}" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
@@ -673,21 +701,37 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
               <span class="adm-nav-label">{{ model.name }}</span>
               {% if model.add_url %}<span class="adm-nav-add" onclick="event.preventDefault();event.stopPropagation();location.href='{{ model.add_url }}'"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>{% endif %}
             </a>
-            <a href="{% url 'admin-abastecimentos-list' %}" class="adm-nav-link{% if request.path == '/admin/fretes/abastecimentos/' %} active{% endif %}">
-              <div class="adm-nav-icon" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.2);">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4"/><path d="M9 7h6"/><path d="M7 22h10"/><path d="M8 22V11a4 4 0 0 1 8 0v11"/><path d="M16 14h2a1 1 0 0 0 1-1V8a2 2 0 0 0-2-2h-1"/><path d="M8 13H6"/></svg>
-              </div>
-              <span class="adm-nav-label">Abastecimentos</span>
-            </a>
-            <a href="{% url 'admin:fretes_manutencao_changelist' %}" class="adm-nav-link{% if '/admin/fretes/manutencao/' in request.path %} active{% endif %}">
-              <div class="adm-nav-icon" style="background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2);">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-              </div>
-              <span class="adm-nav-label">Manutenção e Pneus</span>
-            </a>
+            <div class="adm-nav-subs">
+              <a href="{% url 'admin-abastecimentos-list' %}" class="adm-nav-sub{% if request.path == '/admin/fretes/abastecimentos/' %} active{% endif %}">
+                <div class="adm-nav-sub-icon" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.2);">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4"/><path d="M9 7h6"/><path d="M7 22h10"/><path d="M8 22V11a4 4 0 0 1 8 0v11"/><path d="M16 14h2a1 1 0 0 0 1-1V8a2 2 0 0 0-2-2h-1"/><path d="M8 13H6"/></svg>
+                </div>
+                <span>Abastecimentos</span>
+              </a>
+              <a href="{% url 'admin:fretes_manutencao_changelist' %}" class="adm-nav-sub{% if '/admin/fretes/manutencao/' in request.path %} active{% endif %}">
+                <div class="adm-nav-sub-icon" style="background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2);">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </div>
+                <span>Manutenção e Pneus</span>
+              </a>
+              <a href="{% url 'admin:fretes_compartimento_changelist' %}" class="adm-nav-sub{% if '/admin/fretes/compartimento/' in request.path %} active{% endif %}">
+                <div class="adm-nav-sub-icon" style="background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.2);">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                </div>
+                <span>Compartimentos</span>
+              </a>
+              <a href="{% url 'admin:fretes_caminhaodocumento_changelist' %}" class="adm-nav-sub{% if '/admin/fretes/caminhaodocumento/' in request.path %} active{% endif %}">
+                <div class="adm-nav-sub-icon" style="background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.2);">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <span>Documentos do Caminhão</span>
+              </a>
+            </div>
+            </div>
             {% endwith %}
           {% elif model.object_name == 'Carga' %}
             {% with ic="#f59e0b" bg="rgba(245,158,11,.12)" %}
+            <div class="adm-nav-group{% if '/admin/fretes/localcarregamento/' in request.path %} has-active{% endif %}">
             <a href="{{ model.admin_url }}" class="adm-nav-link">
               <div class="adm-nav-icon" style="background:{{ bg }};border:1px solid {{ ic }}33;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{ ic }}" stroke-width="2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
@@ -695,6 +739,15 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
               <span class="adm-nav-label">{{ model.name }}</span>
               {% if model.add_url %}<span class="adm-nav-add" onclick="event.preventDefault();event.stopPropagation();location.href='{{ model.add_url }}'"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>{% endif %}
             </a>
+            <div class="adm-nav-subs">
+              <a href="{% url 'admin:fretes_localcarregamento_changelist' %}" class="adm-nav-sub{% if '/admin/fretes/localcarregamento/' in request.path %} active{% endif %}">
+                <div class="adm-nav-sub-icon" style="background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.2);">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <span>Locais de Carregamento</span>
+              </a>
+            </div>
+            </div>
             {% endwith %}
           {% elif model.object_name == 'Cliente' %}
             {% with ic="#a855f7" bg="rgba(168,85,247,.12)" %}
@@ -717,15 +770,7 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
             </a>
             {% endwith %}
           {% elif model.object_name == 'LocalCarregamento' %}
-            {% with ic="#ec4899" bg="rgba(236,72,153,.12)" %}
-            <a href="{{ model.admin_url }}" class="adm-nav-link">
-              <div class="adm-nav-icon" style="background:{{ bg }};border:1px solid {{ ic }}33;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{ ic }}" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              </div>
-              <span class="adm-nav-label">{{ model.name }}</span>
-              {% if model.add_url %}<span class="adm-nav-add" onclick="event.preventDefault();event.stopPropagation();location.href='{{ model.add_url }}'"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>{% endif %}
-            </a>
-            {% endwith %}
+            {# Movido para dentro de Cargas como sub-link #}
           {% elif model.object_name == 'Motorista' %}
             {% with ic="#38bdf8" bg="rgba(56,189,248,.12)" %}
             <a href="{{ model.admin_url }}" class="adm-nav-link">
@@ -786,8 +831,8 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
               {% if model.add_url %}<span class="adm-nav-add" onclick="event.preventDefault();event.stopPropagation();location.href='{{ model.add_url }}'"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#00d9a6" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>{% endif %}
             </a>
             {% endwith %}
-          {% elif model.object_name == 'Manutencao' or model.object_name == 'Pneu' %}
-            {# Hidden – accessed via "Manutenção e Pneus" link under Caminhão #}
+          {% elif model.object_name == 'Manutencao' or model.object_name == 'Pneu' or model.object_name == 'Compartimento' or model.object_name == 'CaminhaoDocumento' %}
+            {# Hidden – accessed via sub-links under Caminhões #}
           {% else %}
             {% with ic="#00d9a6" bg="rgba(0,217,166,.12)" %}
             <a href="{{ model.admin_url }}" class="adm-nav-link">
