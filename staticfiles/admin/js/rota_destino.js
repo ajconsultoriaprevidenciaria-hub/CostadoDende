@@ -142,8 +142,9 @@
       if(leafletMap){ leafletMap.remove(); leafletMap = null; }
 
       leafletMap = L.map(mapDiv, {zoomControl:true, attributionControl:false});
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-        maxZoom:18
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+        maxZoom:19,
+        subdomains:'abcd'
       }).addTo(leafletMap);
 
       if(rotaCoords && rotaCoords.length > 1){
@@ -314,7 +315,7 @@
 
     var style = document.createElement('style');
     style.textContent = '@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}'
-      +'#rota-map .leaflet-tile-pane{filter:saturate(.3) brightness(.7);}';
+      '';
     document.head.appendChild(style);
   });
 })();
