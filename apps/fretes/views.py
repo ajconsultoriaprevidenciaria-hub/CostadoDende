@@ -319,7 +319,7 @@ def calcular_distancia(request):
 		for i, p in enumerate(pontos_otimizados):
 			if i == 0:
 				continue  # pular origem
-			ordem_entrega.append({'ordem': len(ordem_entrega) + 1, 'nome': p['nome']})
+			ordem_entrega.append({'ordem': len(ordem_entrega) + 1, 'nome': p['nome'], 'lat': p['lat'], 'lng': p['lng']})
 
 		return JsonResponse({
 			'distancia_km': dist_km,

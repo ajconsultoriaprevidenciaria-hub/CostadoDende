@@ -9,17 +9,50 @@
     var tempoField   = document.getElementById('id_tempo_total_min');
     var latField     = document.getElementById('id_destino_lat');
     var lngField     = document.getElementById('id_destino_lng');
-    var paradaFields = [1,2,3,4,5,6,7].map(function(i){ return document.getElementById('id_parada_' + i); }).filter(Boolean);
-    if(!destinoField) return;
+    var nomeField    = document.getElementById('id_nome');
+    var paradaFields = [1,2,3,4,5,6,7].map(function(i){ return document.getElementById('id_parada_'+i); }).filter(Boolean);
+    if(!origemField) return;
 
     var ORIGENS = {
-      'Candeias/BA':                  {lat:-12.67218, lng:-38.54737},
-      'São Francisco do Conde/BA':    {lat:-12.62836, lng:-38.67952},
-      'Suape/PE':                     {lat:-8.39356,  lng:-35.06017}
+      'Candeias/BA':               {lat:-12.67218, lng:-38.54737},
+      'São Francisco do Conde/BA': {lat:-12.62836, lng:-38.67952},
+      'Suape/PE':                  {lat:-8.39356,  lng:-35.06017}
     };
 
     /* ═══════════════════════════════════════════════════════════
-       INJETAR MAPA + PAINEL DEPOIS DOS FIELDSETS
+       BOTÃO CALCULAR MELHOR ROTA — após fieldset de paradas
+       ═══════════════════════════════════════════════════════════ */
+    var fieldsets = document.querySelectorAll('#content-main fieldset');
+    var paradaFieldset = fieldsets.length > 1 ? fieldsets[1] : null;
+
+    var calcBtnWrap = document.createElement('div');
+    calcBtnWrap.style.cssText = 'text-align:center;padding:18px 0;';
+    calcBtnWrap.innerHTML =
+      '<button type="button" id="btn-calc-rota" style="'
+      +'background:linear-gradient(135deg,#00d9a6,#00b894);color:#070d1a;'
+      +'border:none;border-radius:12px;padding:14px 36px;font-size:1rem;font-weight:800;'
+      +'cursor:pointer;transition:all .2s;letter-spacing:.04em;'
+      +'box-shadow:0 4px 18px rgba(0,217,166,.3);">'
+      +'🚛 Calcular Melhor Rota de Entrega</button>'
+      +'<div id="calc-status" style="margin-top:10px;font-size:.8rem;color:#8892a4;display:none;"></div>';
+
+    if(paradaFieldset){
+      paradaFieldset.parentNode.insertBefore(calcBtnWrap, paradaFieldset.nextSibling);
+    }
+
+    var calcBtn = document.getElementById('btn-calc-rota');
+    calcBtn.addEventListener('mouseenter',function(){
+      calcBtn.style.transform='translateY(-2px)';
+      calcBtn.style.boxShadow='0 6px 24px rgba(0,217,166,.4)';
+    });
+    calcBtn.addEventListener('mouseleave',function(){
+      calcBtn.style.transform='';
+      calcBtn.style.boxShadow='0 4px 18px rgba(0,217,166,.3)';
+    });
+    calcBtn.addEventListener('click', function(){ calcularDistancia(); });
+
+    /* ═══════════════════════════════════════════════════════════
+       CONTAINER GOOGLE MAPS + PAINEL
        ═══════════════════════════════════════════════════════════ */
     var container = document.createElement('div');
     container.id = 'rota-container';
@@ -29,269 +62,111 @@
       +'box-shadow:0 6px 30px rgba(0,0,0,.3);';
 
     container.innerHTML =
-      /* Header */
       '<div style="padding:16px 22px;display:flex;align-items:center;gap:10px;'
       +'border-bottom:1px solid rgba(0,217,166,.1);">'
       +'<span style="font-size:1.5rem;">🗺️</span>'
-      +'<span style="font-size:.95rem;font-weight:800;color:#00d9a6;letter-spacing:.04em;">MAPA DA ROTA</span>'
+      +'<span style="font-size:.95rem;font-weight:800;color:#00d9a6;letter-spacing:.04em;">ROTA VIA GOOGLE MAPS</span>'
       +'<span style="flex:1"></span>'
       +'<span id="rota-spinner" style="font-size:.72rem;color:#f59e0b;font-weight:600;display:none;">⏳ Calculando...</span>'
       +'<a id="rota-gmaps" href="#" target="_blank" style="background:rgba(59,130,246,.12);color:#3b82f6;'
       +'border:1px solid rgba(59,130,246,.3);border-radius:7px;padding:5px 14px;font-size:.7rem;font-weight:700;'
       +'text-decoration:none;transition:all .15s;display:none;"'
       +' onmouseover="this.style.background=\'#3b82f6\';this.style.color=\'#fff\'"'
-      +' onmouseout="this.style.background=\'rgba(59,130,246,.12)\';this.style.color=\'#3b82f6\'">🗺️ Google Maps</a>'
+      +' onmouseout="this.style.background=\'rgba(59,130,246,.12)\';this.style.color=\'#3b82f6\'">🔗 Abrir no Google Maps</a>'
       +'</div>'
-      /* Layout: mapa + cards lado a lado */
-      +'<div style="display:grid;grid-template-columns:1fr 320px;min-height:420px;">'
-      /* Mapa */
-      +'<div id="rota-map" style="min-height:420px;background:#070d1a;"></div>'
-      /* Cards lateral */
+      +'<div style="display:grid;grid-template-columns:1fr 320px;min-height:480px;">'
+      +'<div id="rota-map-wrap" style="min-height:480px;background:#070d1a;position:relative;">'
+      +'<iframe id="rota-gmaps-iframe" style="width:100%;height:100%;border:none;" allowfullscreen loading="lazy"></iframe>'
+      +'</div>'
       +'<div id="rota-cards" style="padding:16px;display:flex;flex-direction:column;gap:12px;'
       +'border-left:1px solid rgba(0,217,166,.1);overflow-y:auto;">'
 
-      /* Card Distância */
       +'<div style="background:#070d1a;border:1px solid rgba(0,217,166,.12);border-radius:12px;padding:16px;text-align:center;">'
-      +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">Distância Rodoviária</div>'
+      +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">Distância Total</div>'
       +'<div id="rota-dist" style="font-size:2rem;font-weight:800;color:#00d9a6;">—</div>'
       +'<div style="font-size:.65rem;color:#8892a4;">KM</div>'
       +'</div>'
 
-      /* Card Tempo */
       +'<div style="background:#070d1a;border:1px solid rgba(245,158,11,.12);border-radius:12px;padding:16px;text-align:center;">'
       +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">⏱️ Tempo Estimado</div>'
       +'<div id="rota-tempo" style="font-size:2rem;font-weight:800;color:#f59e0b;">—</div>'
-  		+'<div style="font-size:.6rem;color:#8892a4;">Tempo total da rota com paradas</div>'
+      +'<div style="font-size:.6rem;color:#8892a4;">Tempo total da rota com paradas</div>'
       +'</div>'
 
-      /* Card Trajeto */
       +'<div style="background:#070d1a;border:1px solid rgba(59,130,246,.12);border-radius:12px;padding:16px;text-align:center;">'
       +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">🚛 Trajeto</div>'
       +'<div id="rota-trajeto" style="font-size:.85rem;font-weight:700;color:#3b82f6;line-height:1.6;">—</div>'
       +'</div>'
 
-      /* Card Ordem de Entrega */
       +'<div style="background:#070d1a;border:1px solid rgba(16,185,129,.12);border-radius:12px;padding:16px;text-align:center;">'
-      +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">📋 Ordem de Entrega</div>'
+      +'<div style="font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:#8892a4;margin-bottom:6px;">📋 Melhor Ordem de Entrega</div>'
       +'<div id="rota-ordem" style="font-size:.85rem;font-weight:700;color:#10b981;line-height:1.8;">—</div>'
-      +'</div>'
-
-      /* Instrução */
-      +'<div style="font-size:.6rem;color:#8892a4;text-align:center;line-height:1.5;padding:8px;">'
-      +'📌 <b>Clique no mapa</b> para alfinetar o destino exato.<br>'
-      +'O alfinete é <b>arrastável</b> — mova para ajustar.'
       +'</div>'
 
       +'</div></div>'
 
-      /* Nota rodapé */
       +'<div style="padding:8px 22px;font-size:.58rem;color:#8892a4;text-align:center;'
       +'border-top:1px solid rgba(0,217,166,.06);">'
-      +'⚠️ Rota calculada via OpenStreetMap/OSRM. Variação de ±5% em relação ao Google Maps é normal. '
-      +'O campo Distância KM é editável para ajuste manual.'
+      +'⚠️ Rota exibida no Google Maps. A ordem de entrega é otimizada automaticamente '
+      +'para o menor percurso total.'
       +'</div>';
 
-    var fieldsets = document.querySelectorAll('#content-main fieldset');
-    if(fieldsets.length){
-      fieldsets[fieldsets.length-1].parentNode.insertBefore(container, fieldsets[fieldsets.length-1].nextSibling);
-    }
+    calcBtnWrap.parentNode.insertBefore(container, calcBtnWrap.nextSibling);
 
     /* ═══════════════════════════════════════════════════════════
-       INICIALIZAR MAPA LEAFLET
+       GOOGLE MAPS — montar URL do iframe e link externo
        ═══════════════════════════════════════════════════════════ */
-    var map = null, marker = null, routeLine = null, originMarker = null;
-
-    function initMap(){
-      if(map) return;
-      map = L.map('rota-map',{
-        zoomControl: true,
-        scrollWheelZoom: true
-      }).setView([-13.0, -38.5], 6);
-
-      // Tile dark theme
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-        attribution:'© OpenStreetMap © CARTO',
-        maxZoom:18
-      }).addTo(map);
-
-      // Clique no mapa = alfinetar destino
-      map.on('click', function(e){
-        setDestinationMarker(e.latlng.lat, e.latlng.lng);
-        // Reverse geocode para preencher nome
-        fetch('/operacao/api/reverse-geocode/?lat='+e.latlng.lat+'&lng='+e.latlng.lng)
-          .then(function(r){ return r.json(); })
-          .then(function(data){
-            if(data.nome) destinoField.value = data.nome;
-            calcularDistancia(e.latlng.lat, e.latlng.lng);
-          })
-          .catch(function(){ calcularDistancia(e.latlng.lat, e.latlng.lng); });
-      });
-
-      // Resize fix
-      setTimeout(function(){ map.invalidateSize(); }, 200);
+    function buildGmapsUrl(pontos){
+      // pontos = [{lat, lng, nome}, ...] na ordem otimizada (origem primeiro)
+      if(pontos.length < 2) return '';
+      var parts = pontos.map(function(p){ return p.lat+','+p.lng; });
+      // Google Maps directions: /maps/dir/coord1/coord2/.../
+      return 'https://www.google.com/maps/dir/' + parts.join('/') + '/';
     }
 
-    // Ícones customizados
-    var truckIcon = L.divIcon({
-      html:'<div style="font-size:24px;text-shadow:0 2px 8px rgba(0,0,0,.5);">🚛</div>',
-      iconSize:[30,30], iconAnchor:[15,15], className:''
-    });
-    var pinIcon = L.divIcon({
-      html:'<div style="font-size:28px;text-shadow:0 2px 8px rgba(0,0,0,.6);filter:drop-shadow(0 0 6px #ef4444);">📍</div>',
-      iconSize:[30,36], iconAnchor:[15,36], className:''
-    });
-
-    function setDestinationMarker(lat, lng){
-      if(marker){
-        marker.setLatLng([lat, lng]);
-      } else {
-        marker = L.marker([lat, lng],{
-          icon: pinIcon,
-          draggable: true
-        }).addTo(map);
-        // Ao arrastar, recalcular
-        marker.on('dragend', function(){
-          var pos = marker.getLatLng();
-          fetch('/operacao/api/reverse-geocode/?lat='+pos.lat+'&lng='+pos.lng)
-            .then(function(r){ return r.json(); })
-            .then(function(data){
-              if(data.nome) destinoField.value = data.nome;
-              calcularDistancia(pos.lat, pos.lng);
-            })
-            .catch(function(){ calcularDistancia(pos.lat, pos.lng); });
-        });
+    function buildGmapsEmbedUrl(pontos){
+      if(pontos.length < 2) return '';
+      var origin = pontos[0].lat+','+pontos[0].lng;
+      var dest = pontos[pontos.length-1].lat+','+pontos[pontos.length-1].lng;
+      var waypoints = '';
+      if(pontos.length > 2){
+        waypoints = pontos.slice(1, -1).map(function(p){ return p.lat+','+p.lng; }).join('|');
       }
-    }
-
-    function setOriginMarker(lat, lng){
-      if(originMarker){
-        originMarker.setLatLng([lat, lng]);
-      } else {
-        originMarker = L.marker([lat, lng],{icon: truckIcon}).addTo(map);
-      }
-    }
-
-    function drawRoute(coords, oLat, oLng, dLat, dLng){
-      if(routeLine) map.removeLayer(routeLine);
-      // Coords do OSRM vêm como [lng, lat]
-      var latlngs = coords.map(function(c){ return [c[1], c[0]]; });
-      routeLine = L.polyline(latlngs,{
-        color:'#00d9a6', weight:4, opacity:.8,
-        dashArray:'8 4'
-      }).addTo(map);
-      setOriginMarker(oLat, oLng);
-      setDestinationMarker(dLat, dLng);
-      // Fit bounds
-      var group = L.featureGroup([routeLine, originMarker, marker]);
-      map.fitBounds(group.getBounds().pad(0.1));
+      // Usar URL de embed gratuita do Google Maps (sem API key)
+      var url = 'https://www.google.com/maps/embed?pb=!1m'+(pontos.length*2+2);
+      // Alternativa mais confiável: usar a URL de direções como src do iframe
+      var dirUrl = 'https://www.google.com/maps/dir/' + pontos.map(function(p){ return p.lat+','+p.lng; }).join('/') + '/';
+      return dirUrl + '?entry=ttu';
     }
 
     /* ═══════════════════════════════════════════════════════════
-       AUTOCOMPLETE DROPDOWN
+       CALCULAR MELHOR ROTA
        ═══════════════════════════════════════════════════════════ */
-    var wrap = destinoField.parentNode;
-    wrap.style.position = 'relative';
-    var dd = document.createElement('div');
-    dd.id = 'destino-dropdown';
-    dd.style.cssText = 'position:absolute;top:100%;left:0;right:0;z-index:9999;'
-      +'background:#0d1929;border:1px solid rgba(0,217,166,.25);border-radius:8px;'
-      +'max-height:260px;overflow-y:auto;display:none;margin-top:2px;'
-      +'box-shadow:0 8px 30px rgba(0,0,0,.4);';
-    wrap.appendChild(dd);
-
-    var timer = null;
-    destinoField.setAttribute('autocomplete','off');
-    destinoField.setAttribute('placeholder','Digite o nome da cidade...');
-    destinoField.addEventListener('input', function(){
-      clearTimeout(timer);
-      var q = destinoField.value.trim();
-      if(q.length < 2){ dd.style.display='none'; return; }
-      timer = setTimeout(function(){ buscarCidades(q); }, 350);
-    });
-
-    function buscarCidades(q){
-      fetch('/operacao/api/cidades/?q=' + encodeURIComponent(q))
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-          dd.innerHTML = '';
-          if(!data.length){ dd.style.display='none'; return; }
-          data.forEach(function(c){
-            var item = document.createElement('div');
-            item.innerHTML = '<span style="color:#00d9a6;margin-right:6px;">📍</span>' + c.nome;
-            item.style.cssText = 'padding:9px 14px;cursor:pointer;font-size:.8rem;color:#dde6f0;'
-              +'border-bottom:1px solid rgba(0,217,166,.06);transition:all .12s;';
-            item.addEventListener('mouseenter',function(){
-              item.style.background='rgba(0,217,166,.08)';item.style.paddingLeft='18px';
-            });
-            item.addEventListener('mouseleave',function(){
-              item.style.background='transparent';item.style.paddingLeft='14px';
-            });
-            item.addEventListener('click',function(){
-              destinoField.value = c.nome;
-              dd.style.display = 'none';
-              calcularDistancia();
-            });
-            dd.appendChild(item);
-          });
-          dd.style.display = 'block';
-        })
-        .catch(function(){ dd.style.display='none'; });
-    }
-
-    document.addEventListener('click', function(e){
-      if(!wrap.contains(e.target)) dd.style.display='none';
-    });
-
-    /* ═══════════════════════════════════════════════════════════
-       BOTÃO CALCULAR
-       ═══════════════════════════════════════════════════════════ */
-    var calcBtn = document.createElement('a');
-    calcBtn.href = '#';
-    calcBtn.innerHTML = '🚛 Calcular Rota';
-    calcBtn.style.cssText = 'display:inline-block;margin-top:8px;'
-      +'background:linear-gradient(135deg,#00d9a6,#00b894);color:#070d1a;'
-      +'border-radius:8px;padding:7px 18px;font-size:.75rem;font-weight:800;'
-      +'text-decoration:none;transition:all .18s;'
-      +'box-shadow:0 2px 10px rgba(0,217,166,.25);';
-    calcBtn.addEventListener('mouseenter',function(){
-      calcBtn.style.transform='translateY(-1px)';
-      calcBtn.style.boxShadow='0 4px 16px rgba(0,217,166,.35)';
-    });
-    calcBtn.addEventListener('mouseleave',function(){
-      calcBtn.style.transform='';
-      calcBtn.style.boxShadow='0 2px 10px rgba(0,217,166,.25)';
-    });
-    calcBtn.addEventListener('click', function(e){ e.preventDefault(); calcularDistancia(); });
-    wrap.appendChild(document.createElement('br'));
-    wrap.appendChild(calcBtn);
-
-    /* ═══════════════════════════════════════════════════════════
-       CALCULAR DISTÂNCIA + ATUALIZAR MAPA + PAINEL
-       ═══════════════════════════════════════════════════════════ */
-    function calcularDistancia(clickLat, clickLng){
+    function calcularDistancia(){
       var origem = origemField ? origemField.value : '';
-      var destino = destinoField.value.trim();
-      var paradaIds = paradaFields.map(function(f){ return (f.value || '').trim(); }).filter(function(v){ return v && v !== ''; });
-      if(!origem) return;
-      if(!destino && !clickLat && !paradaIds.length) return;
+      if(!origem){
+        showStatus('⚠️ Selecione a origem (base de carregamento).','#f59e0b');
+        return;
+      }
+
+      var paradaIds = paradaFields.map(function(f){ return (f.value||'').trim(); }).filter(function(v){ return v && v!==''; });
+      if(!paradaIds.length){
+        showStatus('⚠️ Selecione ao menos um posto de entrega.','#f59e0b');
+        return;
+      }
 
       var spinner = document.getElementById('rota-spinner');
       spinner.style.display = 'inline';
       calcBtn.style.opacity = '.5';
       calcBtn.style.pointerEvents = 'none';
+      showStatus('⏳ Calculando a melhor rota de entrega...','#f59e0b');
       if(distField) distField.value = '...';
 
       var params = new URLSearchParams();
       params.set('origem', origem);
-      if(destino) params.set('destino', destino);
-      paradaIds.forEach(function(id){ params.append('parada_id', id); });
-      if(clickLat && clickLng){
-        params.set('lat', clickLat);
-        params.set('lng', clickLng);
-      }
-      var url = '/operacao/api/distancia/?' + params.toString();
+      paradaIds.forEach(function(id){ params.append('parada_id',id); });
 
-      fetch(url)
+      fetch('/operacao/api/distancia/?'+params.toString())
         .then(function(r){ return r.json(); })
         .then(function(data){
           spinner.style.display = 'none';
@@ -299,53 +174,62 @@
           calcBtn.style.pointerEvents = '';
 
           if(data.error){
+            showStatus('❌ '+data.error,'#ef4444');
             if(distField) distField.value = '';
             return;
           }
 
-          // Campos do form
           if(distField) distField.value = data.distancia_km;
           if(tempoField) tempoField.value = data.tempo_total_min;
-          if(latField)  latField.value  = data.destino_lat;
-          if(lngField)  lngField.value  = data.destino_lng;
+          if(latField) latField.value = data.destino_lat;
+          if(lngField) lngField.value = data.destino_lng;
+          if(destinoField) destinoField.value = data.destino_nome || '';
 
-          // Nome auto
-          var nomeField = document.getElementById('id_nome');
           if(nomeField && !nomeField.value){
             var on = (data.origem_nome||origem).split('/')[0];
-            var dn = (data.destino_nome||destino).split('/')[0];
-            nomeField.value = on + ' x ' + dn;
+            var nomes = (data.ordem_entrega||[]).map(function(e){return e.nome;});
+            nomeField.value = on + ' → ' + nomes.join(' → ');
           }
 
-          // Mostrar container + mapa
+          showStatus('✅ Rota otimizada! '+data.distancia_km+' km — melhor ordem de entrega calculada.','#10b981');
+
+          // Montar pontos na ordem otimizada
+          var pontos = [{nome:data.origem_nome||origem, lat:data.origem_lat, lng:data.origem_lng}];
+          if(data.ordem_entrega){
+            data.ordem_entrega.forEach(function(e){
+              if(e.lat && e.lng) pontos.push({nome:e.nome, lat:e.lat, lng:e.lng});
+            });
+          }
+          if(pontos.length < 2){
+            pontos.push({nome:data.destino_nome||'Destino', lat:data.destino_lat, lng:data.destino_lng});
+          }
+
+          // Google Maps iframe
           container.style.display = 'block';
-          initMap();
-          setTimeout(function(){ map.invalidateSize(); }, 100);
+          var iframe = document.getElementById('rota-gmaps-iframe');
+          var embedUrl = buildGmapsEmbedUrl(pontos);
+          iframe.src = embedUrl;
 
-          // Desenhar rota
-          if(data.rota_coords){
-            drawRoute(data.rota_coords, data.origem_lat, data.origem_lng, data.destino_lat, data.destino_lng);
-          }
-
-          // Cards
-          document.getElementById('rota-dist').textContent =
-            Number(data.distancia_km).toLocaleString('pt-BR');
-          var h = data.tempo_total_h, m = data.tempo_total_m;
-          document.getElementById('rota-tempo').textContent =
-            h + 'h ' + (m<10?'0':'') + m + 'min';
-          var trajetoNomes = data.trajeto_nomes || [data.origem_nome || origem, data.destino_nome || destino];
-          document.getElementById('rota-trajeto').innerHTML = trajetoNomes.map(function(nome, idx){
-            var prefix = idx === 0 ? '🏭 ' : (idx === trajetoNomes.length - 1 ? '📍 ' : '🛑 ');
-            var color = idx === 0 ? '#00d9a6' : (idx === trajetoNomes.length - 1 ? '#f59e0b' : '#3b82f6');
-            return '<span style="color:'+color+';">' + prefix + nome + '</span>';
-          }).join('<br><span style="font-size:.9rem;color:#8892a4;">⬇️</span><br>');
-
-          // Google Maps link
+          // Link externo
           var gmBtn = document.getElementById('rota-gmaps');
-          gmBtn.href = data.gmaps_url;
+          var externalUrl = buildGmapsUrl(pontos);
+          gmBtn.href = externalUrl;
           gmBtn.style.display = 'inline-block';
 
-          // Ordem de entrega
+          // Cards de informação
+          document.getElementById('rota-dist').textContent =
+            Number(data.distancia_km).toLocaleString('pt-BR');
+          var h=data.tempo_total_h, m_val=data.tempo_total_m;
+          document.getElementById('rota-tempo').textContent =
+            h+'h '+(m_val<10?'0':'')+m_val+'min';
+
+          var trajetoNomes = data.trajeto_nomes || [data.origem_nome||origem];
+          document.getElementById('rota-trajeto').innerHTML = trajetoNomes.map(function(nome,idx){
+            var prefix = idx===0 ? '🏭 ' : '🛢️ ';
+            var color = idx===0 ? '#00d9a6' : '#3b82f6';
+            return '<span style="color:'+color+';">'+prefix+nome+'</span>';
+          }).join('<br><span style="font-size:.9rem;color:#8892a4;">⬇️</span><br>');
+
           var ordemEl = document.getElementById('rota-ordem');
           if(data.ordem_entrega && data.ordem_entrega.length > 0){
             ordemEl.innerHTML = data.ordem_entrega.map(function(item){
@@ -360,7 +244,6 @@
             ordemEl.innerHTML = '—';
           }
 
-          // Animação
           container.style.animation = 'none';
           container.offsetHeight;
           container.style.animation = 'fadeSlide .4s ease-out';
@@ -369,46 +252,26 @@
           spinner.style.display = 'none';
           calcBtn.style.opacity = '1';
           calcBtn.style.pointerEvents = '';
+          showStatus('❌ Erro ao calcular rota. Tente novamente.','#ef4444');
           if(distField) distField.value = '';
         });
     }
 
-    // Recalcular ao mudar origem
-    if(origemField){
-      origemField.addEventListener('change', function(){
-        if(destinoField.value.trim()) calcularDistancia();
-      });
+    function showStatus(msg, color){
+      var el = document.getElementById('calc-status');
+      el.style.display = 'block';
+      el.style.color = color;
+      el.textContent = msg;
     }
 
-    paradaFields.forEach(function(field){
-      field.addEventListener('change', function(){
-        if(destinoField.value.trim() || paradaFields.some(function(f){ return f.value; })) calcularDistancia();
-      });
-    });
-    // Select2 (autocomplete_fields) dispara change via jQuery
-    if(window.django && window.django.jQuery){
-      paradaFields.forEach(function(field){
-        django.jQuery(field).on('change', function(){
-          if(destinoField.value.trim() || paradaFields.some(function(f){ return f.value; })) calcularDistancia();
-        });
-      });
-    }
-
-    // Se já tem lat/lng (edição), mostrar mapa
+    // Edição: se já tem dados, recalcular para mostrar Google Maps
     if(latField && lngField && latField.value && lngField.value){
-      container.style.display = 'block';
-      initMap();
-      var o = ORIGENS[origemField ? origemField.value : ''];
-      if(o){
-        setOriginMarker(o.lat, o.lng);
-      }
-      setDestinationMarker(parseFloat(latField.value), parseFloat(lngField.value));
-      if(marker && originMarker){
-        map.fitBounds(L.featureGroup([originMarker, marker]).getBounds().pad(0.2));
+      var hasParadas = paradaFields.some(function(f){ return f.value; });
+      if(hasParadas && origemField.value){
+        setTimeout(function(){ calcularDistancia(); }, 500);
       }
     }
 
-    // Animação CSS
     var style = document.createElement('style');
     style.textContent = '@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
     document.head.appendChild(style);

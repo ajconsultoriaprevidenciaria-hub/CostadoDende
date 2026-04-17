@@ -21,6 +21,7 @@ from .models import (
 
 # ── Auth ──────────────────────────────────────────────────────
 
+@ensure_csrf_cookie
 def login_motorista(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf', '').strip()

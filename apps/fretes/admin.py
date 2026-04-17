@@ -274,14 +274,17 @@ class RotaAdmin(admin.ModelAdmin):
 	list_display = ('nome', 'origem', 'destino', 'distancia_km', 'ativo', 'acoes')
 	list_filter = ('ativo', 'origem')
 	search_fields = ('nome', 'origem', 'destino')
-	readonly_fields = ('destino_lat', 'destino_lng')
+	readonly_fields = ('destino_lat', 'destino_lng', 'destino')
 	autocomplete_fields = ('parada_1', 'parada_2', 'parada_3', 'parada_4', 'parada_5', 'parada_6', 'parada_7')
 	fieldsets = (
-		(None, {'fields': (
-			'nome', 'origem', 'destino',
-			'parada_1', 'parada_2', 'parada_3', 'parada_4', 'parada_5', 'parada_6', 'parada_7',
-			'distancia_km', 'tempo_total_min', 'ativo',
+		(None, {'fields': ('nome', 'origem')}),
+		('🛢️ Postos de Entrega (selecione os clientes da rota)', {'fields': (
+			'parada_1', 'parada_2', 'parada_3', 'parada_4',
+			'parada_5', 'parada_6', 'parada_7',
 		)}),
+		('📊 Resultado da Rota (preenchido automaticamente)', {
+			'fields': ('destino', 'distancia_km', 'tempo_total_min', 'ativo'),
+		}),
 		('Coordenadas (preenchido automaticamente)', {
 			'classes': ('collapse',),
 			'fields': ('destino_lat', 'destino_lng'),
@@ -289,9 +292,7 @@ class RotaAdmin(admin.ModelAdmin):
 	)
 
 	class Media:
-		css = {'all': ('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',)}
 		js = (
-			'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
 			'admin/js/rota_destino.js',
 		)
 
