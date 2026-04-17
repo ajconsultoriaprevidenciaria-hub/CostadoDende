@@ -50,7 +50,7 @@ admin.site.index = dashboard_admin_index
 class CompartimentoAdmin(admin.ModelAdmin):
 	change_list_template = 'admin/fretes/compartimento/change_list.html'
 	list_display = ('caminhao', 'numero', 'capacidade_litros')
-	list_filter = ('caminhao',)
+	list_filter = ()
 
 	def changelist_view(self, request, extra_context=None):
 		extra_context = extra_context or {}
@@ -151,12 +151,33 @@ class CaminhaoAdmin(admin.ModelAdmin):
 
 @admin.register(CaminhaoDocumento)
 class CaminhaoDocumentoAdmin(admin.ModelAdmin):
+	change_list_template = 'admin/fretes/caminhaodocumento/change_list.html'
 	list_display = ('caminhao', 'tipo', 'descricao', 'arquivo_link', 'data_validade', 'ativo')
-	list_filter = ('tipo', 'data_validade', 'ativo')
+	list_filter = ()
 	search_fields = ('caminhao__placa', 'descricao')
 	search_help_text = 'Pesquise pela placa do caminhão ou descrição do documento'
 	autocomplete_fields = ('caminhao',)
 	ordering = ('caminhao__placa', 'tipo')
+
+	def changelist_view(self, request, extra_context=None):
+		extra_context = extra_context or {}
+		caminhoes = (
+			Caminhao.objects.filter(ativo=True)
+			.prefetch_related('documentos')
+			.order_by('placa')
+		)
+		grupos = []
+		for cam in caminhoes:
+			docs = cam.documentos.order_by('tipo')
+			if not docs.exists():
+				continue
+			grupos.append({
+				'caminhao': cam,
+				'documentos': docs,
+				'total': docs.count(),
+			})
+		extra_context['grupos'] = grupos
+		return super().changelist_view(request, extra_context=extra_context)
 
 	@admin.display(description='Arquivo')
 	def arquivo_link(self, obj):
