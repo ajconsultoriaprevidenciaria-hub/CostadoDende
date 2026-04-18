@@ -194,9 +194,29 @@ class CaminhaoDocumentoAdmin(admin.ModelAdmin):
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
 	change_form_template = 'admin/fretes/cliente/change_form.html'
-	list_display = ('nome', 'documento', 'cidade', 'uf', 'ativo')
-	list_filter = ('ativo', 'uf')
+	list_display = ('nome', 'documento', 'cidade', 'uf', 'ativo', 'acoes')
+	list_filter = ()
 	search_fields = ('nome', 'documento', 'nome_fantasia')
+
+	@admin.display(description='Ações')
+	def acoes(self, obj):
+		edit_url = reverse('admin:fretes_cliente_change', args=[obj.pk])
+		delete_url = reverse('admin:fretes_cliente_delete', args=[obj.pk])
+		return format_html(
+			'<a href="{}" style="background:var(--panel);color:var(--primary);border:1px solid var(--border);'
+			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
+			'margin-right:5px;display:inline-block;transition:all .18s;"'
+			' onmouseover="this.style.background=\'var(--primary)\';this.style.color=\'#070d1a\'"'
+			' onmouseout="this.style.background=\'var(--panel)\';this.style.color=\'var(--primary)\'">'
+			'✏️ Editar</a>'
+			'<a href="{}" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25);'
+			'border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:700;text-decoration:none;'
+			'display:inline-block;transition:all .18s;"'
+			' onmouseover="this.style.background=\'#ef4444\';this.style.color=\'#fff\'"'
+			' onmouseout="this.style.background=\'rgba(239,68,68,.1)\';this.style.color=\'#ef4444\'">'
+			'🗑️ Excluir</a>',
+			edit_url, delete_url
+		)
 
 
 @admin.register(Motorista)
