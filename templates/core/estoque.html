@@ -2312,6 +2312,43 @@ function removerFechamento(idx) {
 }
 
 function renderFechamentoCarga() {
+  // Buscar dados do sistema de transporte (CostadoDende) e mesclar com locais
+  _syncTransporteData().then(() => _renderFechamentoInterno());
+}
+
+async function _syncTransporteData() {
+  try {
+    const [resCam, resMot, resForn] = await Promise.all([
+      fetch('/operacao/api/caminhoes/').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/operacao/api/motoristas/').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/operacao/api/fornecedores/').then(r => r.ok ? r.json() : null).catch(() => null),
+    ]);
+
+    // Mesclar caminhões: adicionar do transporte se placa não existir localmente
+    if (resCam && resCam.caminhoes) {
+      const locais = getCaminhoes();
+      resCam.caminhoes.forEach(c => {
+        if (!locais.find(l => l.placa === c.placa)) {
+          locais.push({ placa: c.placa, motorista: c.motorista, telefone: c.telefone, origem: 'transporte' });
+        }
+      });
+      saveCaminhoes(locais);
+    }
+
+    // Mesclar distribuidoras/fornecedores
+    if (resForn && resForn.fornecedores) {
+      const locais = getDistribuidoras();
+      resForn.fornecedores.forEach(f => {
+        if (!locais.find(l => l.razao.toLowerCase() === f.razao.toLowerCase())) {
+          locais.push({ razao: f.razao, cnpj: f.cnpj, base: '', origem: 'transporte' });
+        }
+      });
+      saveDistribuidoras(locais);
+    }
+  } catch(e) { /* silently continue with local data */ }
+}
+
+function _renderFechamentoInterno() {
   // Popula select de distribuidoras
   const distribs = getDistribuidoras();
   const selDist = document.getElementById('fchDistribuidora');
