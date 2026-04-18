@@ -11,7 +11,7 @@ except ImportError:
 
 from .settings import *  # noqa: F401,F403
 
-DEBUG = True  # Temporário para debug
+DEBUG = False  # Produção - SSL configurado
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', SECRET_KEY)
 
@@ -35,12 +35,16 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_TRUSTED_ORIGINS = [
     'https://postoscostadodende.com.br',
     'https://www.postoscostadodende.com.br',
+    'http://postoscostadodende.com.br',
+    'http://www.postoscostadodende.com.br',
+    'http://72.61.27.65',
 ]
 _csrf_extra = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', '')
 CSRF_TRUSTED_ORIGINS += [
     o.strip() for o in _csrf_extra.split(',') if o.strip()
 ]
 
+# Cookies seguros - SSL CONFIGURADO ✅
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 dias
