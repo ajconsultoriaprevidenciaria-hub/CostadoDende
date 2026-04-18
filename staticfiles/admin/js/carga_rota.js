@@ -17,11 +17,10 @@
 
   ready(function(){
     /* ── Referências ─────────────────────────────────────── */
-    var rotaField      = document.getElementById('id_rota');
-    var clienteField   = document.getElementById('id_cliente');
-    if(!rotaField || !clienteField) return;
+    var origemField     = document.getElementById('id_origem');
+    var clienteField     = document.getElementById('id_cliente');
+    if(!clienteField) return;
 
-    var rotaOrigem = '';
     var leafletMap = null;
 
     /* ── Coletar todos os IDs de clientes do form ────────── */
@@ -43,7 +42,10 @@
 
     /* ── Botão Calcular ──────────────────────────────────── */
     var clientesGroup = document.getElementById('clientes_adicionais-group');
-    if(!clientesGroup) return;
+    var insertTarget = clientesGroup
+      || document.querySelector('.submit-row')
+      || document.querySelector('#content form');
+    if(!insertTarget) return;
 
     var calcWrap = document.createElement('div');
     calcWrap.style.cssText = 'text-align:center;padding:18px 0;';
@@ -56,7 +58,7 @@
       +'🚛 Calcular Melhor Rota de Entrega</button>'
       +'<div id="carga-calc-status" style="margin-top:10px;font-size:.8rem;color:#8892a4;display:none;"></div>';
 
-    clientesGroup.parentNode.insertBefore(calcWrap, clientesGroup.nextSibling);
+    insertTarget.parentNode.insertBefore(calcWrap, insertTarget);
 
     var calcBtn = document.getElementById('btn-calc-rota-carga');
     calcBtn.addEventListener('mouseenter',function(){
@@ -180,23 +182,10 @@
       }, 300);
     }
 
-    /* ── Buscar origem da rota selecionada ────────────────── */
-    function fetchRotaOrigem(callback){
-      var rotaId = rotaField.value;
-      if(!rotaId){ rotaOrigem = ''; callback(); return; }
-      fetch('/operacao/api/rota/'+rotaId+'/info/')
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-          rotaOrigem = data.origem || '';
-          callback();
-        })
-        .catch(function(){ rotaOrigem = ''; callback(); });
-    }
-
     /* ── Calcular rota ───────────────────────────────────── */
     function calcularRota(){
-      if(!rotaField.value){
-        showStatus('⚠️ Selecione a rota primeiro.','#f59e0b');
+      if(!origemField || !origemField.value){
+        showStatus('⚠️ Selecione a origem primeiro.','#f59e0b');
         return;
       }
 
@@ -210,19 +199,12 @@
       spinner.style.display = 'inline';
       calcBtn.style.opacity = '.5';
       calcBtn.style.pointerEvents = 'none';
-      showStatus('⏳ Buscando dados da rota e calculando...','#f59e0b');
+      showStatus('⏳ Calculando melhor rota de entrega...','#f59e0b');
 
-      fetchRotaOrigem(function(){
-        if(!rotaOrigem){
-          spinner.style.display = 'none';
-          calcBtn.style.opacity = '1';
-          calcBtn.style.pointerEvents = '';
-          showStatus('⚠️ Não foi possível obter a origem da rota.','#f59e0b');
-          return;
-        }
-
+      var origemValue = origemField.value;
+      {
         var params = new URLSearchParams();
-        params.set('origem', rotaOrigem);
+        params.set('origem', origemValue);
         clienteIds.forEach(function(id){ params.append('parada_id', id); });
 
         fetch('/operacao/api/distancia/?'+params.toString())
@@ -240,7 +222,7 @@
             showStatus('✅ Rota otimizada! '+data.distancia_km+' km — melhor ordem de entrega calculada.','#10b981');
 
             // Montar pontos na ordem otimizada
-            var pontos = [{nome:data.origem_nome||rotaOrigem, lat:data.origem_lat, lng:data.origem_lng}];
+            var pontos = [{nome:data.origem_nome||origemValue, lat:data.origem_lat, lng:data.origem_lng}];
             if(data.ordem_entrega){
               data.ordem_entrega.forEach(function(e){
                 if(e.lat && e.lng) pontos.push({nome:e.nome, lat:e.lat, lng:e.lng});
@@ -268,7 +250,7 @@
             document.getElementById('carga-rota-tempo').textContent =
               h+'h '+(m_val<10?'0':'')+m_val+'min';
 
-            var trajetoNomes = data.trajeto_nomes || [data.origem_nome||rotaOrigem];
+            var trajetoNomes = data.trajeto_nomes || [data.origem_nome||origemValue];
             document.getElementById('carga-rota-trajeto').innerHTML = trajetoNomes.map(function(nome,idx){
               var prefix = idx===0 ? '🏭 ' : '🛢️ ';
               var color = idx===0 ? '#00d9a6' : '#3b82f6';
@@ -299,7 +281,7 @@
             calcBtn.style.pointerEvents = '';
             showStatus('❌ Erro ao calcular rota. Tente novamente.','#ef4444');
           });
-      });
+      }
     }
 
     function showStatus(msg, color){
