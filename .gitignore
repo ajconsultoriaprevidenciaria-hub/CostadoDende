@@ -39,3 +39,10 @@ htmlcov/
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Arquivos de produção com credenciais (NÃO COMMITAR!)
+DEPLOY_PRODUCAO_CREDENCIAIS.md
+*CREDENCIAIS*.md
+*SENHAS*.md
+backup_*.sql
+backup_*.sql.gz

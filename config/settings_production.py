@@ -1,4 +1,13 @@
 import os
+from pathlib import Path
+
+# Carregar variáveis de ambiente do arquivo .env
+try:
+    from dotenv import load_dotenv
+    env_path = Path(__file__).resolve().parent.parent / '.env'
+    load_dotenv(env_path)
+except ImportError:
+    pass
 
 from .settings import *  # noqa: F401,F403
 
@@ -38,14 +47,17 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 dias
 
 MEDIA_SERVE_BY_DJANGO = True
 
-# Banco de dados — produção sempre usa PostgreSQL
+# Banco de dados — produção usa PostgreSQL (padrão VPS) ou MySQL
+db_engine = os.getenv('DB_ENGINE', 'django.db.backends.postgresql')
+default_port = '5432' if 'postgres' in db_engine else '3306'
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': db_engine,
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'PORT': os.getenv('DB_PORT', default_port),
     }
 }
