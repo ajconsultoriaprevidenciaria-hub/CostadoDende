@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrar Abastecimento</title>
+    <style>
+        :root {
+            --bg: #070d1a;
+            --panel: #0d1929;
+            --border: rgba(0,217,166,.14);
+            --text: #e2e8f0;
+            --text-sec: rgba(255,255,255,.5);
+            --warn: #f59e0b;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 14px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, sans-serif;
+        }
+        .wrap {
+            background: var(--panel);
+            border: 1px solid rgba(245,158,11,.22);
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .title {
+            font-size: .82rem;
+            font-weight: 800;
+            color: var(--warn);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .msg {
+            font-size: .76rem;
+            padding: 9px 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid;
+        }
+        .msg-success { background: rgba(16,185,129,.12); color: #10b981; border-color: rgba(16,185,129,.25); }
+        .msg-error { background: rgba(244,63,94,.12); color: #f43f5e; border-color: rgba(244,63,94,.25); }
+        label {
+            display: block;
+            font-size: .7rem;
+            color: var(--text-sec);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .field { margin-bottom: 10px; }
+        input, select {
+            width: 100%;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #071126;
+            color: var(--text);
+            padding: 0 10px;
+            font-size: .8rem;
+        }
+        input[type="file"] {
+            height: auto;
+            padding: 8px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .btn {
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(245,158,11,.92);
+            color: #201100;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="title">Registrar Abastecimento desta Viagem</div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="msg {% if message.tags == 'success' %}msg-success{% else %}msg-error{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="field">
+                <label for="ab_posto">Nome do Posto *</label>
+                <select name="posto" id="ab_posto" required>
+                    <option value="">Selecione o cliente/posto...</option>
+                    {% for cli in clientes %}
+                    <option value="{{ cli.nome }}">{{ cli.nome }}{% if cli.cidade %} — {{ cli.cidade }}/{{ cli.uf }}{% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="grid">
+                <div class="field">
+                    <label for="ab_valor">Valor da Nota (R$) *</label>
+                    <input type="number" name="valor" id="ab_valor" step="0.01" min="0" required inputmode="decimal">
+                </div>
+                <div class="field">
+                    <label for="ab_litros">Litros</label>
+                    <input type="number" name="litros" id="ab_litros" step="0.01" min="0" inputmode="decimal">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="ab_preco">Preço por Litro (R$)</label>
+                <input type="number" name="preco_litro" id="ab_preco" step="0.0001" min="0" inputmode="decimal" readonly style="background:rgba(255,255,255,.05);color:#aaa;">
+            </div>
+
+            <div class="field">
+                <label for="ab_cupom">Foto do Cupom Fiscal *</label>
+                <input type="file" name="foto_cupom" id="ab_cupom" accept="image/*" capture="environment" required>
+            </div>
+
+            <button type="submit" class="btn">⛽ Salvar Abastecimento</button>
+        </form>
+        <script>
+        (function(){
+            var valor=document.getElementById('ab_valor');
+            var litros=document.getElementById('ab_litros');
+            var preco=document.getElementById('ab_preco');
+            function calc(){
+                var v=parseFloat(valor.value)||0;
+                var l=parseFloat(litros.value)||0;
+                preco.value=l>0?(v/l).toFixed(4):'';
+            }
+            valor.addEventListener('input',calc);
+            litros.addEventListener('input',calc);
+        })();
+        </script>
+    </div>
+</body>
+</html>

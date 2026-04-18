@@ -1,10 +1,14 @@
+from collections import OrderedDict
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.clickjacking import xframe_options_exempt
 
-from apps.fretes.models import Carga, Cliente, Motorista
+from apps.fretes.models import Carga, Caminhao, Cliente, Motorista
 
 from .forms import ChecklistForm, DespesaForm, ItemChecklistForm
 from .models import (
@@ -17,6 +21,7 @@ from .models import (
 
 # ── Auth ──────────────────────────────────────────────────────
 
+@ensure_csrf_cookie
 def login_motorista(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf', '').strip()
@@ -58,10 +63,107 @@ def painel(request):
     motorista = _require_motorista(request)
     if motorista is None:
         return redirect('motorista_portal:login')
-    cargas = Carga.objects.filter(motorista=motorista, ativo=True).order_by('-data_carga')[:10]
+
+    cargas = list(
+        Carga.objects.filter(motorista=motorista, ativo=True)
+        .select_related('cliente', 'fornecedor', 'caminhao', 'motorista')
+        .prefetch_related('carga_compartimentos__compartimento', 'carga_compartimentos__produto')
+        .order_by('-data_carga', '-criado_em', '-id')[:20]
+    )
+
+    grupos = OrderedDict()
+    for carga in cargas:
+        marcador = carga.criado_em.replace(second=0, microsecond=0) if carga.criado_em else None
+        chave = (
+            carga.data_carga,
+            carga.caminhao_id,
+            carga.motorista_id,
+            carga.fornecedor_id,
+            (carga.numero_documento or '').strip(),
+            marcador,
+        )
+        grupo = grupos.setdefault(chave, {
+            'carga_pk': carga.pk,
+            'data_carga': carga.data_carga,
+            'placa': carga.caminhao.placa if carga.caminhao_id else '-',
+            'horario_lancamento': carga.criado_em,
+            'motorista': carga.motorista.nome if carga.motorista_id else '-',
+            'distribuidora': carga.fornecedor.nome if carga.fornecedor_id else '-',
+            'clientes': [],
+        })
+        bocas = list(carga.carga_compartimentos.all())
+        numeros = [str(item.compartimento.numero) for item in bocas if item.compartimento_id]
+        detalhes_bocas = []
+        produtos_volume = OrderedDict()
+        for item in sorted(bocas, key=lambda x: x.compartimento.numero if x.compartimento_id else 0):
+            produto_nome = item.produto.nome if item.produto_id else '-'
+            capacidade = item.compartimento.capacidade_litros if item.compartimento_id else 0
+            detalhes_bocas.append({
+                'numero': item.compartimento.numero if item.compartimento_id else '-',
+                'produto': produto_nome,
+            })
+            if item.produto_id and item.compartimento_id:
+                produtos_volume[produto_nome] = produtos_volume.get(produto_nome, 0) + capacidade
+
+        produtos_resumo = []
+        for produto_nome, volume in produtos_volume.items():
+            volume_fmt = f"{int(volume):,}".replace(',', '.')
+            produtos_resumo.append({
+                'produto': produto_nome,
+                'volume_fmt': volume_fmt,
+            })
+
+        grupo['clientes'].append({
+            'nome': carga.cliente.nome if carga.cliente_id else '-',
+            'qtd_bocas': len(bocas),
+            'bocas_numeros': ', '.join(numeros) if numeros else '-',
+            'detalhes_bocas': detalhes_bocas,
+            'produtos_resumo': produtos_resumo,
+        })
+
+    cargas_agrupadas = sorted(
+        grupos.values(),
+        key=lambda g: (
+            g['data_carga'].isoformat() if g.get('data_carga') else '',
+            g['horario_lancamento'].isoformat() if g.get('horario_lancamento') else '',
+        ),
+        reverse=True,
+    )
+
+    dias_semana = {
+        0: 'SEGUNDA FEIRA',
+        1: 'TERCA FEIRA',
+        2: 'QUARTA FEIRA',
+        3: 'QUINTA FEIRA',
+        4: 'SEXTA FEIRA',
+        5: 'SABADO',
+        6: 'DOMINGO',
+    }
+    cargas_por_dia = OrderedDict()
+    for item in cargas_agrupadas:
+        data = item.get('data_carga')
+        if not data:
+            continue
+        titulo = f"{dias_semana.get(data.weekday(), '')} {data.strftime('%d/%m/%Y')}".strip()
+        cargas_por_dia.setdefault(titulo, []).append(item)
+
     return render(request, 'motorista_portal/painel.html', {
         'motorista': motorista,
         'cargas': cargas,
+        'cargas_agrupadas': cargas_agrupadas,
+        'cargas_por_dia': list(cargas_por_dia.items()),
+    })
+
+
+@login_required(login_url='motorista_portal:login')
+def documentos_caminhoes(request):
+    motorista = _require_motorista(request)
+    if motorista is None:
+        return redirect('motorista_portal:login')
+    caminhoes = Caminhao.objects.filter(ativo=True).order_by('placa').prefetch_related('documentos')
+    return render(request, 'motorista_portal/documentos_caminhoes.html', {
+        'motorista': motorista,
+        'caminhoes': caminhoes,
     })
 
 
@@ -98,6 +200,7 @@ CATEGORIAS_OBRIGATORIAS = [
 
 
 @login_required(login_url='motorista_portal:login')
+@xframe_options_exempt
 def checklist_criar(request, carga_pk):
     motorista = _require_motorista(request)
     if motorista is None:
@@ -212,6 +315,69 @@ def abastecimento_rapido(request, carga_pk):
             messages.success(request, f'Abastecimento no {posto} registrado! R$ {valor_dec}')
 
     return redirect('motorista_portal:checklist-criar', carga_pk=carga.pk)
+
+
+@login_required(login_url='motorista_portal:login')
+@xframe_options_exempt
+@ensure_csrf_cookie
+def abastecimento_embutido(request, carga_pk):
+    motorista = _require_motorista(request)
+    if motorista is None:
+        return redirect('motorista_portal:login')
+    carga = get_object_or_404(Carga, pk=carga_pk, motorista=motorista)
+
+    if request.method == 'POST':
+        posto = request.POST.get('posto', '').strip()
+        valor = request.POST.get('valor', '').strip()
+        litros = request.POST.get('litros', '').strip()
+        preco_litro = request.POST.get('preco_litro', '').strip()
+        foto_cupom = request.FILES.get('foto_cupom')
+
+        erros = []
+        if not posto:
+            erros.append('Informe o nome do posto.')
+        if not valor:
+            erros.append('Informe o valor da nota.')
+        if not foto_cupom:
+            erros.append('Envie a foto do cupom fiscal.')
+
+        if erros:
+            for e in erros:
+                messages.error(request, e)
+        else:
+            from decimal import Decimal, InvalidOperation
+            from django.utils import timezone
+            try:
+                valor_dec = Decimal(valor.replace(',', '.'))
+                litros_dec = Decimal(litros.replace(',', '.')) if litros else Decimal('0')
+                preco_dec = Decimal(preco_litro.replace(',', '.')) if preco_litro else Decimal('0')
+            except (InvalidOperation, ValueError):
+                messages.error(request, 'Valores numéricos inválidos.')
+            else:
+                despesa = DespesaViagem.objects.create(
+                    carga=carga,
+                    motorista=motorista,
+                    tipo='abastecimento',
+                    descricao=f'Abastecimento - {posto}',
+                    valor=valor_dec,
+                    data=timezone.now().date(),
+                    comprovante=foto_cupom,
+                )
+                AbastecimentoViagem.objects.create(
+                    despesa=despesa,
+                    posto=posto,
+                    litros=litros_dec,
+                    preco_litro=preco_dec,
+                    foto_cupom=foto_cupom,
+                )
+                messages.success(request, f'Abastecimento no {posto} registrado! R$ {valor_dec}')
+                return redirect('motorista_portal:abastecimento-embutido', carga_pk=carga.pk)
+
+    clientes = Cliente.objects.filter(ativo=True).order_by('nome')
+    return render(request, 'motorista_portal/abastecimento_embutido.html', {
+        'carga': carga,
+        'clientes': clientes,
+    })
 
 
 @login_required(login_url='motorista_portal:login')

@@ -34,5 +34,5 @@ urlpatterns = [
     path('dashboard/', include('apps.dashboard.urls')),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG or getattr(settings, 'MEDIA_SERVE_BY_DJANGO', False):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

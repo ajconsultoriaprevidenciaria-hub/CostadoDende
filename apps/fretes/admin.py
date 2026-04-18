@@ -193,6 +193,7 @@ class CaminhaoDocumentoAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
+	change_form_template = 'admin/fretes/cliente/change_form.html'
 	list_display = ('nome', 'documento', 'cidade', 'uf', 'ativo')
 	list_filter = ('ativo', 'uf')
 	search_fields = ('nome', 'documento', 'nome_fantasia')

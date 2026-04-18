@@ -72,7 +72,16 @@ class LocalCarregamento(BaseModel):
 
 
 class Caminhao(BaseModel):
+	TIPO_EIXO_CHOICES = [
+		('truck', 'Truck'),
+		('bi_truck', 'Bi Truck'),
+		('carreta', 'Carreta'),
+	]
+
 	placa = models.CharField(max_length=8, unique=True)
+	modelo = models.CharField(max_length=100, blank=True)
+	ano_fabricacao = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Ano de fabricação')
+	tipo_eixo = models.CharField(max_length=20, choices=TIPO_EIXO_CHOICES, blank=True, verbose_name='Tipo do eixo')
 	motorista_principal = models.ForeignKey(
 		Motorista,
 		on_delete=models.SET_NULL,
@@ -198,9 +207,17 @@ class Rota(BaseModel):
 	nome = models.CharField(max_length=150)
 	origem = models.CharField(max_length=150, choices=ORIGEM_CHOICES)
 	destino = models.CharField(max_length=150)
+	parada_1 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 1')
+	parada_2 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 2')
+	parada_3 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 3')
+	parada_4 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 4')
+	parada_5 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 5')
+	parada_6 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 6')
+	parada_7 = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='+', verbose_name='Parada 7')
 	destino_lat = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, verbose_name='Latitude destino')
 	destino_lng = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, verbose_name='Longitude destino')
 	distancia_km = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+	tempo_total_min = models.PositiveIntegerField(null=True, blank=True, verbose_name='Tempo total (min)')
 
 	class Meta:
 		ordering = ['nome']
@@ -299,11 +316,26 @@ class Carga(BaseModel):
 		super().save(*args, **kwargs)
 
 
+class CargaCliente(models.Model):
+	carga = models.ForeignKey(Carga, on_delete=models.CASCADE, related_name='clientes_adicionais')
+	cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name='cargas_adicional')
+	ordem = models.PositiveSmallIntegerField(default=2)
+
+	class Meta:
+		ordering = ['ordem']
+		unique_together = ('carga', 'ordem')
+		verbose_name = 'Cliente adicional'
+		verbose_name_plural = 'Clientes adicionais'
+
+	def __str__(self):
+		return f'Cliente {self.ordem:02d} - {self.cliente.nome}'
+
+
 class CargaCompartimento(models.Model):
 	carga = models.ForeignKey(Carga, on_delete=models.CASCADE, related_name='carga_compartimentos')
 	compartimento = models.ForeignKey(Compartimento, on_delete=models.CASCADE)
 	produto = models.ForeignKey(Produto, on_delete=models.PROTECT)
-	cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, blank=True, null=True, related_name='carga_compartimentos')
+	cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, blank=True, null=True, related_name='+')
 
 	class Meta:
 		unique_together = ('carga', 'compartimento')
@@ -313,3 +345,93 @@ class CargaCompartimento(models.Model):
 
 	def __str__(self):
 		return f'Boca {self.compartimento.numero} - {self.produto.nome}'
+
+
+class Manutencao(BaseModel):
+	TIPO_CHOICES = [
+		('preventiva', 'Preventiva'),
+		('corretiva', 'Corretiva'),
+		('pneus', 'Pneus'),
+		('eletrica', 'Elétrica'),
+		('funilaria', 'Funilaria'),
+		('outros', 'Outros'),
+	]
+	STATUS_CHOICES = [
+		('pendente', 'Pendente'),
+		('em_andamento', 'Em andamento'),
+		('concluida', 'Concluída'),
+	]
+
+	caminhao = models.ForeignKey(Caminhao, on_delete=models.CASCADE, related_name='manutencoes')
+	tipo = models.CharField(max_length=30, choices=TIPO_CHOICES)
+	descricao = models.TextField()
+	data_servico = models.DateField(default=timezone.localdate)
+	km_atual = models.PositiveIntegerField(null=True, blank=True, verbose_name='KM atual')
+	valor = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+	oficina = models.CharField(max_length=150, blank=True)
+	status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
+	observacoes = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ['-data_servico', '-id']
+		verbose_name = 'Manutenção'
+		verbose_name_plural = 'Manutenções'
+
+	def __str__(self):
+		return f'{self.caminhao.placa} – {self.get_tipo_display()} ({self.data_servico:%d/%m/%Y})'
+
+
+class Pneu(BaseModel):
+	POSICAO_CHOICES = [
+		('1E', '1° Eixo – Esquerdo'),
+		('1D', '1° Eixo – Direito'),
+		('2E', '2° Eixo – Esquerdo'),
+		('2D', '2° Eixo – Direito'),
+		('2EI', '2° Eixo – Esq. Interno'),
+		('2EE', '2° Eixo – Esq. Externo'),
+		('2DI', '2° Eixo – Dir. Interno'),
+		('2DE', '2° Eixo – Dir. Externo'),
+		('3EI', '3° Eixo – Esq. Interno'),
+		('3EE', '3° Eixo – Esq. Externo'),
+		('3DI', '3° Eixo – Dir. Interno'),
+		('3DE', '3° Eixo – Dir. Externo'),
+		('4EI', '4° Eixo – Esq. Interno'),
+		('4EE', '4° Eixo – Esq. Externo'),
+		('4DI', '4° Eixo – Dir. Interno'),
+		('4DE', '4° Eixo – Dir. Externo'),
+		('5EI', '5° Eixo – Esq. Interno'),
+		('5EE', '5° Eixo – Esq. Externo'),
+		('5DI', '5° Eixo – Dir. Interno'),
+		('5DE', '5° Eixo – Dir. Externo'),
+		('6EI', '6° Eixo – Esq. Interno'),
+		('6EE', '6° Eixo – Esq. Externo'),
+		('6DI', '6° Eixo – Dir. Interno'),
+		('6DE', '6° Eixo – Dir. Externo'),
+		('ESP', 'Estepe'),
+	]
+	STATUS_PNEU_CHOICES = [
+		('bom', 'Bom'),
+		('atencao', 'Atenção'),
+		('ruim', 'Ruim'),
+	]
+
+	caminhao = models.ForeignKey(Caminhao, on_delete=models.CASCADE, related_name='pneus')
+	posicao = models.CharField(max_length=10, choices=POSICAO_CHOICES, verbose_name='Posição')
+	marca = models.CharField(max_length=80, blank=True)
+	modelo = models.CharField(max_length=80, blank=True)
+	numero_fogo = models.CharField(max_length=50, blank=True, verbose_name='Número de fogo (DOT)')
+	data_instalacao = models.DateField(null=True, blank=True, verbose_name='Data de instalação')
+	km_instalacao = models.PositiveIntegerField(null=True, blank=True, verbose_name='KM na instalação')
+	sulco_mm = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True, verbose_name='Sulco (mm)')
+	recapado = models.BooleanField(default=False)
+	status = models.CharField(max_length=10, choices=STATUS_PNEU_CHOICES, default='bom')
+	observacoes = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ['caminhao__placa', 'posicao']
+		unique_together = ('caminhao', 'posicao')
+		verbose_name = 'Pneu'
+		verbose_name_plural = 'Pneus'
+
+	def __str__(self):
+		return f'{self.caminhao.placa} – {self.get_posicao_display()}'

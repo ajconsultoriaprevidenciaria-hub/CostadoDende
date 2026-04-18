@@ -1,29 +1,37 @@
-PACOTE DE HOSPEDAGEM - COSTA DO DENDE
+DEPLOY - COSTA DO DENDE - postoscostadodende.com.br
+====================================================
 
-Arquivos principais para upload:
-- passenger_wsgi.py
-- manage.py
-- deploy_requirements.txt
-- config/
-- apps/
-- templates/
-- static/
-- staticfiles/
-- media/
-- db.sqlite3
+PASSO A PASSO PARA HOSTINGER:
 
-Configuracao recomendada no servidor:
-1. Python app / WSGI apontando para passenger_wsgi.py
-2. Variavel DJANGO_SETTINGS_MODULE=config.settings_production
-3. Variavel DJANGO_SECRET_KEY com uma chave secreta propria
-4. Variavel DJANGO_ALLOWED_HOSTS com o dominio, ex: meusite.com,www.meusite.com
-5. Instalar dependencias com: pip install -r deploy_requirements.txt
+1. Acesse hPanel > Avancado > Aplicativo Python (Setup Python App)
+2. Crie uma aplicacao Python:
+   - Python version: 3.12 (ou a mais recente disponivel)
+   - App root: public_html (ou a pasta do dominio)
+   - App URL: postoscostadodende.com.br
+   - Startup file: passenger_wsgi.py
+3. Faca upload de TODOS os arquivos desta pasta para o App root
+   (pode enviar o ZIP pelo Gerenciador de Arquivos e extrair la)
+4. No terminal SSH da Hostinger, ative o virtualenv e instale:
+   source /home/SEUUSUARIO/virtualenv/public_html/3.12/bin/activate
+   pip install -r deploy_requirements.txt
+5. Configure variaveis de ambiente no painel do Python App:
+   DJANGO_SETTINGS_MODULE = config.settings_production
+   DJANGO_SECRET_KEY = (gere com: python -c "import secrets; print(secrets.token_urlsafe(50))")
+6. No terminal SSH, rode as migracoes:
+   python manage.py migrate --settings=config.settings_production
+   python manage.py collectstatic --noinput --settings=config.settings_production
+7. Reinicie a aplicacao Python no hPanel
+8. Ative o SSL gratuito (Let's Encrypt) em hPanel > SSL
 
-Se a hospedagem usar cPanel Python App:
-1. Envie o conteudo da pasta deploy_upload
-2. Configure a aplicacao Python para apontar para passenger_wsgi.py
-3. Reinicie a aplicacao
+ESTRUTURA:
+- passenger_wsgi.py   -> ponto de entrada WSGI
+- manage.py           -> comandos Django
+- config/             -> configuracoes
+- apps/               -> aplicacoes (fretes, dashboard, motorista_portal, core)
+- templates/          -> templates HTML
+- static/             -> arquivos estaticos (fonte)
+- staticfiles/        -> arquivos estaticos (compilados)
+- media/              -> uploads (fotos, documentos)
+- db.sqlite3          -> banco de dados
 
-Observacao:
-- Este projeto nao e estatico. Nao existe upload apenas de index.html.
-- O banco sqlite esta incluido. Se quiser usar outro banco, ajuste config/settings_production.py.
+DOMINIO: postoscostadodende.com.br

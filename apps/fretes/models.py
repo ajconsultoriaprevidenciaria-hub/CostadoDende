@@ -18,7 +18,7 @@ class BaseModel(models.Model):
 class Cliente(BaseModel):
 	nome = models.CharField(max_length=150)
 	nome_fantasia = models.CharField(max_length=150, blank=True)
-	documento = models.CharField(max_length=18, unique=True)
+	documento = models.CharField('CNPJ', max_length=18, unique=True)
 	contato = models.CharField(max_length=120, blank=True)
 	telefone = models.CharField(max_length=20, blank=True)
 	email = models.EmailField(blank=True)

@@ -1,5 +1,113 @@
 {% extends "admin/change_list.html" %}
 
+{% block search %}
+<form method="get" style="margin:14px 0 10px;padding:12px;border:1px solid rgba(0,217,166,.22);border-radius:10px;background:rgba(13,25,41,.62);display:flex;align-items:end;gap:10px;flex-wrap:wrap;">
+    {% for key, value in request.GET.items %}
+        {% if key != 'placa' and key != 'cliente_id' and key != 'data_inicio' and key != 'data_fim' and key != 'p' %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endif %}
+    {% endfor %}
+
+    <div style="min-width:180px;flex:1;">
+        <label for="id_placa_filtro" style="display:block;font-size:.72rem;color:#94a3b8;margin-bottom:4px;font-weight:700;">Placa do caminhão</label>
+        <input id="id_placa_filtro" type="text" name="placa" value="{{ request.GET.placa }}" placeholder="Ex.: RDG3C98"
+               style="width:100%;height:34px;border-radius:8px;border:1px solid rgba(0,217,166,.2);background:#091120;color:#e2e8f0;padding:0 10px;">
+    </div>
+
+    <div style="min-width:220px;flex:1;">
+        <label for="id_cliente_filtro" style="display:block;font-size:.72rem;color:#94a3b8;margin-bottom:4px;font-weight:700;">Cliente</label>
+        <select id="id_cliente_filtro" name="cliente_id"
+                style="width:100%;height:34px;border-radius:8px;border:1px solid rgba(0,217,166,.2);background:#091120;color:#e2e8f0;padding:0 10px;">
+            <option value="">Todos os clientes</option>
+            {% for cliente in clientes_filtro %}
+                <option value="{{ cliente.id }}" {% if request.GET.cliente_id == cliente.id|stringformat:'s' %}selected{% endif %}>{{ cliente.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div style="min-width:160px;">
+        <label for="id_data_inicio_filtro" style="display:block;font-size:.72rem;color:#94a3b8;margin-bottom:4px;font-weight:700;">Data inicial</label>
+        <input id="id_data_inicio_filtro" type="date" name="data_inicio" value="{{ request.GET.data_inicio }}"
+               style="width:100%;height:34px;border-radius:8px;border:1px solid rgba(0,217,166,.2);background:#091120;color:#e2e8f0;padding:0 10px;">
+    </div>
+
+    <div style="min-width:160px;">
+        <label for="id_data_fim_filtro" style="display:block;font-size:.72rem;color:#94a3b8;margin-bottom:4px;font-weight:700;">Data final</label>
+        <input id="id_data_fim_filtro" type="date" name="data_fim" value="{{ request.GET.data_fim }}"
+               style="width:100%;height:34px;border-radius:8px;border:1px solid rgba(0,217,166,.2);background:#091120;color:#e2e8f0;padding:0 10px;">
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center;">
+        <button type="submit" style="height:34px;border:none;border-radius:8px;padding:0 14px;background:#00d9a6;color:#04221a;font-weight:800;cursor:pointer;">
+            Filtrar
+        </button>
+        <a href="?" style="height:34px;display:inline-flex;align-items:center;padding:0 12px;border-radius:8px;border:1px solid rgba(148,163,184,.3);color:#cbd5e1;text-decoration:none;font-weight:700;">
+            Limpar
+        </a>
+    </div>
+</form>
+{% endblock %}
+
+{% block result_list %}
+<div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+    {% for grupo in cargas_agrupadas %}
+    <details style="border:1px solid rgba(0,217,166,.18);border-radius:12px;background:rgba(13,25,41,.72);overflow:hidden;">
+        <summary style="list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:1.1fr .8fr 1.1fr 1.1fr auto;gap:12px;align-items:center;color:#e2e8f0;">
+            <div>
+                <div style="font-size:.66rem;color:#7dd3c9;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;">Placa do caminhão</div>
+                <div style="font-size:.9rem;font-weight:800;">{{ grupo.placa }}</div>
+            </div>
+            <div>
+                <div style="font-size:.66rem;color:#7dd3c9;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;">Horário de lançamento</div>
+                <div style="font-size:.9rem;font-weight:800;">{{ grupo.horario_lancamento|date:"H:i" }}</div>
+            </div>
+            <div>
+                <div style="font-size:.66rem;color:#7dd3c9;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;">Motorista</div>
+                <div style="font-size:.86rem;font-weight:700;">{{ grupo.motorista }}</div>
+            </div>
+            <div>
+                <div style="font-size:.66rem;color:#7dd3c9;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;">Distribuidora</div>
+                <div style="font-size:.86rem;font-weight:700;">{{ grupo.fornecedor }}</div>
+            </div>
+            <div style="justify-self:end;display:flex;align-items:center;gap:8px;">
+                <span style="display:inline-flex;align-items:center;justify-content:center;padding:4px 10px;border-radius:999px;background:rgba(59,130,246,.14);color:#93c5fd;border:1px solid rgba(59,130,246,.28);font-size:.72rem;font-weight:800;">{{ grupo.qtd_clientes }} cliente{{ grupo.qtd_clientes|pluralize }}</span>
+                <span style="font-size:.72rem;color:#9fb0c7;font-weight:700;">Clique para expandir</span>
+            </div>
+        </summary>
+
+        <div style="padding:0 16px 16px;">
+            <div style="border:1px solid rgba(0,217,166,.14);border-radius:10px;overflow:hidden;background:#0b1526;">
+                <div style="display:grid;grid-template-columns:1.5fr .7fr .9fr 1fr .8fr;gap:10px;padding:10px 12px;background:rgba(0,217,166,.08);font-size:.68rem;color:#7dd3c9;font-weight:800;text-transform:uppercase;letter-spacing:.06em;">
+                    <div>Cliente</div>
+                    <div>Bocas</div>
+                    <div>Litros</div>
+                    <div>Total Frete</div>
+                    <div>Ações</div>
+                </div>
+
+                {% for item in grupo.clientes %}
+                <div style="display:grid;grid-template-columns:1.5fr .7fr .9fr 1fr .8fr;gap:10px;padding:12px;border-top:1px solid rgba(148,163,184,.08);align-items:center;">
+                    <div style="font-size:.84rem;font-weight:700;color:#e2e8f0;">{{ item.nome }}</div>
+                    <div style="font-size:.8rem;font-weight:700;color:#93c5fd;">{{ item.bocas }} boca{{ item.bocas|pluralize }}</div>
+                    <div style="font-size:.8rem;font-weight:700;color:#e2e8f0;">{{ item.litros }}</div>
+                    <div style="font-size:.8rem;font-weight:700;color:#34d399;">{{ item.total_frete }}</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <a href="{{ item.edit_url }}" style="padding:5px 10px;border-radius:7px;border:1px solid rgba(0,217,166,.24);background:rgba(0,217,166,.08);color:#00d9a6;text-decoration:none;font-size:.72rem;font-weight:800;">Editar</a>
+                        <a href="{{ item.delete_url }}" style="padding:5px 10px;border-radius:7px;border:1px solid rgba(239,68,68,.22);background:rgba(239,68,68,.08);color:#ef4444;text-decoration:none;font-size:.72rem;font-weight:800;">Excluir</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </details>
+    {% empty %}
+    <div style="padding:16px;border:1px solid rgba(148,163,184,.18);border-radius:10px;background:rgba(13,25,41,.62);color:#cbd5e1;font-weight:700;">
+        Nenhuma carga encontrada.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
 {% block pagination %}
 {{ block.super }}
 

@@ -1,0 +1,16 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block content %}
+<div style="margin-bottom:14px;">
+  <a href="{% url 'admin:fretes_manutencao_changelist' %}"
+     style="display:inline-flex;align-items:center;gap:6px;padding:7px 18px;
+            border-radius:6px;font-size:.85rem;font-weight:600;
+            text-decoration:none;color:var(--primary,#00d9a6);
+            background:var(--panel,#0d1929);border:1px solid var(--border,rgba(0,217,166,.14));
+            transition:all .18s;">
+    ← Voltar
+  </a>
+</div>
+{{ block.super }}
+{% endblock %}

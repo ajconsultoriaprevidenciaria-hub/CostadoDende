@@ -2,31 +2,193 @@
 
 {% block title %}Painel - Portal do Motorista{% endblock %}
 
-{% block content %}
-<h2 style="font-size:.9rem; font-weight:700; margin-bottom:4px;">Olá, {{ motorista.nome }}!</h2>
-<p style="font-size:.72rem; color:var(--text-sec); margin-bottom:20px;">Suas cargas recentes</p>
+{% block extra_css %}
+<style>
+.mp-shell { max-width: 780px !important; }
 
-{% if cargas %}
-    {% for carga in cargas %}
-    <a href="{% url 'motorista_portal:carga-detalhe' pk=carga.pk %}" style="text-decoration:none; color:inherit;">
-        <div class="mp-card" style="display:flex; justify-content:space-between; align-items:center;">
+.mp-trip-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 12px 12px;
+    display: grid;
+    grid-template-columns: minmax(86px, 1fr) minmax(86px, 1fr) minmax(92px, 1fr) minmax(118px, 1.05fr) minmax(118px, 1.05fr) 100px;
+    gap: 8px;
+    align-items: center;
+}
+
+.mp-trip-label {
+    font-size: .62rem;
+    color: var(--text-sec);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 2px;
+}
+
+.mp-trip-value {
+    font-size: .9rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.mp-trip-value--text {
+    font-size: .74rem;
+    font-weight: 700;
+}
+
+.mp-trip-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-self: end;
+    width: 100px;
+    justify-content: flex-end;
+}
+
+.mp-trip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 1.35rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    .mp-shell { max-width: 100% !important; }
+    .mp-trip-summary {
+        grid-template-columns: repeat(3, minmax(95px, 1fr));
+        gap: 10px;
+    }
+    .mp-trip-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-end;
+        width: auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .mp-trip-summary {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px;">
+    <div>
+        <h2 style="font-size:.9rem; font-weight:700; margin-bottom:4px;">Olá, {{ motorista.nome }}!</h2>
+        <p style="font-size:.72rem; color:var(--text-sec); margin:0;">Suas cargas recentes</p>
+    </div>
+    <a href="{% url 'motorista_portal:documentos-caminhoes' %}" class="mp-btn mp-btn-primary" style="padding:14px 18px; font-size:.82rem; font-weight:700; white-space:nowrap;">
+        📁 DOCUMENTOS DOS CAMINHÕES
+    </a>
+</div>
+
+{% if cargas_por_dia %}
+    {% for titulo_dia, grupos_dia in cargas_por_dia %}
+    <div style="font-size:.74rem; color:var(--primary); font-weight:800; letter-spacing:.05em; text-transform:uppercase; margin:10px 2px 8px;">
+        {{ titulo_dia }}
+    </div>
+    {% for grupo in grupos_dia %}
+    <details class="mp-card" style="padding:0; overflow:hidden;">
+        <summary class="mp-trip-summary">
             <div>
-                <div style="font-size:.82rem; font-weight:600;">{{ carga }}</div>
-                <div style="font-size:.68rem; color:var(--text-sec); margin-top:2px;">
-                    {{ carga.caminhao }} &middot; {{ carga.rota }}
-                </div>
+                <div class="mp-trip-label">Placa do caminhão</div>
+                <div class="mp-trip-value">{{ grupo.placa }}</div>
             </div>
-            <div style="text-align:right;">
-                {% if carga.checklists.exists %}
-                    <span class="mp-badge mp-badge-ok">Checklist ✓</span>
-                {% else %}
-                    <span class="mp-badge mp-badge-pending">Pendente</span>
+            <div>
+                <div class="mp-trip-label">Horário de lançamento</div>
+                <div class="mp-trip-value">{{ grupo.horario_lancamento|date:"H:i" }}</div>
+            </div>
+            <div>
+                <div class="mp-trip-label">Data da carga</div>
+                <div class="mp-trip-value">{{ grupo.data_carga|date:"d/m/Y" }}</div>
+            </div>
+            <div>
+                <div class="mp-trip-label">Motorista</div>
+                <div class="mp-trip-value mp-trip-value--text">{{ grupo.motorista }}</div>
+            </div>
+            <div>
+                <div class="mp-trip-label">Distribuidora</div>
+                <div class="mp-trip-value mp-trip-value--text">{{ grupo.distribuidora }}</div>
+            </div>
+            <div class="mp-trip-actions">
+                <a href="{% url 'motorista_portal:checklist-criar' carga_pk=grupo.carga_pk %}"
+                   title="Checklist da viagem"
+                   onclick="event.stopPropagation();"
+                   class="mp-trip-icon"
+                   style="border:1px solid rgba(0,217,166,.32); background:rgba(0,217,166,.12); color:var(--primary);">✓</a>
+                <a href="{% url 'motorista_portal:abastecimento-embutido' carga_pk=grupo.carga_pk %}"
+                   title="Registrar abastecimento da viagem"
+                   onclick="event.stopPropagation(); event.preventDefault(); abrirJanelaAbastecimento(this.href);"
+                   class="mp-trip-icon"
+                   style="border:1px solid rgba(245,158,11,.35); background:rgba(245,158,11,.14); color:#f59e0b;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="30" height="30" aria-hidden="true">
+                        <path d="M3 22V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17"/>
+                        <path d="M3 22h12"/>
+                        <path d="M15 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9l-3-3"/>
+                        <path d="M6 8h6"/>
+                        <path d="M6 11h6"/>
+                    </svg>
+                </a>
+            </div>
+        </summary>
+
+        <div style="padding:0 14px 14px; border-top:1px solid var(--border);">
+            <div style="font-size:.66rem; color:var(--primary); font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin:10px 0 8px;">Relação de postos e bocas</div>
+            {% for item in grupo.clientes %}
+            <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:5px;">
+                    <span style="font-size:.8rem; font-weight:800; color:var(--text);">{{ item.nome }}</span>
+                    <span class="mp-badge mp-badge-ok">{{ item.qtd_bocas }} boca{{ item.qtd_bocas|pluralize }}</span>
+                </div>
+                {% if item.produtos_resumo %}
+                <div style="margin-top:8px; display:grid; gap:4px;">
+                    {% for linha in item.produtos_resumo %}
+                    <div style="font-size:.72rem; color:var(--text-sec);">
+                        <span style="color:var(--text); font-weight:700;">{{ linha.produto }}</span> - {{ linha.volume_fmt }} L
+                    </div>
+                    {% endfor %}
+                </div>
                 {% endif %}
             </div>
+            {% endfor %}
         </div>
-    </a>
+    </details>
+    {% endfor %}
     {% endfor %}
 {% else %}
     <div class="mp-empty">Nenhuma carga atribuída a você.</div>
 {% endif %}
+
+<div id="abastecimento-janela" style="display:none;position:fixed;top:20px;right:20px;width:420px;height:760px;background:var(--panel);border:1px solid rgba(245,158,11,.35);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,.45);z-index:1000;overflow:hidden;">
+    <div style="height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(245,158,11,.14);border-bottom:1px solid rgba(245,158,11,.25);">
+        <span style="font-size:.74rem;font-weight:800;color:#f59e0b;letter-spacing:.02em;">Registrar Abastecimento</span>
+        <button type="button" onclick="fecharJanelaAbastecimento()" style="border:none;background:transparent;color:#f59e0b;font-size:1.1rem;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <iframe id="abastecimento-iframe" src="about:blank" style="width:100%;height:calc(100% - 42px);border:none;background:#070d1a;"></iframe>
+</div>
+
+<script>
+function abrirJanelaAbastecimento(url){
+    var box = document.getElementById('abastecimento-janela');
+    var frame = document.getElementById('abastecimento-iframe');
+    if(!box || !frame) return;
+    frame.src = url;
+    box.style.display = 'block';
+}
+
+function fecharJanelaAbastecimento(){
+    var box = document.getElementById('abastecimento-janela');
+    var frame = document.getElementById('abastecimento-iframe');
+    if(!box || !frame) return;
+    frame.src = 'about:blank';
+    box.style.display = 'none';
+}
+</script>
 {% endblock %}

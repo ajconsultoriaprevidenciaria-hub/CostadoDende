@@ -10,7 +10,25 @@ from apps.fretes.models import Carga, Cliente, Fornecedor, LocalCarregamento, Mo
 from apps.motorista_portal.models import AbastecimentoViagem
 
 
-COLORWAY = ['#0f766e', '#f59e0b', '#1d4ed8', '#7c3aed', '#dc2626']
+COLORWAY = ['#ff6b6b', '#00d9a6', '#f59e0b', '#a78bfa', '#3b82f6', '#f472b6', '#2dd4bf']
+
+_DARK_LAYOUT = dict(
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    font=dict(family='Inter, system-ui, sans-serif', color='#e2e8f0', size=12),
+    title_font=dict(size=15, color='#e2e8f0'),
+    legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(color='#94a3b8', size=11)),
+    xaxis=dict(
+        gridcolor='rgba(100,116,139,.12)', gridwidth=1,
+        linecolor='rgba(100,116,139,.2)', linewidth=1,
+        tickfont=dict(color='#94a3b8', size=11), title_font=dict(color='#94a3b8'),
+    ),
+    yaxis=dict(
+        gridcolor='rgba(100,116,139,.12)', gridwidth=1,
+        linecolor='rgba(100,116,139,.2)', linewidth=1,
+        tickfont=dict(color='#94a3b8', size=11), title_font=dict(color='#94a3b8'),
+    ),
+)
 
 
 def _parse_date(value):
@@ -26,15 +44,15 @@ def _empty_chart(title):
     fig = go.Figure()
     fig.update_layout(
         title=title,
-        template='plotly_white',
         height=380,
+        **_DARK_LAYOUT,
         annotations=[
             {
                 'text': 'Sem dados para o filtro selecionado',
                 'xref': 'paper',
                 'yref': 'paper',
                 'showarrow': False,
-                'font': {'size': 16},
+                'font': {'size': 14, 'color': '#64748b'},
                 'x': 0.5,
                 'y': 0.5,
             }
@@ -44,7 +62,25 @@ def _empty_chart(title):
 
 
 def _figure_to_html(fig):
-    fig.update_layout(template='plotly_white', colorway=COLORWAY, height=380, margin=dict(l=20, r=20, t=60, b=20))
+    fig.update_layout(
+        colorway=COLORWAY,
+        height=380,
+        margin=dict(l=20, r=20, t=50, b=20),
+        bargap=0.25,
+        **_DARK_LAYOUT,
+    )
+    return fig.to_html(full_html=False, include_plotlyjs=False)
+
+
+def _hbar_to_html(fig, n_items):
+    h = max(220, min(380, 50 + n_items * 45))
+    fig.update_layout(
+        colorway=COLORWAY,
+        height=h,
+        margin=dict(l=10, r=60, t=50, b=20),
+        bargap=0.35,
+        **_DARK_LAYOUT,
+    )
     return fig.to_html(full_html=False, include_plotlyjs=False)
 
 
@@ -150,59 +186,95 @@ def build_dashboard_context(params):
             y='total_litros',
             color='produto__nome',
             barmode='group',
-            title='Carga por cliente x produto',
-            labels={'cliente__nome': 'Cliente', 'total_litros': 'Litros', 'produto__nome': 'Produto'},
+            title='Litros por Cliente × Produto',
+            labels={'cliente__nome': '', 'total_litros': 'Litros', 'produto__nome': 'Produto'},
+        )
+        fig_cliente_produto.update_traces(
+            marker_line_width=0, opacity=0.92,
+            texttemplate='%{y:,.0f}', textposition='outside',
+            textfont=dict(size=10, color='#94a3b8'),
         )
         grafico_cliente_produto = _figure_to_html(fig_cliente_produto)
     else:
-        grafico_cliente_produto = _empty_chart('Carga por cliente x produto')
+        grafico_cliente_produto = _empty_chart('Litros por Cliente × Produto')
 
     if fornecedor_totais:
         fig_fornecedor = px.pie(
             fornecedor_totais,
             names='fornecedor__nome',
             values='total_frete',
-            title='Participação do frete por fornecedor',
+            title='Participação do Frete por Fornecedor',
+            hole=0.55,
+        )
+        fig_fornecedor.update_traces(
+            textinfo='percent+label', textposition='outside',
+            textfont=dict(size=11, color='#e2e8f0'),
+            marker=dict(line=dict(color='#0d1929', width=2)),
+            pull=[0.03] * len(fornecedor_totais),
         )
         grafico_fornecedor = _figure_to_html(fig_fornecedor)
     else:
-        grafico_fornecedor = _empty_chart('Participação do frete por fornecedor')
+        grafico_fornecedor = _empty_chart('Participação do Frete por Fornecedor')
 
     if frete_medio_produto:
-        fig_frete_medio = px.bar(
-            frete_medio_produto,
-            x='produto__nome',
-            y='frete_medio',
-            title='Valor médio do frete por produto',
-            labels={'produto__nome': 'Produto', 'frete_medio': 'R$/litro'},
+        nomes = [d['produto__nome'] for d in frete_medio_produto]
+        valores = [float(d['frete_medio']) for d in frete_medio_produto]
+        fig_frete_medio = go.Figure(go.Bar(
+            y=nomes, x=valores, orientation='h',
+            marker=dict(color='#ff6b6b', line=dict(width=0)),
+            opacity=0.9,
+            text=[f'R$ {v:.4f}' for v in valores],
+            textposition='outside',
+            textfont=dict(size=11, color='#e2e8f0'),
+        ))
+        fig_frete_medio.update_layout(
+            title='Frete Médio por Produto (R$/L)',
+            xaxis_title='', yaxis_title='',
+            yaxis=dict(autorange='reversed'),
         )
-        grafico_frete_medio = _figure_to_html(fig_frete_medio)
+        grafico_frete_medio = _hbar_to_html(fig_frete_medio, len(nomes))
     else:
-        grafico_frete_medio = _empty_chart('Valor médio do frete por produto')
+        grafico_frete_medio = _empty_chart('Frete Médio por Produto (R$/L)')
 
     if volume_por_posto:
-        fig_volume_posto = px.bar(
-            volume_por_posto,
-            x='caminhao__local_carregamento__nome',
-            y='total_litros',
-            title='Volume de carregamento por posto',
-            labels={'caminhao__local_carregamento__nome': 'Posto', 'total_litros': 'Litros'},
+        nomes_posto = [d['caminhao__local_carregamento__nome'] or '—' for d in volume_por_posto]
+        litros_posto = [float(d['total_litros'] or 0) for d in volume_por_posto]
+        fig_volume_posto = go.Figure(go.Bar(
+            y=nomes_posto, x=litros_posto, orientation='h',
+            marker=dict(color='#00d9a6', line=dict(width=0)),
+            opacity=0.9,
+            text=[f'{v:,.0f} L' for v in litros_posto],
+            textposition='outside',
+            textfont=dict(size=11, color='#e2e8f0'),
+        ))
+        fig_volume_posto.update_layout(
+            title='Volume por Local de Carregamento',
+            xaxis_title='', yaxis_title='',
+            yaxis=dict(autorange='reversed'),
         )
-        grafico_volume_posto = _figure_to_html(fig_volume_posto)
+        grafico_volume_posto = _hbar_to_html(fig_volume_posto, len(nomes_posto))
     else:
-        grafico_volume_posto = _empty_chart('Volume de carregamento por posto')
+        grafico_volume_posto = _empty_chart('Volume por Local de Carregamento')
 
     if fornecedor_litros:
-        fig_volume_fornecedor = px.bar(
-            fornecedor_litros,
-            x='fornecedor__nome',
-            y='total_litros',
-            title='Volume carregado por fornecedor',
-            labels={'fornecedor__nome': 'Fornecedor', 'total_litros': 'Litros'},
+        nomes_forn = [d['fornecedor__nome'] for d in fornecedor_litros]
+        litros_forn = [float(d['total_litros'] or 0) for d in fornecedor_litros]
+        fig_volume_fornecedor = go.Figure(go.Bar(
+            y=nomes_forn, x=litros_forn, orientation='h',
+            marker=dict(color='#f59e0b', line=dict(width=0)),
+            opacity=0.9,
+            text=[f'{v:,.0f} L' for v in litros_forn],
+            textposition='outside',
+            textfont=dict(size=11, color='#e2e8f0'),
+        ))
+        fig_volume_fornecedor.update_layout(
+            title='Volume Carregado por Fornecedor',
+            xaxis_title='', yaxis_title='',
+            yaxis=dict(autorange='reversed'),
         )
-        grafico_volume_fornecedor = _figure_to_html(fig_volume_fornecedor)
+        grafico_volume_fornecedor = _hbar_to_html(fig_volume_fornecedor, len(nomes_forn))
     else:
-        grafico_volume_fornecedor = _empty_chart('Volume carregado por fornecedor')
+        grafico_volume_fornecedor = _empty_chart('Volume Carregado por Fornecedor')
 
     return {
         'filtros': filtros,

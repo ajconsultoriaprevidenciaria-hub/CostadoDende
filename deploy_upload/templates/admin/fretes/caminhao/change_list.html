@@ -1,0 +1,6 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+{% if cl_extra_css %}{{ cl_extra_css|safe }}{% endif %}
+{% endblock %}

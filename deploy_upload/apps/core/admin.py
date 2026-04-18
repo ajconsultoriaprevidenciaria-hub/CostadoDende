@@ -154,6 +154,7 @@ class CustomUserAdmin(BaseUserAdmin):
             '<style>'
             '.form-row { padding: 6px 12px !important; }'
             'fieldset { margin-bottom: 8px !important; padding: 8px 12px !important; }'
+            '.help, .help-text { display: none !important; }'
             '.aligned label { padding: 4px 0 !important; }'
             '</style>'
         )
