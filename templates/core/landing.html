@@ -1,0 +1,753 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Costa do Dendê | Rede de Postos de Combustíveis</title>
+    <meta
+      name="description"
+      content="Rede de postos de combustíveis Costa do Dendê. Qualidade, confiança e o melhor atendimento para você e sua frota."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #0a1628;
+        color: #fff;
+        line-height: 1.6;
+      }
+
+      /* ── HEADER ── */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 0 2rem;
+        backdrop-filter: blur(12px);
+        background: rgba(10, 22, 40, 0.85);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 68px;
+      }
+      .header-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+      }
+      .header-logo img {
+        height: 40px;
+        width: auto;
+      }
+      .header-logo-text {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.01em;
+      }
+      .header-logo-text span {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .header-btn {
+        background: #f59e0b;
+        color: #0a1628;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.5rem 1.4rem;
+        border-radius: 6px;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        white-space: nowrap;
+      }
+      .header-btn:hover {
+        background: #fbbf24;
+        transform: translateY(-1px);
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 100vh;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(10, 22, 40, 0.55) 0%,
+            rgba(10, 22, 40, 0.75) 60%,
+            rgba(10, 22, 40, 0.98) 100%
+          ),
+          url("{% static 'img/igreja_amparo.png' %}") center center / cover
+            no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 7rem 1.5rem 4rem;
+      }
+      .hero-inner {
+        max-width: 720px;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #f59e0b;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.35rem 1rem;
+        border-radius: 999px;
+        margin-bottom: 1.8rem;
+      }
+      .hero-badge::before {
+        content: "⛽";
+        font-size: 0.9rem;
+      }
+      .hero h1 {
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.2rem;
+      }
+      .hero h1 .highlight {
+        color: #f59e0b;
+      }
+      .hero p {
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        color: rgba(255, 255, 255, 0.75);
+        max-width: 560px;
+        margin: 0 auto 2.5rem;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        background: #f59e0b;
+        color: #0a1628;
+        font-weight: 800;
+        font-size: 1rem;
+        padding: 0.9rem 2.4rem;
+        border-radius: 8px;
+        text-decoration: none;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.2s,
+          transform 0.15s,
+          box-shadow 0.2s;
+        box-shadow: 0 4px 24px rgba(245, 158, 11, 0.35);
+      }
+      .btn-primary:hover {
+        background: #fbbf24;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.45);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.9rem 2rem;
+        border-radius: 8px;
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        text-decoration: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          transform 0.15s;
+      }
+      .btn-secondary:hover {
+        border-color: #fff;
+        background: rgba(255, 255, 255, 0.07);
+        transform: translateY(-2px);
+      }
+
+      .hero-scroll {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        animation: bounce 2s ease-in-out infinite;
+      }
+      .hero-scroll svg {
+        width: 20px;
+        height: 20px;
+        opacity: 0.5;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(6px);
+        }
+      }
+
+      /* ── STATS ── */
+      .stats {
+        background: rgba(255, 255, 255, 0.04);
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 3rem 2rem;
+      }
+      .stats-grid {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 3rem;
+      }
+      .stat-item {
+        text-align: center;
+      }
+      .stat-num {
+        font-size: 2.4rem;
+        font-weight: 900;
+        color: #f59e0b;
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-top: 0.35rem;
+      }
+
+      /* ── SECTION COMUM ── */
+      section {
+        padding: 5rem 1.5rem;
+      }
+      .section-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+      .section-tag {
+        display: inline-block;
+        color: #f59e0b;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 0.8rem;
+      }
+      .section-title {
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+      }
+      .section-subtitle {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.6);
+        max-width: 600px;
+      }
+
+      /* ── CARDS DE SERVIÇOS ── */
+      .services {
+        background: #0d1f3c;
+      }
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.2rem;
+        margin-top: 3rem;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 12px;
+        padding: 1.8rem;
+        transition:
+          border-color 0.2s,
+          transform 0.2s,
+          background 0.2s;
+      }
+      .card:hover {
+        border-color: rgba(245, 158, 11, 0.4);
+        background: rgba(245, 158, 11, 0.05);
+        transform: translateY(-3px);
+      }
+      .card-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      .card h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .card p {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.55);
+        line-height: 1.6;
+      }
+
+      /* ── DESTAQUES ── */
+      .features {
+        background: #0a1628;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        margin-top: 3rem;
+      }
+      .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .feature-item {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      .feature-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        display: grid;
+        place-items: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      .feature-text h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .feature-text p {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .features-visual {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        min-height: 300px;
+      }
+      .visual-logo {
+        width: 120px;
+        height: auto;
+        opacity: 0.9;
+      }
+      .visual-label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      /* ── SISTEMA ── */
+      .sistema {
+        background: linear-gradient(135deg, #0d1f3c 0%, #0a1628 100%);
+      }
+      .sistema-box {
+        background: rgba(245, 158, 11, 0.06);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        border-radius: 16px;
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 3rem;
+      }
+      .sistema-text h3 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+      }
+      .sistema-text p {
+        color: rgba(255, 255, 255, 0.65);
+        max-width: 460px;
+      }
+      .sistema-btn {
+        background: #f59e0b;
+        color: #0a1628;
+        font-weight: 800;
+        font-size: 1rem;
+        padding: 0.9rem 2.4rem;
+        border-radius: 8px;
+        text-decoration: none;
+        white-space: nowrap;
+        box-shadow: 0 4px 24px rgba(245, 158, 11, 0.35);
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .sistema-btn:hover {
+        background: #fbbf24;
+        transform: translateY(-2px);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: rgba(0, 0, 0, 0.4);
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 2.5rem 2rem;
+        text-align: center;
+      }
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+      .footer-logo img {
+        height: 32px;
+        opacity: 0.7;
+      }
+      .footer-logo span {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      footer p {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin: 1rem 0;
+      }
+      .footer-links a {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: #f59e0b;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 768px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .features-visual {
+          display: none;
+        }
+        .sistema-box {
+          flex-direction: column;
+          text-align: center;
+        }
+        .stats-grid {
+          gap: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <a href="/" class="header-logo">
+        <img
+          src="{% static 'img/logo_gf_white.png' %}"
+          alt="Costa do Dendê"
+          onerror="this.style.display = 'none'"
+        />
+        <div class="header-logo-text">
+          Costa do Dendê
+          <span>Rede de Postos</span>
+        </div>
+      </a>
+      <a href="/login/" class="header-btn">Acessar Sistema</a>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" style="position: relative">
+      <div class="hero-inner">
+        <div class="hero-badge">Rede de Postos de Combustíveis</div>
+        <h1>
+          Combustível de qualidade<br />
+          para você e sua <span class="highlight">frota</span>
+        </h1>
+        <p>
+          A Costa do Dendê é uma rede de postos com tradição, compromisso e o
+          melhor atendimento. Sua segurança e satisfação são nossa prioridade.
+        </p>
+        <div class="hero-actions">
+          <a href="/login/" class="btn-primary">Acessar o Sistema</a>
+          <a href="#servicos" class="btn-secondary">Conheça os Serviços</a>
+        </div>
+      </div>
+      <div class="hero-scroll">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+        Rolar
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-num">24h</div>
+          <div class="stat-label">Funcionamento</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Combustível Certificado</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">+Frotas</div>
+          <div class="stat-label">Atendidas com Gestão</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">Bahia</div>
+          <div class="stat-label">Presente no Estado</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVIÇOS -->
+    <section class="services" id="servicos">
+      <div class="section-inner">
+        <div class="section-tag">Nossos Serviços</div>
+        <h2 class="section-title">Tudo que você precisa em um só lugar</h2>
+        <p class="section-subtitle">
+          Estrutura completa para pessoas físicas, empresas e gestão de frotas.
+        </p>
+        <div class="cards-grid">
+          <div class="card">
+            <div class="card-icon">⛽</div>
+            <h3>Abastecimento</h3>
+            <p>
+              Combustíveis de alta qualidade: gasolina, etanol e diesel para
+              veículos leves e pesados.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🚛</div>
+            <h3>Gestão de Frota</h3>
+            <p>
+              Controle completo de abastecimentos, manutenções e quilometragem
+              da sua frota.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">📍</div>
+            <h3>Pista 24 horas</h3>
+            <p>
+              Atendimento ininterrupto para que você nunca fique na mão, a
+              qualquer hora do dia.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔧</div>
+            <h3>Serviços Automotivos</h3>
+            <p>
+              Calibração de pneus, troca de óleo e serviços básicos de
+              manutenção veicular.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">📊</div>
+            <h3>Relatórios Gerenciais</h3>
+            <p>
+              Dados precisos e relatórios detalhados para tomada de decisão
+              sobre sua operação.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🛡️</div>
+            <h3>Qualidade Garantida</h3>
+            <p>
+              Todos os combustíveis com certificação e controle de qualidade
+              rigoroso.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIFERENCIAIS -->
+    <section class="features" id="diferenciais">
+      <div class="section-inner">
+        <div class="section-tag">Diferenciais</div>
+        <h2 class="section-title">Por que escolher a Costa do Dendê?</h2>
+        <p class="section-subtitle">
+          Mais que um posto, um parceiro de confiança para sua mobilidade e
+          negócios.
+        </p>
+        <div class="features-grid">
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon">✅</div>
+              <div class="feature-text">
+                <h4>Transparência Total</h4>
+                <p>
+                  Cada abastecimento e operação registrados com precisão no
+                  sistema de gestão.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🔒</div>
+              <div class="feature-text">
+                <h4>Acesso Seguro para Motoristas</h4>
+                <p>
+                  Portal exclusivo para motoristas registrarem abastecimentos e
+                  solicitações.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">📱</div>
+              <div class="feature-text">
+                <h4>Sistema 100% Online</h4>
+                <p>
+                  Acesse de qualquer dispositivo, a qualquer hora, onde estiver.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🤝</div>
+              <div class="feature-text">
+                <h4>Atendimento Humanizado</h4>
+                <p>
+                  Equipe treinada e dedicada a oferecer a melhor experiência a
+                  cada visita.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="features-visual">
+            <img
+              src="{% static 'img/logo_gf_white.png' %}"
+              class="visual-logo"
+              alt="Costa do Dendê"
+              onerror="this.style.display = 'none'"
+            />
+            <div
+              style="
+                height: 1px;
+                width: 60%;
+                background: rgba(255, 255, 255, 0.1);
+              "
+            ></div>
+            <p
+              style="
+                text-align: center;
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.5);
+                max-width: 220px;
+              "
+            >
+              Gestão inteligente para sua frota e sua operação
+            </p>
+            <div class="visual-label">postoscostadodende.com.br</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA SISTEMA -->
+    <section class="sistema" id="sistema">
+      <div class="section-inner">
+        <div class="section-tag">Sistema de Gestão</div>
+        <h2 class="section-title">Acesse o painel de controle</h2>
+        <p class="section-subtitle">
+          Gerencie frotas, abastecimentos, manutenções e relatórios em um único
+          sistema.
+        </p>
+        <div class="sistema-box">
+          <div class="sistema-text">
+            <h3>Portal Operacional Costa do Dendê</h3>
+            <p>
+              Controle total da operação: cargas, motoristas, pneus, manutenções
+              e muito mais. Acesso restrito a usuários autorizados.
+            </p>
+          </div>
+          <a href="/login/" class="sistema-btn">Entrar no Sistema →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-logo">
+        <img
+          src="{% static 'img/logo_gf_white.png' %}"
+          alt="Costa do Dendê"
+          onerror="this.style.display = 'none'"
+        />
+        <span>Costa do Dendê</span>
+      </div>
+      <div class="footer-links">
+        <a href="#servicos">Serviços</a>
+        <a href="#diferenciais">Diferenciais</a>
+        <a href="/login/">Acesso ao Sistema</a>
+        <a href="/motorista/">Portal do Motorista</a>
+      </div>
+      <p>
+        &copy; {% now "Y" %} Costa do Dendê — Rede de Postos de Combustíveis.
+        Todos os direitos reservados.
+      </p>
+    </footer>
+  </body>
+</html>
