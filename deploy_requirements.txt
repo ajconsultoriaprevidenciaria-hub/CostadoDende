@@ -5,3 +5,4 @@ pandas>=2.2.0
 Pillow>=10.0
 whitenoise>=6.9,<7
 gunicorn>=23,<24
+psycopg2-binary>=2.9
