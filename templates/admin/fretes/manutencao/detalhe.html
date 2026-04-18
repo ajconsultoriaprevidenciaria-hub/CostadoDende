@@ -62,7 +62,9 @@
 .ck-tire.active{outline:2px solid #00d9a6;outline-offset:2px}
 
 /* ── Recapado badge ── */
-.ck-recap{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;background:#1e3a5f;border:2px solid #3b82f6;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:900;color:#3b82f6;line-height:1;pointer-events:none;z-index:3}
+.ck-recap{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:18px;border-radius:9px;padding:1px 0;background:#1e3a5f;border:2px solid #3b82f6;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;color:#3b82f6;line-height:1;pointer-events:none;z-index:3}
+.ck-recap-num{font-size:.4rem;line-height:1}
+.ck-recap-r{font-size:.5rem;line-height:1}
 
 /* ── Estepe ── */
 .ck-estepe{display:flex;align-items:center;gap:8px;margin-top:12px}
@@ -88,8 +90,9 @@
 .ck-ed-sbtn.sel-ruim{border-color:#ef4444;background:rgba(239,68,68,.15);color:#ef4444}
 .ck-ed-field{margin-bottom:10px}
 .ck-ed-field label{display:block;font-size:.6rem;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-.ck-ed-field input[type="text"],.ck-ed-field input[type="number"]{width:100%;padding:7px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#e2e8f0;font-size:.78rem;box-sizing:border-box}
-.ck-ed-field input:focus{outline:none;border-color:rgba(0,217,166,.4)}
+.ck-ed-field input[type="text"],.ck-ed-field input[type="number"],.ck-ed-field select{width:100%;padding:7px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#e2e8f0;font-size:.78rem;box-sizing:border-box}
+.ck-ed-field input:focus,.ck-ed-field select:focus{outline:none;border-color:rgba(0,217,166,.4)}
+.ck-ed-field select option{background:#0d1929;color:#e2e8f0}
 .ck-ed-check{display:flex;align-items:center;gap:6px;margin-bottom:14px;font-size:.72rem;color:#e2e8f0;cursor:pointer}
 .ck-ed-check input{accent-color:#00d9a6}
 .ck-ed-save{width:100%;padding:10px;border:none;border-radius:8px;background:linear-gradient(135deg,#00d9a6,#00b389);color:#070d1a;font-size:.78rem;font-weight:800;cursor:pointer;transition:opacity .2s}
@@ -196,7 +199,14 @@
     <div class="ck-ed-field"><label>Modelo</label><input type="text" id="edModelo"></div>
     <div class="ck-ed-field"><label>Sulco (mm)</label><input type="number" step="0.1" min="0" id="edSulco"></div>
     <div class="ck-ed-field"><label>N° Fogo (DOT)</label><input type="text" id="edDot"></div>
-    <label class="ck-ed-check"><input type="checkbox" id="edRecapado"> Recapado</label>
+    <div class="ck-ed-field"><label>Recapeamento</label>
+      <select id="edRecapagem">
+        <option value="">Não recapado</option>
+        <option value="1">1° Recapeamento</option>
+        <option value="2">2° Recapeamento</option>
+        <option value="3">3° Recapeamento</option>
+      </select>
+    </div>
     <button class="ck-ed-save" id="edSave" onclick="savePneu()">💾 Salvar</button>
   </div>
 </div>
@@ -356,8 +366,11 @@ function makeTire(pos){
   t.setAttribute('data-st', tireStatus(pos));
   t.setAttribute('title', POS_NAMES[pos] || pos);
   t.appendChild(el('span','', shortLabel(pos)));
-  if(DATA[pos] && DATA[pos].recapado){
-    t.appendChild(el('div','ck-recap','R'));
+  if(DATA[pos] && DATA[pos].recapagem){
+    var badge = el('div','ck-recap');
+    badge.appendChild(el('span','ck-recap-num', DATA[pos].recapagem));
+    badge.appendChild(el('span','ck-recap-r', 'R'));
+    t.appendChild(badge);
   }
   t.addEventListener('click', function(){ openEditor(pos); });
   return t;
@@ -374,7 +387,7 @@ function openEditor(pos){
   document.getElementById('edModelo').value = d.modelo || '';
   document.getElementById('edSulco').value = d.sulco_mm || '';
   document.getElementById('edDot').value = d.numero_fogo || '';
-  document.getElementById('edRecapado').checked = !!d.recapado;
+  document.getElementById('edRecapagem').value = d.recapagem || '';
 
   renderStatusBtns();
   highlightTire(pos);
@@ -420,7 +433,7 @@ window.savePneu = function(){
     modelo: document.getElementById('edModelo').value,
     sulco_mm: document.getElementById('edSulco').value,
     numero_fogo: document.getElementById('edDot').value,
-    recapado: document.getElementById('edRecapado').checked
+    recapagem: document.getElementById('edRecapagem').value
   };
 
   fetch(API, {
@@ -438,7 +451,7 @@ window.savePneu = function(){
         marca: payload.marca,
         modelo: payload.modelo,
         sulco_mm: payload.sulco_mm,
-        recapado: payload.recapado,
+        recapagem: payload.recapagem,
         numero_fogo: payload.numero_fogo
       };
       /* Update visual */
@@ -446,9 +459,16 @@ window.savePneu = function(){
       if(t){
         t.setAttribute('data-st', payload.status);
         var oldBadge = t.querySelector('.ck-recap');
-        if(payload.recapado && !oldBadge){
-          t.appendChild(el('div','ck-recap','R'));
-        } else if(!payload.recapado && oldBadge){
+        if(payload.recapagem && !oldBadge){
+          var badge = el('div','ck-recap');
+          badge.appendChild(el('span','ck-recap-num', payload.recapagem));
+          badge.appendChild(el('span','ck-recap-r', 'R'));
+          t.appendChild(badge);
+        } else if(payload.recapagem && oldBadge){
+          oldBadge.innerHTML = '';
+          oldBadge.appendChild(el('span','ck-recap-num', payload.recapagem));
+          oldBadge.appendChild(el('span','ck-recap-r', 'R'));
+        } else if(!payload.recapagem && oldBadge){
           oldBadge.remove();
         }
         t.classList.add('saved');

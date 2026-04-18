@@ -712,7 +712,7 @@ class ManutencaoAdmin(admin.ModelAdmin):
 				'marca': p.marca,
 				'modelo': p.modelo,
 				'sulco_mm': str(p.sulco_mm) if p.sulco_mm else '',
-				'recapado': p.recapado,
+				'recapagem': p.recapagem,
 				'numero_fogo': p.numero_fogo,
 			}
 			for p in pneus
@@ -759,7 +759,7 @@ class ManutencaoAdmin(admin.ModelAdmin):
 
 @admin.register(Pneu)
 class PneuAdmin(admin.ModelAdmin):
-	list_display = ('caminhao', 'posicao', 'marca', 'modelo', 'sulco_mm', 'recapado')
-	list_filter = ('caminhao', 'recapado')
+	list_display = ('caminhao', 'posicao', 'marca', 'modelo', 'sulco_mm', 'recapagem')
+	list_filter = ('caminhao', 'recapagem')
 	search_fields = ('caminhao__placa', 'marca', 'modelo', 'numero_fogo')
 	autocomplete_fields = ('caminhao',)
