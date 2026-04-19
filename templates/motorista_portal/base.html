@@ -43,6 +43,15 @@
             padding: 16px 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 20px;
+            gap: 12px;
+        }
+        .mp-topbar .brand-logo-wrap {
+            flex-shrink: 0;
+        }
+        .mp-topbar .brand-logo-wrap img {
+            height: clamp(60px, 15vw, 108px);
+            width: auto;
+            display: block;
         }
         .mp-topbar .brand-name {
             font-size: .82rem;
@@ -100,6 +109,8 @@
             cursor: pointer;
             text-decoration: none;
             transition: .15s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         .mp-btn-primary {
             background: var(--primary);
@@ -242,6 +253,14 @@
             font-size: .78rem;
             padding: 24px 0;
         }
+        /* ── Prevenir zoom iOS em inputs ── */
+        @media (max-width: 768px) {
+            .mp-field input,
+            .mp-field select,
+            .mp-field textarea {
+                font-size: 16px;
+            }
+        }
         /* ── Ticker ── */
         .mp-ticker-wrap {
             background: var(--panel);
@@ -285,9 +304,8 @@
     <div class="mp-shell">
         {% block topbar %}
         <div class="mp-topbar">
-            <div>
-                <img src="{% static 'img/logo_gf_white.png' %}" alt="Gonçalves &amp; Fonseca Transportadora" style="height:108px; width:auto; display:block; image-rendering:auto;">
-            </div>
+            <div class="brand-logo-wrap">
+                <img src="{% static 'img/logo_gf_white.png' %}" alt="Gonçalves &amp; Fonseca Transportadora"></div>
             {% if request.user.is_authenticated %}
             <div class="mp-topbar-right">
                 <span class="user-name">{{ request.user.motorista.nome }}</span>

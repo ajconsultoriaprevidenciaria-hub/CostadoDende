@@ -57,6 +57,22 @@
     flex-shrink: 0;
 }
 
+/* ── Janela flutuante de abastecimento ── */
+#abastecimento-janela {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 420px;
+    height: 760px;
+    background: var(--panel);
+    border: 1px solid rgba(245,158,11,.35);
+    border-radius: 12px;
+    box-shadow: 0 14px 36px rgba(0,0,0,.45);
+    z-index: 1000;
+    overflow: hidden;
+}
+
 @media (max-width: 900px) {
     .mp-shell { max-width: 100% !important; }
     .mp-trip-summary {
@@ -73,6 +89,19 @@
 @media (max-width: 640px) {
     .mp-trip-summary {
         grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+}
+
+/* Janela de abastecimento: fullscreen em telas pequenas */
+@media (max-width: 500px) {
+    #abastecimento-janela {
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0 !important;
     }
 }
 </style>
@@ -166,7 +195,7 @@
     <div class="mp-empty">Nenhuma carga atribuída a você.</div>
 {% endif %}
 
-<div id="abastecimento-janela" style="display:none;position:fixed;top:20px;right:20px;width:420px;height:760px;background:var(--panel);border:1px solid rgba(245,158,11,.35);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,.45);z-index:1000;overflow:hidden;">
+<div id="abastecimento-janela">
     <div style="height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(245,158,11,.14);border-bottom:1px solid rgba(245,158,11,.25);">
         <span style="font-size:.74rem;font-weight:800;color:#f59e0b;letter-spacing:.02em;">Registrar Abastecimento</span>
         <button type="button" onclick="fecharJanelaAbastecimento()" style="border:none;background:transparent;color:#f59e0b;font-size:1.1rem;cursor:pointer;line-height:1;">✕</button>

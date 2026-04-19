@@ -146,7 +146,7 @@
         <span style="flex:1"></span>
         <span id="bocas-resumo" style="font-size:.7rem;color:#8892a4;"></span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;min-height:200px;">
+    <div class="bocas-inner-grid">
         <div style="padding:16px;border-right:1px solid rgba(0,217,166,.1);">
             <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8892a4;margin-bottom:12px;">📦 Bocas do Caminhão</div>
             <div id="bocas-grid" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
@@ -279,6 +279,22 @@
 .cf-row input[type="checkbox"] {
     width: 18px; height: 18px;
     accent-color: var(--primary);
+}
+
+/* ── Bocas inner grid (2 col → 1 col em mobile) ── */
+.bocas-inner-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 200px;
+}
+@media (max-width: 640px) {
+    .bocas-inner-grid {
+        grid-template-columns: 1fr;
+    }
+    .bocas-inner-grid > div:first-child {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(0,217,166,.1);
+    }
 }
 </style>
 

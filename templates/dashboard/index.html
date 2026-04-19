@@ -2,6 +2,24 @@
 
 {% block title %}Dashboard | Costa do Dendê{% endblock %}
 
+{% block extra_css %}
+<style>
+/* Quick-filters: wrapping em mobile */
+@media (max-width: 640px) {
+    .quick-filters,
+    .panel-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .quick-filters .btn-secondary,
+    .panel-actions .btn-secondary {
+        text-align: center;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <section class="panel" id="painel-filtros">
@@ -73,7 +91,7 @@
         <h2>Abastecimentos por Posto</h2>
     </div>
     <div class="table-wrapper">
-        <table>
+        <table class="mobile-cards">
             <thead>
                 <tr>
                     <th>Posto</th>
@@ -85,10 +103,10 @@
             <tbody>
                 {% for p in relatorio_abastecimentos %}
                 <tr>
-                    <td>{{ p.posto }}</td>
-                    <td style="text-align:right">{{ p.total_litros|floatformat:2 }}</td>
-                    <td style="text-align:right">{{ p.total_abastecimentos }}</td>
-                    <td style="text-align:right">{{ p.total_valor|floatformat:2 }}</td>
+                    <td data-label="Posto">{{ p.posto }}</td>
+                    <td data-label="Total Litros" style="text-align:right">{{ p.total_litros|floatformat:2 }}</td>
+                    <td data-label="Nº Abast." style="text-align:right">{{ p.total_abastecimentos }}</td>
+                    <td data-label="Valor Total" style="text-align:right">{{ p.total_valor|floatformat:2 }}</td>
                 </tr>
                 {% empty %}
                 <tr><td colspan="4" style="text-align:center; color:var(--text-sec); padding:18px;">Nenhum abastecimento registrado.</td></tr>
@@ -132,7 +150,7 @@
         </div>
     </div>
     <div class="table-wrapper">
-        <table id="tabela-relatorio">
+        <table id="tabela-relatorio" class="mobile-cards">
             <thead>
                 <tr>
                     <th>Cliente</th>
@@ -147,13 +165,13 @@
             <tbody>
                 {% for item in tabela_relatorio %}
                     <tr>
-                        <td>{{ item.cliente__nome }}</td>
-                        <td>{{ item.produto__nome }}</td>
-                        <td>{{ item.fornecedor__nome }}</td>
-                        <td>{{ item.cargas }}</td>
-                        <td>{{ item.litros|floatformat:2 }}</td>
-                        <td>R$ {{ item.frete_medio|floatformat:4 }}</td>
-                        <td>R$ {{ item.frete_total|floatformat:2 }}</td>
+                        <td data-label="Cliente">{{ item.cliente__nome }}</td>
+                        <td data-label="Produto">{{ item.produto__nome }}</td>
+                        <td data-label="Fornecedor">{{ item.fornecedor__nome }}</td>
+                        <td data-label="Cargas">{{ item.cargas }}</td>
+                        <td data-label="Litros">{{ item.litros|floatformat:2 }}</td>
+                        <td data-label="Frete médio">R$ {{ item.frete_medio|floatformat:4 }}</td>
+                        <td data-label="Frete total">R$ {{ item.frete_total|floatformat:2 }}</td>
                     </tr>
                 {% empty %}
                     <tr>

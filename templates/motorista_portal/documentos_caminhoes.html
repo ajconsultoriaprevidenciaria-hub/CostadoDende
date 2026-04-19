@@ -2,6 +2,16 @@
 
 {% block title %}Documentos dos Caminhões - Portal do Motorista{% endblock %}
 
+{% block extra_css %}
+<style>
+@media (max-width: 420px) {
+    .docs-filter-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px;">
     <div>
@@ -15,7 +25,7 @@
 
 <div class="mp-card" style="margin-bottom:18px; display:grid; gap:12px;">
     <div style="font-size:.78rem; color:var(--text-sec);">Selecione a placa do caminhão para ver os documentos anexados.</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end;" class="docs-filter-grid">
         <label style="display:block;">
             <span style="font-size:.72rem; color:var(--text-sec);">Buscar placa</span>
             <input id="plate-search" type="search" placeholder="Digite a placa" style="width:100%; margin-top:6px; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--panel); color:var(--text);" />

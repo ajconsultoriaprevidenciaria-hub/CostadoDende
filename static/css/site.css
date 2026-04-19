@@ -39,16 +39,22 @@
   --t: 0.18s ease;
 }
 
-/* ── Reset ───────────────────────────────────────────────────
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Reset ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 14px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Scrollbar */
@@ -832,6 +838,39 @@ td a:hover {
   table {
     min-width: 600px;
   }
+
+  /* Toque — alvos mínimos de 44px para acessibilidade */
+  .menu a {
+    min-height: 44px;
+    padding: 12px 14px;
+  }
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger {
+    min-height: 44px;
+  }
+  .mobile-hamburger {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Prevenir zoom automático do iOS ao focar em inputs */
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="month"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Melhor wrapping do panel-actions em tablet/mobile */
+  .panel-actions {
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 600px) {
@@ -883,6 +922,111 @@ td a:hover {
   body.auth-layout .auth-panel {
     border-radius: 16px;
     padding: 20px 18px;
+  }
+
+  /* Formulário cf-row: empilhar em mobile (carga_form) */
+  .cf-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .cf-label {
+    min-width: 0 !important;
+  }
+  .cf-field select,
+  .cf-field input,
+  .cf-field textarea {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100%;
+  }
+  .cf-field {
+    flex-wrap: wrap;
+  }
+
+  /* Barra de ações dos formulários: empilhar botões */
+  .cf-actions {
+    flex-direction: column;
+  }
+  .cf-actions .btn-primary,
+  .cf-actions .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Linha de bocas & produtos: 1 coluna */
+  .bocas-inner-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .bocas-inner-grid > div:first-child {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(0, 217, 166, 0.1);
+  }
+
+  /* Stat cards: melhorar padding em mobile */
+  .stat-card strong {
+    font-size: 1.3rem;
+  }
+}
+
+/* ── Mobile card-view para tabelas (qualquer tela < 640px) ── */
+@media (max-width: 640px) {
+  /* Tabela de cargas e relatórios: mostrar como cards */
+  .mobile-cards thead {
+    display: none;
+  }
+  .mobile-cards tbody tr {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    background: var(--panel);
+    min-width: 0 !important;
+  }
+  .mobile-cards td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0, 217, 166, 0.06);
+    gap: 8px;
+    min-width: 0 !important;
+    font-size: 0.85rem;
+    white-space: normal;
+  }
+  .mobile-cards td:last-child {
+    border-bottom: none;
+    padding-top: 8px;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+  .mobile-cards td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    width: 90px;
+    padding-top: 2px;
+  }
+  .mobile-cards td:last-child::before {
+    display: none;
+  }
+  /* Em modo card a tabela não precisa de min-width */
+  .mobile-cards {
+    min-width: 0 !important;
+  }
+  /* Filtros de cargas: layout vertical */
+  .panel-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .panel-actions > a.btn-primary {
+    width: 100%;
+    justify-content: center;
   }
 }
 
