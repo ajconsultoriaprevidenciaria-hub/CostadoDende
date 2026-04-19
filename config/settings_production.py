@@ -65,3 +65,11 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT', default_port),
     }
 }
+
+# Desabilitar cache em produção durante o ciclo de deploys frequentes
+# Usa DummyCache para evitar caching enquanto fazemos deploys diários
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
