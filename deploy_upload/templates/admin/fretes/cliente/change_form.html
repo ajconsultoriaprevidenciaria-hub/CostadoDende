@@ -1,0 +1,54 @@
+{% extends "admin/change_form.html" %}
+
+{% block after_field_sets %}
+{{ block.super }}
+<div id="map-container" style="margin:16px 0;display:none;">
+  <h3 style="color:var(--primary,#0ff);margin-bottom:8px;">📍 Localização no Google Maps</h3>
+  <iframe id="map-iframe" width="100%" height="350" style="border:1px solid var(--border,#333);border-radius:8px;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <a id="map-link" href="#" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:var(--primary,#0ff);font-weight:700;text-decoration:underline;">
+    🗺️ Abrir no Google Maps (ver rotas e quilometragem)
+  </a>
+</div>
+
+<script>
+(function(){
+  const cidadeInput = document.getElementById('id_cidade');
+  const ufInput = document.getElementById('id_uf');
+  const container = document.getElementById('map-container');
+  const iframe = document.getElementById('map-iframe');
+  const link = document.getElementById('map-link');
+
+  function updateMap(){
+    const cidade = (cidadeInput ? cidadeInput.value.trim() : '');
+    const uf = (ufInput ? ufInput.value.trim() : '');
+    if(!cidade){
+      container.style.display = 'none';
+      return;
+    }
+    const query = cidade + (uf ? ', ' + uf : '') + ', Brasil';
+    const encoded = encodeURIComponent(query);
+    iframe.src = 'https://www.google.com/maps?q=' + encoded + '&output=embed';
+    link.href = 'https://www.google.com/maps/search/' + encoded;
+    container.style.display = 'block';
+  }
+
+  let timer = null;
+  function debounced(){
+    clearTimeout(timer);
+    timer = setTimeout(updateMap, 800);
+  }
+
+  if(cidadeInput){
+    cidadeInput.addEventListener('input', debounced);
+    cidadeInput.addEventListener('change', updateMap);
+  }
+  if(ufInput){
+    ufInput.addEventListener('input', debounced);
+    ufInput.addEventListener('change', updateMap);
+  }
+
+  // Carrega o mapa se já houver cidade preenchida (edição)
+  updateMap();
+})();
+</script>
+{% endblock %}
