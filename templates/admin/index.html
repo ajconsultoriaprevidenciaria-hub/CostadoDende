@@ -256,6 +256,37 @@
       right: 12px !important;
     }
   }
+
+  /* ── Filtros: inputs/selects sempre preenchem o cell do grid ── */
+  .dash-filter-form > div { min-width: 0; }
+  .dash-filter-form input,
+  .dash-filter-form select { width: 100%; box-sizing: border-box; }
+
+  /* Botões de atalho: ocupam toda a largura em mobile */
+  @media (max-width: 600px) {
+    .dash-filter-section { padding: 14px !important; }
+
+    .dash-quick-btns {
+      width: 100% !important;
+    }
+    .dash-quick-btns button {
+      flex: 1 1 calc(50% - 4px) !important;
+      text-align: center !important;
+    }
+
+    .dash-filter-form {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .dash-quick-btns button {
+      flex: 1 1 100% !important;
+    }
+    .dash-filter-form {
+      grid-template-columns: 1fr !important;
+    }
+  }
 </style>
 {% endblock %}
 
@@ -282,9 +313,9 @@
   </select>
 </div>
 
-<section style="margin-bottom:22px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;">
+<section class="dash-filter-section" style="margin-bottom:22px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;">
   <div class="dash-filter-bar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap;">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div class="dash-quick-btns" style="display:flex;gap:8px;flex-wrap:wrap;">
       <button type="button" class="js-quick-range" data-range="7" style="background:rgba(0,217,166,.1);color:var(--primary);border:1px solid rgba(0,217,166,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Últimos 7 dias</button>
       <button type="button" class="js-quick-range" data-range="30" style="background:rgba(0,217,166,.1);color:var(--primary);border:1px solid rgba(0,217,166,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Últimos 30 dias</button>
       <button type="button" class="js-quick-range" data-range="0" style="background:rgba(0,217,166,.1);color:var(--primary);border:1px solid rgba(0,217,166,.2);border-radius:8px;padding:7px 16px;font-weight:600;cursor:pointer;font-size:.85rem;">Hoje</button>
@@ -295,7 +326,7 @@
     </div>
   </div>
 
-  <form method="get" id="form-dashboard-filtros" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:flex-end;">
+  <form method="get" id="form-dashboard-filtros" class="dash-filter-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:flex-end;">
     <div>
       <label for="data_inicial" style="display:block;font-size:.8rem;font-weight:600;margin-bottom:4px;color:var(--muted);">Data inicial</label>
       <input type="date" id="data_inicial" name="data_inicial" value="{{ filtros.data_inicial|date:'Y-m-d' }}" class="form-control" style="background:rgba(0,217,166,.05);border:1px solid rgba(0,217,166,.14);border-radius:8px;padding:8px;color:var(--text);font-size:.85rem;">
