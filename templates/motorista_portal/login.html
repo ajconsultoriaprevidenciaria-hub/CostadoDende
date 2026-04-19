@@ -1,105 +1,217 @@
-{% extends "motorista_portal/base.html" %}
-{% load static %}
-
-{% block title %}Portal do Motorista | Gonçalves &amp; Fonseca{% endblock %}
-
-{% block extra_css %}
+{% extends "motorista_portal/base.html" %} {% load static %} {% block title
+%}Portal do Motorista | Gonçalves &amp; Fonseca{% endblock %} {% block extra_css
+%}
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; background: #05080f; overflow: hidden; }
-  .mp-shell { max-width: none; padding: 0; }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  html,
+  body {
+    height: 100%;
+    background: #05080f;
+    overflow: hidden;
+  }
+  .mp-shell {
+    max-width: none;
+    padding: 0;
+  }
 
-  #scene { position: fixed; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; }
+  #scene {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
   .login-overlay {
-    position: fixed; inset: 0; z-index: 1;
-    display: flex; align-items: center; justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
   }
   .login-card {
     pointer-events: all;
-    width: 100%; max-width: 380px;
+    width: 100%;
+    max-width: 380px;
     margin: 0 16px;
-    background: rgba(5,12,26,0.82);
-    border: 1px solid rgba(0,217,166,0.22);
+    background: rgba(5, 12, 26, 0.82);
+    border: 1px solid rgba(0, 217, 166, 0.22);
     border-radius: 22px;
     padding: 32px 28px 28px;
-    box-shadow: 0 0 0 1px rgba(0,217,166,.06) inset, 0 32px 80px rgba(0,0,0,.7), 0 0 120px rgba(0,217,166,.06);
+    box-shadow:
+      0 0 0 1px rgba(0, 217, 166, 0.06) inset,
+      0 32px 80px rgba(0, 0, 0, 0.7),
+      0 0 120px rgba(0, 217, 166, 0.06);
     backdrop-filter: blur(20px) saturate(1.4);
-    animation: card-in .9s cubic-bezier(.22,1,.36,1) both;
+    animation: card-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   @keyframes card-in {
-    from { opacity:0; transform: translateY(30px) scale(.97); }
-    to   { opacity:1; transform: translateY(0) scale(1); }
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
-  .card-logo { display:flex; align-items:center; gap:10px; margin-bottom:22px; justify-content:center; }
+  .card-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    justify-content: center;
+  }
   .card-logo-dot {
-    width:36px; height:36px; border-radius:10px;
-    background:linear-gradient(135deg,#00d9a6,#00896a);
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 0 20px rgba(0,217,166,.4); flex-shrink:0;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00d9a6, #00896a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 217, 166, 0.4);
+    flex-shrink: 0;
   }
-  .card-logo-dot svg { width:20px; height:20px; }
-  .card-logo-text { line-height:1.2; }
-  .card-logo-text strong { display:block; font-size:.82rem; font-weight:800; color:#00d9a6; letter-spacing:.5px; }
-  .card-logo-text span   { display:block; font-size:.65rem; color:rgba(255,255,255,.35); }
-  .card-title { font-size:1.3rem; font-weight:800; color:#e8f0fe; text-align:center; margin-bottom:4px; }
-  .card-sub   { font-size:.78rem; color:rgba(255,255,255,.35); text-align:center; margin-bottom:24px; }
-  .login-field { margin-bottom:16px; }
+  .card-logo-dot svg {
+    width: 20px;
+    height: 20px;
+  }
+  .card-logo-text {
+    line-height: 1.2;
+  }
+  .card-logo-text strong {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #00d9a6;
+    letter-spacing: 0.5px;
+  }
+  .card-logo-text span {
+    display: block;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .card-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #e8f0fe;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .card-sub {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .login-field {
+    margin-bottom: 16px;
+  }
   .login-field label {
-    display:block; font-size:.65rem; font-weight:700;
-    color:rgba(255,255,255,.38); text-transform:uppercase; letter-spacing:.8px; margin-bottom:7px;
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.38);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 7px;
   }
   .login-field input {
-    width:100%; background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.1); color:#e8f0fe;
-    border-radius:11px; padding:13px 15px; font-size:max(16px, .88rem);
-    font-family:inherit; outline:none;
-    transition:border-color .2s, box-shadow .2s, background .2s;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e8f0fe;
+    border-radius: 11px;
+    padding: 13px 15px;
+    font-size: max(16px, 0.88rem);
+    font-family: inherit;
+    outline: none;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s,
+      background 0.2s;
   }
   .login-field input:focus {
-    border-color:#00d9a6; background:rgba(0,217,166,.05);
-    box-shadow:0 0 0 3px rgba(0,217,166,.14);
+    border-color: #00d9a6;
+    background: rgba(0, 217, 166, 0.05);
+    box-shadow: 0 0 0 3px rgba(0, 217, 166, 0.14);
   }
-  .login-field input::placeholder { color:rgba(255,255,255,.2); }
+  .login-field input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+  }
   .login-btn {
-    width:100%; padding:14px; margin-top:6px;
-    background:linear-gradient(135deg,#00d9a6 0%,#00b289 100%);
-    color:#03100c; font-size:.9rem; font-weight:800;
-    border:none; border-radius:11px; cursor:pointer; letter-spacing:.3px;
-    box-shadow:0 6px 30px rgba(0,217,166,.35);
-    transition:filter .2s, transform .12s;
+    width: 100%;
+    padding: 14px;
+    margin-top: 6px;
+    background: linear-gradient(135deg, #00d9a6 0%, #00b289 100%);
+    color: #03100c;
+    font-size: 0.9rem;
+    font-weight: 800;
+    border: none;
+    border-radius: 11px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    box-shadow: 0 6px 30px rgba(0, 217, 166, 0.35);
+    transition:
+      filter 0.2s,
+      transform 0.12s;
   }
-  .login-btn:hover  { filter:brightness(1.1); }
-  .login-btn:active { transform:scale(.98); }
+  .login-btn:hover {
+    filter: brightness(1.1);
+  }
+  .login-btn:active {
+    transform: scale(0.98);
+  }
   .login-msg-error {
-    background:rgba(244,63,94,.1); border:1px solid rgba(244,63,94,.25); color:#f87171;
-    border-radius:10px; padding:11px 14px; font-size:.78rem; margin-bottom:18px; text-align:center;
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.25);
+    color: #f87171;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 0.78rem;
+    margin-bottom: 18px;
+    text-align: center;
   }
   .chapada-label {
-    position:fixed; bottom:14px; left:0; right:0; z-index:2;
-    text-align:center; pointer-events:none;
-    font-size:.62rem; color:rgba(255,255,255,.22); letter-spacing:1.5px; text-transform:uppercase;
+    position: fixed;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    text-align: center;
+    pointer-events: none;
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.22);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
   }
 </style>
-{% endblock %}
-
-{% block topbar %}{% endblock %}
-
-{% block content %}
+{% endblock %} {% block topbar %}{% endblock %} {% block content %}
 <canvas id="scene"></canvas>
 
 <div class="login-overlay">
   <div class="login-card">
-    <div class="card-logo" style="justify-content:center; margin-bottom:22px;">
-      <img src="{% static 'img/logo_gf_white.png' %}" alt="Gonçalves &amp; Fonseca Transportadora" style="height:120px; width:auto;">
+    <div class="card-logo" style="justify-content: center; margin-bottom: 22px">
+      <img
+        src="{% static 'img/logo_gf_white.png' %}"
+        alt="Gonçalves &amp; Fonseca Transportadora"
+        style="height: 120px; width: auto"
+      />
     </div>
 
-    {% if messages %}
-      {% for msg in messages %}
-        <div class="login-msg-error">{{ msg }}</div>
-      {% endfor %}
-    {% endif %}
+    {% if messages %} {% for msg in messages %}
+    <div class="login-msg-error">{{ msg }}</div>
+    {% endfor %} {% endif %}
 
     <div class="card-title">Acesso do Motorista</div>
     <div class="card-sub">Chapada Diamantina &mdash; BA</div>
@@ -108,448 +220,904 @@
       {% csrf_token %}
       <div class="login-field">
         <label for="cpf">CPF</label>
-        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" inputmode="numeric" required autofocus>
+        <input
+          type="text"
+          id="cpf"
+          name="cpf"
+          placeholder="000.000.000-00"
+          inputmode="numeric"
+          required
+          autofocus
+        />
       </div>
       <div class="login-field">
         <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+        <input
+          type="password"
+          id="senha"
+          name="senha"
+          placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+          required
+        />
       </div>
       <button type="submit" class="login-btn">Entrar no Portal &rarr;</button>
     </form>
-    <a href="{% url 'motorista_portal:password_reset' %}" style="display:block;text-align:center;margin-top:14px;font-size:.78rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;"
-       onmouseover="this.style.color='#00d9a6'" onmouseout="this.style.color='rgba(255,255,255,.4)'">Esqueceu a senha?</a>
+    <a
+      href="{% url 'motorista_portal:password_reset' %}"
+      style="
+        display: block;
+        text-align: center;
+        margin-top: 14px;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition: color 0.2s;
+      "
+      onmouseover="this.style.color = '#00d9a6'"
+      onmouseout="this.style.color = 'rgba(255,255,255,.4)'"
+      >Esqueceu a senha?</a
+    >
   </div>
 </div>
 
-<div class="chapada-label">Morro do Pai In&aacute;cio &middot; Chapada Diamantina &middot; Bahia</div>
-{% endblock %}
-
-{% block extra_js %}
+<div class="chapada-label">
+  Morro do Pai In&aacute;cio &middot; Chapada Diamantina &middot; Bahia
+</div>
+{% endblock %} {% block extra_js %}
 <script>
-(function(){
-  const cv=document.getElementById('scene');
-  const ctx=cv.getContext('2d');
-  let W,H,dpr;
-  const truck={progress:-0.28,speed:0.00125,bw:0,bh:0};
-  const dust=[];
-  const stars=[];
-  let T=0;
+  (function () {
+    const cv = document.getElementById("scene");
+    const ctx = cv.getContext("2d");
+    let W, H, dpr;
+    const truck = { progress: -0.28, speed: 0.00125, bw: 0, bh: 0 };
+    const dust = [];
+    const stars = [];
+    let T = 0;
 
-  function resize(){
-    dpr=window.devicePixelRatio||1;
-    W=window.innerWidth; H=window.innerHeight;
-    cv.width=W*dpr; cv.height=H*dpr;
-    cv.style.width=W+'px'; cv.style.height=H+'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    truck.bw=W*0.22; truck.bh=truck.bw*0.38;
-    buildStars();
-  }
-
-  function buildStars(){
-    stars.length=0;
-    for(let i=0;i<200;i++) stars.push({
-      x:Math.random()*W, y:Math.random()*H*0.55,
-      r:Math.random()*1.5+0.3, ph:Math.random()*Math.PI*2, sp:Math.random()*0.8+0.4
-    });
-  }
-
-  const L=(a,b,t)=>a+(b-a)*t;
-  const LC=(a,b,t)=>[Math.round(L(a[0],b[0],t)),Math.round(L(a[1],b[1],t)),Math.round(L(a[2],b[2],t))];
-  const C=(c,a)=>a!=null?`rgba(${c[0]},${c[1]},${c[2]},${a})`:`rgb(${c[0]},${c[1]},${c[2]})`;
-  const phase=()=>Math.sin(T*0.00033)*0.5+0.5;
-
-  /* ─── CÉU ─────────────────────────────────────────── */
-  function drawSky(ph){
-    const topC=ph<.5?LC([18,12,52],[12,8,28],ph*2):LC([12,8,28],[3,5,15],(ph-.5)*2);
-    const horC=ph<.5?LC([255,120,30],[180,50,20],ph*2):LC([180,50,20],[10,18,35],(ph-.5)*2);
-    const skyH=H*.62;
-    const g=ctx.createLinearGradient(0,0,0,skyH);
-    g.addColorStop(0,C(topC)); g.addColorStop(.72,C(horC)); g.addColorStop(1,C(LC(horC,[8,14,22],.55)));
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,skyH);
-    // glow pôr-do-sol
-    const sg=1-Math.abs(ph-.22)*4.5;
-    if(sg>0){
-      const gg=ctx.createRadialGradient(W*.68,skyH*.88,0,W*.68,skyH*.88,W*.6);
-      gg.addColorStop(0,`rgba(255,140,40,${.6*sg})`); gg.addColorStop(.4,`rgba(255,60,10,${.3*sg})`); gg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=gg; ctx.fillRect(0,0,W,skyH);
+    function resize() {
+      dpr = window.devicePixelRatio || 1;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      cv.width = W * dpr;
+      cv.height = H * dpr;
+      cv.style.width = W + "px";
+      cv.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      truck.bw = W * 0.22;
+      truck.bh = truck.bw * 0.38;
+      buildStars();
     }
-    // sol
-    const sa=Math.max(0,1-ph*3.8);
-    if(sa>0){
-      const sx=W*.68,sy=skyH*(.76-ph*.28),sr=W*.048;
-      const hl=ctx.createRadialGradient(sx,sy,sr*.4,sx,sy,sr*4);
-      hl.addColorStop(0,`rgba(255,200,80,${.4*sa})`); hl.addColorStop(.5,`rgba(255,120,20,${.18*sa})`); hl.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=hl; ctx.beginPath(); ctx.arc(sx,sy,sr*4,0,Math.PI*2); ctx.fill();
-      const sg2=ctx.createRadialGradient(sx,sy*.95,0,sx,sy,sr);
-      sg2.addColorStop(0,`rgba(255,255,200,${sa})`); sg2.addColorStop(.6,`rgba(255,190,40,${sa})`); sg2.addColorStop(1,`rgba(255,100,0,${sa*.8})`);
-      ctx.fillStyle=sg2; ctx.beginPath(); ctx.arc(sx,sy,sr,0,Math.PI*2); ctx.fill();
+
+    function buildStars() {
+      stars.length = 0;
+      for (let i = 0; i < 200; i++)
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H * 0.55,
+          r: Math.random() * 1.5 + 0.3,
+          ph: Math.random() * Math.PI * 2,
+          sp: Math.random() * 0.8 + 0.4,
+        });
     }
-  }
 
-  function drawStars(ph){
-    const al=Math.max(0,(ph-.38)*2.8); if(al<=0) return;
-    stars.forEach(s=>{
-      const tw=.5+.5*Math.sin(T*s.sp*.038+s.ph);
-      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,240,${al*tw*.9})`; ctx.fill();
-    });
-  }
+    const L = (a, b, t) => a + (b - a) * t;
+    const LC = (a, b, t) => [
+      Math.round(L(a[0], b[0], t)),
+      Math.round(L(a[1], b[1], t)),
+      Math.round(L(a[2], b[2], t)),
+    ];
+    const C = (c, a) =>
+      a != null
+        ? `rgba(${c[0]},${c[1]},${c[2]},${a})`
+        : `rgb(${c[0]},${c[1]},${c[2]})`;
+    const phase = () => Math.sin(T * 0.00033) * 0.5 + 0.5;
 
-  /* ─── RAIOS DE LUZ ───────────────────────────────── */
-  function drawGodRays(ph){
-    const ra=Math.max(0,(1-ph*3.2)*.2); if(ra<=0) return;
-    const sx=W*.68,sy=H*.05;
-    [[Math.PI/2.2,W*.04],[Math.PI/2.5,W*.025],[Math.PI/3.0,W*.035]].forEach(([ang,rw])=>{
-      const ex=sx+Math.cos(ang)*H,ey=sy+Math.sin(ang)*H,nx=-Math.sin(ang)*rw,ny=Math.cos(ang)*rw;
-      ctx.beginPath();
-      ctx.moveTo(sx-nx*.1,sy-ny*.1); ctx.lineTo(sx+nx*.1,sy+ny*.1);
-      ctx.lineTo(ex+nx,ey+ny); ctx.lineTo(ex-nx,ey-ny); ctx.closePath();
-      const rg=ctx.createLinearGradient(sx,sy,ex,ey);
-      rg.addColorStop(0,`rgba(255,220,120,${ra})`); rg.addColorStop(1,'rgba(255,220,120,0)');
-      ctx.fillStyle=rg; ctx.fill();
-    });
-  }
-
-  /* ─── NUVENS ─────────────────────────────────────── */
-  const clouds=Array.from({length:5},(_,i)=>({x:(i/5)*1.3-.1,y:.08+Math.random()*.18,sc:.6+Math.random()*.7,sp:.000025+Math.random()*.00002,al:.3+Math.random()*.3}));
-  function drawClouds(ph){
-    const al=Math.max(0,1-ph*2); if(al<=0) return;
-    clouds.forEach(c=>{
-      c.x+=c.sp; if(c.x>1.3) c.x=-.3;
-      const cx=c.x*W,cy=c.y*H,r=W*.09*c.sc;
-      const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-      cg.addColorStop(0,`rgba(255,210,160,${c.al*al})`); cg.addColorStop(.5,`rgba(240,170,110,${c.al*al*.5})`); cg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(cx+r*.5,cy+r*.08,r*.62,0,Math.PI*2); ctx.fill();
-    });
-  }
-
-  /* ─── CHAPADA: MORRO DO PAI INÁCIO ──────────────── */
-  function getMorro(){
-    return{
-      back:[[0,H*.62],[W*.06,H*.56],[W*.14,H*.50],[W*.22,H*.42],[W*.30,H*.52],[W*.36,H*.46],[W*.41,H*.18],[W*.44,H*.10],[W*.52,H*.14],[W*.56,H*.22],[W*.62,H*.38],[W*.70,H*.28],[W*.76,H*.42],[W*.84,H*.36],[W*.92,H*.46],[W,H*.50],[W,H*.62]],
-      front:[[0,H*.62],[W*.09,H*.59],[W*.17,H*.57],[W*.25,H*.60],[W*.31,H*.53],[W*.37,H*.46],[W*.400,H*.20],[W*.435,H*.135],[W*.470,H*.128],[W*.505,H*.14],[W*.540,H*.20],[W*.585,H*.35],[W*.640,H*.32],[W*.700,H*.44],[W*.770,H*.41],[W*.840,H*.50],[W*.920,H*.46],[W,H*.51],[W,H*.62]]
-    };
-  }
-
-  function drawMountains(ph){
-    const m=getMorro();
-    // camada traseira
-    const bc=LC([35,20,60],[8,10,22],ph);
-    ctx.beginPath(); ctx.moveTo(m.back[0][0],m.back[0][1]);
-    m.back.forEach(p=>ctx.lineTo(p[0],p[1])); ctx.closePath();
-    const mg1=ctx.createLinearGradient(0,H*.08,0,H*.62);
-    mg1.addColorStop(0,C(bc)); mg1.addColorStop(1,C(LC(bc,[4,8,18],.65)));
-    ctx.fillStyle=mg1; ctx.fill();
-    // arenito da Chapada (frente)
-    const rc=LC([115,68,32],[30,20,14],ph), rs=LC([52,30,12],[15,10,8],ph);
-    ctx.beginPath(); ctx.moveTo(m.front[0][0],m.front[0][1]);
-    m.front.forEach(p=>ctx.lineTo(p[0],p[1])); ctx.closePath();
-    const mg2=ctx.createLinearGradient(0,H*.12,0,H*.62);
-    mg2.addColorStop(0,C(rc)); mg2.addColorStop(.4,C(LC(rc,rs,.5))); mg2.addColorStop(1,C(rs));
-    ctx.fillStyle=mg2; ctx.fill();
-    // borda iluminada do paredão
-    const ea=Math.max(0,(1-ph*2.5)*.75);
-    if(ea>0){
-      ctx.beginPath(); ctx.moveTo(W*.400,H*.20); ctx.lineTo(W*.435,H*.135); ctx.lineTo(W*.470,H*.128);
-      ctx.strokeStyle=`rgba(255,205,100,${ea})`; ctx.lineWidth=2; ctx.stroke();
+    /* ─── CÉU ─────────────────────────────────────────── */
+    function drawSky(ph) {
+      const topC =
+        ph < 0.5
+          ? LC([18, 12, 52], [12, 8, 28], ph * 2)
+          : LC([12, 8, 28], [3, 5, 15], (ph - 0.5) * 2);
+      const horC =
+        ph < 0.5
+          ? LC([255, 120, 30], [180, 50, 20], ph * 2)
+          : LC([180, 50, 20], [10, 18, 35], (ph - 0.5) * 2);
+      const skyH = H * 0.62;
+      const g = ctx.createLinearGradient(0, 0, 0, skyH);
+      g.addColorStop(0, C(topC));
+      g.addColorStop(0.72, C(horC));
+      g.addColorStop(1, C(LC(horC, [8, 14, 22], 0.55)));
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, skyH);
+      // glow pôr-do-sol
+      const sg = 1 - Math.abs(ph - 0.22) * 4.5;
+      if (sg > 0) {
+        const gg = ctx.createRadialGradient(
+          W * 0.68,
+          skyH * 0.88,
+          0,
+          W * 0.68,
+          skyH * 0.88,
+          W * 0.6,
+        );
+        gg.addColorStop(0, `rgba(255,140,40,${0.6 * sg})`);
+        gg.addColorStop(0.4, `rgba(255,60,10,${0.3 * sg})`);
+        gg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = gg;
+        ctx.fillRect(0, 0, W, skyH);
+      }
+      // sol
+      const sa = Math.max(0, 1 - ph * 3.8);
+      if (sa > 0) {
+        const sx = W * 0.68,
+          sy = skyH * (0.76 - ph * 0.28),
+          sr = W * 0.048;
+        const hl = ctx.createRadialGradient(sx, sy, sr * 0.4, sx, sy, sr * 4);
+        hl.addColorStop(0, `rgba(255,200,80,${0.4 * sa})`);
+        hl.addColorStop(0.5, `rgba(255,120,20,${0.18 * sa})`);
+        hl.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = hl;
+        ctx.beginPath();
+        ctx.arc(sx, sy, sr * 4, 0, Math.PI * 2);
+        ctx.fill();
+        const sg2 = ctx.createRadialGradient(sx, sy * 0.95, 0, sx, sy, sr);
+        sg2.addColorStop(0, `rgba(255,255,200,${sa})`);
+        sg2.addColorStop(0.6, `rgba(255,190,40,${sa})`);
+        sg2.addColorStop(1, `rgba(255,100,0,${sa * 0.8})`);
+        ctx.fillStyle = sg2;
+        ctx.beginPath();
+        ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
-    // reflexo laranja
-    const ra=Math.max(0,1-ph*3);
-    if(ra>0){
-      const rg=ctx.createLinearGradient(W*.36,H*.12,W*.56,H*.35);
-      rg.addColorStop(0,`rgba(255,155,55,${ra*.55})`); rg.addColorStop(.5,`rgba(255,90,15,${ra*.22})`); rg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=rg;
-      ctx.beginPath(); ctx.moveTo(m.front[4][0],m.front[4][1]);
-      for(let i=5;i<=11;i++) ctx.lineTo(m.front[i][0],m.front[i][1]);
-      ctx.closePath(); ctx.fill();
-    }
-    // Paredão com textura de linhas geológicas
-    const la=Math.max(0,(1-ph*2.2)*.3);
-    if(la>0){
-      [H*.18,H*.22,H*.28,H*.35,H*.42].forEach(yl=>{
-        ctx.beginPath(); ctx.moveTo(W*.38,yl); ctx.lineTo(W*.56,yl+H*.01);
-        ctx.strokeStyle=`rgba(80,45,15,${la})`; ctx.lineWidth=.8; ctx.stroke();
+
+    function drawStars(ph) {
+      const al = Math.max(0, (ph - 0.38) * 2.8);
+      if (al <= 0) return;
+      stars.forEach((s) => {
+        const tw = 0.5 + 0.5 * Math.sin(T * s.sp * 0.038 + s.ph);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,240,${al * tw * 0.9})`;
+        ctx.fill();
       });
     }
-    drawVeg(ph);
-  }
 
-  function drawVeg(ph){
-    const vpts=[{x:.03,h:.055},{x:.09,h:.045},{x:.14,h:.06},{x:.62,h:.05},{x:.71,h:.065},{x:.79,h:.042},{x:.87,h:.055},{x:.95,h:.048}];
-    const gc=LC([40,58,12],[15,22,8],ph), tc=LC([60,42,15],[25,18,8],ph);
-    vpts.forEach(v=>{
-      const vx=v.x*W,vy=H*.60,vh=v.h*H;
-      ctx.fillStyle=C(tc); ctx.fillRect(vx-2,vy,4,vh*.38);
-      ctx.beginPath(); ctx.ellipse(vx,vy-vh*.38,vh*.55,vh*.48,0,0,Math.PI*2);
-      ctx.fillStyle=C(gc,.88); ctx.fill();
-      const la2=Math.max(0,(1-ph*2.2)*.52);
-      if(la2>0){
-        ctx.beginPath(); ctx.ellipse(vx,vy-vh*.6,vh*.24,vh*.18,0,0,Math.PI*2);
-        ctx.fillStyle=`rgba(200,225,80,${la2})`; ctx.fill();
-      }
-    });
-  }
+    /* ─── RAIOS DE LUZ ───────────────────────────────── */
+    function drawGodRays(ph) {
+      const ra = Math.max(0, (1 - ph * 3.2) * 0.2);
+      if (ra <= 0) return;
+      const sx = W * 0.68,
+        sy = H * 0.05;
+      [
+        [Math.PI / 2.2, W * 0.04],
+        [Math.PI / 2.5, W * 0.025],
+        [Math.PI / 3.0, W * 0.035],
+      ].forEach(([ang, rw]) => {
+        const ex = sx + Math.cos(ang) * H,
+          ey = sy + Math.sin(ang) * H,
+          nx = -Math.sin(ang) * rw,
+          ny = Math.cos(ang) * rw;
+        ctx.beginPath();
+        ctx.moveTo(sx - nx * 0.1, sy - ny * 0.1);
+        ctx.lineTo(sx + nx * 0.1, sy + ny * 0.1);
+        ctx.lineTo(ex + nx, ey + ny);
+        ctx.lineTo(ex - nx, ey - ny);
+        ctx.closePath();
+        const rg = ctx.createLinearGradient(sx, sy, ex, ey);
+        rg.addColorStop(0, `rgba(255,220,120,${ra})`);
+        rg.addColorStop(1, "rgba(255,220,120,0)");
+        ctx.fillStyle = rg;
+        ctx.fill();
+      });
+    }
 
-  /* ─── ESTRADA (sobe o morro) ─────────────────────── */
-  function roadPts(){
-    return [
-      {t:0.00,x:W*1.08,y:H*.73,w:W*.17},
-      {t:0.13,x:W*.83, y:H*.71,w:W*.145},
-      {t:0.26,x:W*.66, y:H*.68,w:W*.115},
-      {t:0.40,x:W*.53, y:H*.645,w:W*.088},
-      {t:0.53,x:W*.44, y:H*.578,w:W*.060},
-      {t:0.65,x:W*.405,y:H*.438,w:W*.042},
-      {t:0.76,x:W*.415,y:H*.298,w:W*.028},
-      {t:0.86,x:W*.438,y:H*.182,w:W*.018},
-      {t:0.94,x:W*.452,y:H*.136,w:W*.011},
-      {t:1.00,x:W*.457,y:H*.128,w:W*.007},
-    ];
-  }
+    /* ─── NUVENS ─────────────────────────────────────── */
+    const clouds = Array.from({ length: 5 }, (_, i) => ({
+      x: (i / 5) * 1.3 - 0.1,
+      y: 0.08 + Math.random() * 0.18,
+      sc: 0.6 + Math.random() * 0.7,
+      sp: 0.000025 + Math.random() * 0.00002,
+      al: 0.3 + Math.random() * 0.3,
+    }));
+    function drawClouds(ph) {
+      const al = Math.max(0, 1 - ph * 2);
+      if (al <= 0) return;
+      clouds.forEach((c) => {
+        c.x += c.sp;
+        if (c.x > 1.3) c.x = -0.3;
+        const cx = c.x * W,
+          cy = c.y * H,
+          r = W * 0.09 * c.sc;
+        const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        cg.addColorStop(0, `rgba(255,210,160,${c.al * al})`);
+        cg.addColorStop(0.5, `rgba(240,170,110,${c.al * al * 0.5})`);
+        cg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = cg;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx + r * 0.5, cy + r * 0.08, r * 0.62, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
 
-  function iRoad(pts,pr){
-    let i=0; while(i<pts.length-2&&pts[i+1].t<pr) i++;
-    const a=pts[i],b=pts[i+1],s=Math.max(0,Math.min(1,(pr-a.t)/(b.t-a.t)));
-    return {x:L(a.x,b.x,s),y:L(a.y,b.y,s),w:L(a.w,b.w,s),ang:Math.atan2(b.y-a.y,b.x-a.x)};
-  }
+    /* ─── CHAPADA: MORRO DO PAI INÁCIO ──────────────── */
+    function getMorro() {
+      return {
+        back: [
+          [0, H * 0.62],
+          [W * 0.06, H * 0.56],
+          [W * 0.14, H * 0.5],
+          [W * 0.22, H * 0.42],
+          [W * 0.3, H * 0.52],
+          [W * 0.36, H * 0.46],
+          [W * 0.41, H * 0.18],
+          [W * 0.44, H * 0.1],
+          [W * 0.52, H * 0.14],
+          [W * 0.56, H * 0.22],
+          [W * 0.62, H * 0.38],
+          [W * 0.7, H * 0.28],
+          [W * 0.76, H * 0.42],
+          [W * 0.84, H * 0.36],
+          [W * 0.92, H * 0.46],
+          [W, H * 0.5],
+          [W, H * 0.62],
+        ],
+        front: [
+          [0, H * 0.62],
+          [W * 0.09, H * 0.59],
+          [W * 0.17, H * 0.57],
+          [W * 0.25, H * 0.6],
+          [W * 0.31, H * 0.53],
+          [W * 0.37, H * 0.46],
+          [W * 0.4, H * 0.2],
+          [W * 0.435, H * 0.135],
+          [W * 0.47, H * 0.128],
+          [W * 0.505, H * 0.14],
+          [W * 0.54, H * 0.2],
+          [W * 0.585, H * 0.35],
+          [W * 0.64, H * 0.32],
+          [W * 0.7, H * 0.44],
+          [W * 0.77, H * 0.41],
+          [W * 0.84, H * 0.5],
+          [W * 0.92, H * 0.46],
+          [W, H * 0.51],
+          [W, H * 0.62],
+        ],
+      };
+    }
 
-  function drawRoad(ph){
-    const pts=roadPts();
-    const rc=LC([48,44,40],[18,16,14],ph), sc=LC([62,56,42],[22,20,15],ph);
-    const N=90;
-    for(let i=0;i<N;i++){
-      const r0=iRoad(pts,i/N),r1=iRoad(pts,(i+1)/N);
-      const nx0=-Math.sin(r0.ang),ny0=Math.cos(r0.ang),nx1=-Math.sin(r1.ang),ny1=Math.cos(r1.ang);
-      const h0=r0.w*.5,h1=r1.w*.5;
-      // berma
+    function drawMountains(ph) {
+      const m = getMorro();
+      // camada traseira
+      const bc = LC([35, 20, 60], [8, 10, 22], ph);
       ctx.beginPath();
-      ctx.moveTo(r0.x-nx0*h0*1.18,r0.y-ny0*h0*1.18);
-      ctx.lineTo(r1.x-nx1*h1*1.18,r1.y-ny1*h1*1.18);
-      ctx.lineTo(r1.x+nx1*h1*1.18,r1.y+ny1*h1*1.18);
-      ctx.lineTo(r0.x+nx0*h0*1.18,r0.y+ny0*h0*1.18);
-      ctx.closePath(); ctx.fillStyle=C(sc); ctx.fill();
-      // asfalto
-      const shd=Math.max(0,1-(i/N)*1.3);
+      ctx.moveTo(m.back[0][0], m.back[0][1]);
+      m.back.forEach((p) => ctx.lineTo(p[0], p[1]));
+      ctx.closePath();
+      const mg1 = ctx.createLinearGradient(0, H * 0.08, 0, H * 0.62);
+      mg1.addColorStop(0, C(bc));
+      mg1.addColorStop(1, C(LC(bc, [4, 8, 18], 0.65)));
+      ctx.fillStyle = mg1;
+      ctx.fill();
+      // arenito da Chapada (frente)
+      const rc = LC([115, 68, 32], [30, 20, 14], ph),
+        rs = LC([52, 30, 12], [15, 10, 8], ph);
       ctx.beginPath();
-      ctx.moveTo(r0.x-nx0*h0,r0.y-ny0*h0);
-      ctx.lineTo(r1.x-nx1*h1,r1.y-ny1*h1);
-      ctx.lineTo(r1.x+nx1*h1,r1.y+ny1*h1);
-      ctx.lineTo(r0.x+nx0*h0,r0.y+ny0*h0);
-      ctx.closePath(); ctx.fillStyle=C(LC(rc,LC(rc,[0,0,0],.55),shd*.45)); ctx.fill();
-      // faixa central
-      if(Math.floor(i/N*30)%2===0&&r0.w>W*.042){
-        const fa=Math.min(1,r0.w/(W*.09));
-        ctx.beginPath(); ctx.moveTo(r0.x,r0.y); ctx.lineTo(r1.x,r1.y);
-        ctx.strokeStyle=`rgba(220,200,80,${.45*fa})`; ctx.lineWidth=Math.max(.5,r0.w*.022); ctx.stroke();
+      ctx.moveTo(m.front[0][0], m.front[0][1]);
+      m.front.forEach((p) => ctx.lineTo(p[0], p[1]));
+      ctx.closePath();
+      const mg2 = ctx.createLinearGradient(0, H * 0.12, 0, H * 0.62);
+      mg2.addColorStop(0, C(rc));
+      mg2.addColorStop(0.4, C(LC(rc, rs, 0.5)));
+      mg2.addColorStop(1, C(rs));
+      ctx.fillStyle = mg2;
+      ctx.fill();
+      // borda iluminada do paredão
+      const ea = Math.max(0, (1 - ph * 2.5) * 0.75);
+      if (ea > 0) {
+        ctx.beginPath();
+        ctx.moveTo(W * 0.4, H * 0.2);
+        ctx.lineTo(W * 0.435, H * 0.135);
+        ctx.lineTo(W * 0.47, H * 0.128);
+        ctx.strokeStyle = `rgba(255,205,100,${ea})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
       }
-    }
-    // guard-rail
-    ctx.beginPath();
-    pts.forEach((pt,i)=>{
-      const r=iRoad(pts,pt.t),nx=-Math.sin(r.ang),ny=Math.cos(r.ang);
-      if(i===0) ctx.moveTo(r.x-nx*r.w*.58,r.y-ny*r.w*.58);
-      else ctx.lineTo(r.x-nx*r.w*.58,r.y-ny*r.w*.58);
-    });
-    ctx.strokeStyle=`rgba(200,188,155,${.28*(1-ph*.5)})`; ctx.lineWidth=1.5; ctx.stroke();
-  }
-
-  function drawGround(ph){
-    const gy=H*.62,g=ctx.createLinearGradient(0,gy,0,H);
-    g.addColorStop(0,C(LC([38,70,20],[12,22,8],ph))); g.addColorStop(1,C(LC([22,46,12],[8,14,5],ph)));
-    ctx.fillStyle=g; ctx.fillRect(0,gy,W,H-gy);
-  }
-
-  function drawHaze(ph){
-    const gy=H*.60,hg=ctx.createLinearGradient(0,gy-H*.07,0,gy+H*.04);
-    hg.addColorStop(0,'rgba(0,0,0,0)');
-    hg.addColorStop(.5,C(LC([255,175,95],[100,130,180],ph),L(.48,.16,ph)));
-    hg.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=hg; ctx.fillRect(0,gy-H*.07,W,H*.11);
-  }
-
-  function drawCityLights(ph){
-    const la=Math.max(0,(ph-.48)*2.4); if(la<=0) return;
-    [[.12,.67,[255,180,80]],[.18,.66,[255,200,100]],[.70,.67,[255,160,60]],[.76,.64,[200,220,255]],[.82,.66,[255,200,80]],[.88,.64,[255,180,60]],[.92,.65,[200,200,220]],[.96,.64,[255,200,100]]].forEach(([lx,ly,lc])=>{
-      const x=lx*W,y=ly*H,tw=.7+.3*Math.sin(T*.055+x);
-      const lg=ctx.createRadialGradient(x,y,0,x,y,15);
-      lg.addColorStop(0,C(lc,la*tw*.9)); lg.addColorStop(.45,C(lc,la*tw*.3)); lg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=lg; ctx.beginPath(); ctx.arc(x,y,15,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2); ctx.fillStyle=C(lc,la*tw); ctx.fill();
-    });
-  }
-
-  /* ─── POEIRA ─────────────────────────────────────── */
-  function spawnDust(x,y,sp){
-    for(let i=0;i<3;i++) dust.push({
-      x,y:y+(Math.random()-.5)*8,vx:-(sp*.4+Math.random()*sp*.3),vy:-(Math.random()*sp*.3),
-      life:1,decay:.018+Math.random()*.012,r:Math.random()*5+3,
-      color:Math.random()>.5?[220,190,130]:[180,160,100]
-    });
-  }
-  function updateDust(){for(let i=dust.length-1;i>=0;i--){const d=dust[i];d.x+=d.vx;d.y+=d.vy;d.r*=1.04;d.life-=d.decay;if(d.life<=0)dust.splice(i,1);}}
-  function drawDust(){dust.forEach(d=>{ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fillStyle=`rgba(${d.color},${d.life*.32})`;ctx.fill();});}
-
-  /* ─── CAMINHÃO ───────────────────────────────────── */
-  function drawTruck(pr,ph,variant=0){
-    if(pr<0||pr>0.97) return;
-    const pts=roadPts(),pos=iRoad(pts,pr);
-    const sc2=pos.w/(W*.16+.001);
-    const tw=truck.bw*sc2*1.2,th=truck.bh*sc2*1.2;
-    // cone de farol na noite
-    if(ph>.32){
-      const la=(ph-.32)*1.6;
-      const fx=pos.x+Math.cos(pos.ang)*tw*.52,fy=pos.y+Math.sin(pos.ang)*tw*.52;
-      const lg=ctx.createRadialGradient(fx,fy,0,fx,fy,tw*2.2);
-      lg.addColorStop(0,`rgba(255,240,180,${la*.28})`); lg.addColorStop(.35,`rgba(255,200,100,${la*.1})`); lg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=lg; ctx.beginPath(); ctx.arc(fx,fy,tw*2.2,0,Math.PI*2); ctx.fill();
-    }
-    ctx.save(); ctx.translate(pos.x,pos.y); ctx.rotate(pos.ang); ctx.scale(1,-1);
-    const cw=tw*.53,trW=tw*.98,trH=th*.88;
-    const palettes = [
-      { tank1:[178,230,255], tank2:[85,176,238], tankBand:[215,244,255], cab1:[45,126,228], cab2:[22,86,185], accent:[255,150,38], stripe:[92,176,236] }
-    ];
-    const p = palettes[variant % palettes.length];
-    const tankC=LC(p.tank1,p.tank2,ph*.5),tankHL=LC(p.tankBand,p.tank1,ph*.45);
-    const cabC=LC(p.cab1,p.cab2,ph*.5),acC=LC(p.accent,[210,110,20],ph*.4);
-    // sombra
-    ctx.fillStyle='rgba(0,0,0,.4)';
-    ctx.beginPath(); ctx.roundRect(-trW*.62+3,-trH*.42+5,trW*1.26,trH*1.02,3*sc2); ctx.fill();
-    // tanque cilíndrico
-    const tankW=trW*1.04, tankH=trH*.82, tankX=-trW*.52, tankY=-trH*.40;
-    const tg=ctx.createLinearGradient(0,tankY,0,tankY+tankH);
-    tg.addColorStop(0,C(tankHL)); tg.addColorStop(.45,C(tankC)); tg.addColorStop(1,C(LC(tankC,[0,0,0],.35)));
-    ctx.fillStyle=tg;
-    ctx.beginPath();
-    ctx.roundRect(tankX,tankY,tankW,tankH,tankH*.5);
-    ctx.fill();
-    // faixa superior do tanque
-    ctx.fillStyle=`rgba(${p.tankBand[0]},${p.tankBand[1]},${p.tankBand[2]},${.75-ph*.18})`;
-    ctx.beginPath();
-    ctx.roundRect(tankX+tankW*.14,tankY+tankH*.16,tankW*.70,tankH*.18,tankH*.18);
-    ctx.fill();
-    // faixa lateral colorida
-    ctx.fillStyle=`rgba(${p.stripe[0]},${p.stripe[1]},${p.stripe[2]},${.82-ph*.12})`;
-    ctx.beginPath();
-    ctx.roundRect(tankX+tankW*.06,tankY+tankH*.56,tankW*.88,tankH*.10,tankH*.08);
-    ctx.fill();
-    // cabine estilo ilustração
-    const cabX=trW*.48,ctY=-th*.55;
-    ctx.beginPath();
-    ctx.moveTo(cabX,trH*.4); ctx.lineTo(cabX,ctY+th*.12); ctx.lineTo(cabX+cw*.25,ctY+th*.05);
-    ctx.lineTo(cabX+cw*.72,ctY); ctx.lineTo(cabX+cw*1.06,ctY+th*.2); ctx.lineTo(cabX+cw*1.06,trH*.4); ctx.closePath();
-    const cg=ctx.createLinearGradient(cabX,ctY,cabX+cw,ctY+th);
-    cg.addColorStop(0,C(LC(cabC,[255,255,255],.18))); cg.addColorStop(.55,C(cabC)); cg.addColorStop(1,C(LC(cabC,[0,0,0],.55)));
-    ctx.fillStyle=cg; ctx.fill(); ctx.strokeStyle=C(acC,.5); ctx.lineWidth=sc2; ctx.stroke();
-    // para-brisa
-    ctx.beginPath();
-    ctx.moveTo(cabX+cw*.14,ctY+th*.1); ctx.lineTo(cabX+cw*.68,ctY+th*.04);
-    ctx.lineTo(cabX+cw*1.0,ctY+th*.22); ctx.lineTo(cabX+cw*.14,ctY+th*.33); ctx.closePath();
-    const wg=ctx.createLinearGradient(cabX,ctY,cabX+cw,ctY+th*.3);
-    wg.addColorStop(0,`rgba(130,205,255,${.25+(1-ph)*.2})`); wg.addColorStop(1,'rgba(45,90,180,.08)');
-    ctx.fillStyle=wg; ctx.fill();
-    // grade frontal
-    ctx.fillStyle='rgba(35,40,48,.95)';
-    ctx.beginPath(); ctx.roundRect(cabX+cw*.05,ctY+th*.30,cw*.22,th*.27,2*sc2); ctx.fill();
-    ctx.strokeStyle='rgba(95,105,120,.9)';
-    for(let gi=0;gi<3;gi++){
-      const gy=ctY+th*(.35+gi*.08);
-      ctx.beginPath(); ctx.moveTo(cabX+cw*.08,gy); ctx.lineTo(cabX+cw*.24,gy); ctx.stroke();
-    }
-    // farol LED
-    const hla=.4+ph*.5;
-    ctx.fillStyle=`rgba(255,230,120,${hla})`;
-    ctx.beginPath(); ctx.roundRect(cabX+cw*.92,-th*.05,cw*.12,th*.12,2*sc2); ctx.fill();
-    // escapamento + fumaça animada
-    ctx.fillStyle=C(LC([20,30,40],[10,15,20],ph));
-    ctx.beginPath(); ctx.roundRect(cabX+cw*.6,-th*.55-th*.26,6*sc2,th*.26,3*sc2); ctx.fill();
-    for(let i=0;i<3;i++){
-      const fp=((T*.002+i*.33)%1);
-      const fx2=cabX+cw*.63+Math.sin(fp*8)*4*sc2;
-      const fy2=-th*.55-th*.26-fp*th*.48;
-      const fr=sc2*(3+fp*9);
-      ctx.beginPath(); ctx.arc(fx2,fy2,fr,0,Math.PI*2);
-      ctx.fillStyle=`rgba(180,195,215,${(1-fp)*.25})`; ctx.fill();
-    }
-    // para-choque
-    ctx.fillStyle=C(LC([40,50,60],[15,18,22],ph));
-    ctx.beginPath(); ctx.roundRect(cabX+cw*.82,trH*.3,cw*.24,th*.12,2*sc2); ctx.fill();
-    ctx.fillStyle=C(acC,.95);
-    ctx.beginPath(); ctx.roundRect(cabX+cw*.72,trH*.26,cw*.18,th*.10,2*sc2); ctx.fill();
-    // placa
-    ctx.fillStyle='rgba(240,240,240,.92)'; ctx.beginPath(); ctx.roundRect(cabX+cw*.84,trH*.22,cw*.19,th*.09,1.5*sc2); ctx.fill();
-    ctx.fillStyle='rgba(0,10,80,.9)'; ctx.font=`bold ${Math.max(4,7*sc2)}px monospace`;
-    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('RCV2A7',cabX+cw*.935,trH*.268);
-    // rodas
-    const wheels=[{cx:trW*.28,cy:trH*.4+th*.06},{cx:0,cy:trH*.4+th*.06},{cx:-trW*.3,cy:trH*.4+th*.06},{cx:cabX+cw*.78,cy:trH*.4+th*.06}];
-    const wr=th*.22;
-    wheels.forEach(w=>{
-      ctx.beginPath(); ctx.ellipse(w.cx+2,w.cy+4,wr,wr*.3,0,0,Math.PI*2); ctx.fillStyle='rgba(0,0,0,.38)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(w.cx,w.cy,wr,0,Math.PI*2); ctx.fillStyle=C(LC([28,28,28],[12,12,12],.5)); ctx.fill();
-      ctx.strokeStyle=C(acC,.65); ctx.lineWidth=1.5*sc2; ctx.stroke();
-      ctx.beginPath(); ctx.arc(w.cx,w.cy,wr*.6,0,Math.PI*2); ctx.fillStyle=C(LC([70,80,90],[30,36,40],ph)); ctx.fill();
-      const rot=(T*.055+w.cx*.01)%(Math.PI*2);
-      for(let i=0;i<6;i++){
-        const a=rot+(i/6)*Math.PI*2;
-        ctx.beginPath(); ctx.moveTo(w.cx,w.cy); ctx.lineTo(w.cx+Math.cos(a)*wr*.55,w.cy+Math.sin(a)*wr*.55);
-        ctx.strokeStyle=C(LC([100,110,120],[40,45,50],ph),.6); ctx.lineWidth=1.5*sc2; ctx.stroke();
+      // reflexo laranja
+      const ra = Math.max(0, 1 - ph * 3);
+      if (ra > 0) {
+        const rg = ctx.createLinearGradient(
+          W * 0.36,
+          H * 0.12,
+          W * 0.56,
+          H * 0.35,
+        );
+        rg.addColorStop(0, `rgba(255,155,55,${ra * 0.55})`);
+        rg.addColorStop(0.5, `rgba(255,90,15,${ra * 0.22})`);
+        rg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = rg;
+        ctx.beginPath();
+        ctx.moveTo(m.front[4][0], m.front[4][1]);
+        for (let i = 5; i <= 11; i++) ctx.lineTo(m.front[i][0], m.front[i][1]);
+        ctx.closePath();
+        ctx.fill();
       }
-      ctx.beginPath(); ctx.arc(w.cx,w.cy,wr*.12,0,Math.PI*2); ctx.fillStyle=C(acC,.95); ctx.fill();
-    });
-    ctx.restore();
-    // rastro de velocidade (flash!)
-    if(pr>.08){
-      const streak=Math.max(0,1-(pos.w/(W*.15)));
-      if(streak>.05){
-        for(let i=0;i<6;i++){
-          const yOff=(i-2.5)*tw*.08;
-          const len=tw*(0.5+Math.random()*.4)*streak;
+      // Paredão com textura de linhas geológicas
+      const la = Math.max(0, (1 - ph * 2.2) * 0.3);
+      if (la > 0) {
+        [H * 0.18, H * 0.22, H * 0.28, H * 0.35, H * 0.42].forEach((yl) => {
           ctx.beginPath();
-          ctx.moveTo(pos.x+Math.sin(pos.ang)*yOff,pos.y-Math.cos(pos.ang)*yOff);
-          ctx.lineTo(pos.x+Math.sin(pos.ang)*yOff-Math.cos(pos.ang)*len,pos.y-Math.cos(pos.ang)*yOff-Math.sin(pos.ang)*len);
-          ctx.strokeStyle=`rgba(255,240,180,${streak*.12})`; ctx.lineWidth=Math.max(.5,1.5*(pos.w/(W*.15))); ctx.stroke();
+          ctx.moveTo(W * 0.38, yl);
+          ctx.lineTo(W * 0.56, yl + H * 0.01);
+          ctx.strokeStyle = `rgba(80,45,15,${la})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        });
+      }
+      drawVeg(ph);
+    }
+
+    function drawVeg(ph) {
+      const vpts = [
+        { x: 0.03, h: 0.055 },
+        { x: 0.09, h: 0.045 },
+        { x: 0.14, h: 0.06 },
+        { x: 0.62, h: 0.05 },
+        { x: 0.71, h: 0.065 },
+        { x: 0.79, h: 0.042 },
+        { x: 0.87, h: 0.055 },
+        { x: 0.95, h: 0.048 },
+      ];
+      const gc = LC([40, 58, 12], [15, 22, 8], ph),
+        tc = LC([60, 42, 15], [25, 18, 8], ph);
+      vpts.forEach((v) => {
+        const vx = v.x * W,
+          vy = H * 0.6,
+          vh = v.h * H;
+        ctx.fillStyle = C(tc);
+        ctx.fillRect(vx - 2, vy, 4, vh * 0.38);
+        ctx.beginPath();
+        ctx.ellipse(
+          vx,
+          vy - vh * 0.38,
+          vh * 0.55,
+          vh * 0.48,
+          0,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fillStyle = C(gc, 0.88);
+        ctx.fill();
+        const la2 = Math.max(0, (1 - ph * 2.2) * 0.52);
+        if (la2 > 0) {
+          ctx.beginPath();
+          ctx.ellipse(
+            vx,
+            vy - vh * 0.6,
+            vh * 0.24,
+            vh * 0.18,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fillStyle = `rgba(200,225,80,${la2})`;
+          ctx.fill();
         }
-        // flash lateral
-        const fl=ctx.createRadialGradient(pos.x,pos.y,0,pos.x,pos.y,tw*1.2);
-        fl.addColorStop(0,`rgba(255,255,200,${streak*.08})`); fl.addColorStop(1,'rgba(0,0,0,0)');
-        ctx.fillStyle=fl; ctx.beginPath(); ctx.arc(pos.x,pos.y,tw*1.2,0,Math.PI*2); ctx.fill();
+      });
+    }
+
+    /* ─── ESTRADA (sobe o morro) ─────────────────────── */
+    function roadPts() {
+      return [
+        { t: 0.0, x: W * 1.08, y: H * 0.73, w: W * 0.17 },
+        { t: 0.13, x: W * 0.83, y: H * 0.71, w: W * 0.145 },
+        { t: 0.26, x: W * 0.66, y: H * 0.68, w: W * 0.115 },
+        { t: 0.4, x: W * 0.53, y: H * 0.645, w: W * 0.088 },
+        { t: 0.53, x: W * 0.44, y: H * 0.578, w: W * 0.06 },
+        { t: 0.65, x: W * 0.405, y: H * 0.438, w: W * 0.042 },
+        { t: 0.76, x: W * 0.415, y: H * 0.298, w: W * 0.028 },
+        { t: 0.86, x: W * 0.438, y: H * 0.182, w: W * 0.018 },
+        { t: 0.94, x: W * 0.452, y: H * 0.136, w: W * 0.011 },
+        { t: 1.0, x: W * 0.457, y: H * 0.128, w: W * 0.007 },
+      ];
+    }
+
+    function iRoad(pts, pr) {
+      let i = 0;
+      while (i < pts.length - 2 && pts[i + 1].t < pr) i++;
+      const a = pts[i],
+        b = pts[i + 1],
+        s = Math.max(0, Math.min(1, (pr - a.t) / (b.t - a.t)));
+      return {
+        x: L(a.x, b.x, s),
+        y: L(a.y, b.y, s),
+        w: L(a.w, b.w, s),
+        ang: Math.atan2(b.y - a.y, b.x - a.x),
+      };
+    }
+
+    function drawRoad(ph) {
+      const pts = roadPts();
+      const rc = LC([48, 44, 40], [18, 16, 14], ph),
+        sc = LC([62, 56, 42], [22, 20, 15], ph);
+      const N = 90;
+      for (let i = 0; i < N; i++) {
+        const r0 = iRoad(pts, i / N),
+          r1 = iRoad(pts, (i + 1) / N);
+        const nx0 = -Math.sin(r0.ang),
+          ny0 = Math.cos(r0.ang),
+          nx1 = -Math.sin(r1.ang),
+          ny1 = Math.cos(r1.ang);
+        const h0 = r0.w * 0.5,
+          h1 = r1.w * 0.5;
+        // berma
+        ctx.beginPath();
+        ctx.moveTo(r0.x - nx0 * h0 * 1.18, r0.y - ny0 * h0 * 1.18);
+        ctx.lineTo(r1.x - nx1 * h1 * 1.18, r1.y - ny1 * h1 * 1.18);
+        ctx.lineTo(r1.x + nx1 * h1 * 1.18, r1.y + ny1 * h1 * 1.18);
+        ctx.lineTo(r0.x + nx0 * h0 * 1.18, r0.y + ny0 * h0 * 1.18);
+        ctx.closePath();
+        ctx.fillStyle = C(sc);
+        ctx.fill();
+        // asfalto
+        const shd = Math.max(0, 1 - (i / N) * 1.3);
+        ctx.beginPath();
+        ctx.moveTo(r0.x - nx0 * h0, r0.y - ny0 * h0);
+        ctx.lineTo(r1.x - nx1 * h1, r1.y - ny1 * h1);
+        ctx.lineTo(r1.x + nx1 * h1, r1.y + ny1 * h1);
+        ctx.lineTo(r0.x + nx0 * h0, r0.y + ny0 * h0);
+        ctx.closePath();
+        ctx.fillStyle = C(LC(rc, LC(rc, [0, 0, 0], 0.55), shd * 0.45));
+        ctx.fill();
+        // faixa central
+        if (Math.floor((i / N) * 30) % 2 === 0 && r0.w > W * 0.042) {
+          const fa = Math.min(1, r0.w / (W * 0.09));
+          ctx.beginPath();
+          ctx.moveTo(r0.x, r0.y);
+          ctx.lineTo(r1.x, r1.y);
+          ctx.strokeStyle = `rgba(220,200,80,${0.45 * fa})`;
+          ctx.lineWidth = Math.max(0.5, r0.w * 0.022);
+          ctx.stroke();
+        }
+      }
+      // guard-rail
+      ctx.beginPath();
+      pts.forEach((pt, i) => {
+        const r = iRoad(pts, pt.t),
+          nx = -Math.sin(r.ang),
+          ny = Math.cos(r.ang);
+        if (i === 0) ctx.moveTo(r.x - nx * r.w * 0.58, r.y - ny * r.w * 0.58);
+        else ctx.lineTo(r.x - nx * r.w * 0.58, r.y - ny * r.w * 0.58);
+      });
+      ctx.strokeStyle = `rgba(200,188,155,${0.28 * (1 - ph * 0.5)})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    function drawGround(ph) {
+      const gy = H * 0.62,
+        g = ctx.createLinearGradient(0, gy, 0, H);
+      g.addColorStop(0, C(LC([38, 70, 20], [12, 22, 8], ph)));
+      g.addColorStop(1, C(LC([22, 46, 12], [8, 14, 5], ph)));
+      ctx.fillStyle = g;
+      ctx.fillRect(0, gy, W, H - gy);
+    }
+
+    function drawHaze(ph) {
+      const gy = H * 0.6,
+        hg = ctx.createLinearGradient(0, gy - H * 0.07, 0, gy + H * 0.04);
+      hg.addColorStop(0, "rgba(0,0,0,0)");
+      hg.addColorStop(
+        0.5,
+        C(LC([255, 175, 95], [100, 130, 180], ph), L(0.48, 0.16, ph)),
+      );
+      hg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = hg;
+      ctx.fillRect(0, gy - H * 0.07, W, H * 0.11);
+    }
+
+    function drawCityLights(ph) {
+      const la = Math.max(0, (ph - 0.48) * 2.4);
+      if (la <= 0) return;
+      [
+        [0.12, 0.67, [255, 180, 80]],
+        [0.18, 0.66, [255, 200, 100]],
+        [0.7, 0.67, [255, 160, 60]],
+        [0.76, 0.64, [200, 220, 255]],
+        [0.82, 0.66, [255, 200, 80]],
+        [0.88, 0.64, [255, 180, 60]],
+        [0.92, 0.65, [200, 200, 220]],
+        [0.96, 0.64, [255, 200, 100]],
+      ].forEach(([lx, ly, lc]) => {
+        const x = lx * W,
+          y = ly * H,
+          tw = 0.7 + 0.3 * Math.sin(T * 0.055 + x);
+        const lg = ctx.createRadialGradient(x, y, 0, x, y, 15);
+        lg.addColorStop(0, C(lc, la * tw * 0.9));
+        lg.addColorStop(0.45, C(lc, la * tw * 0.3));
+        lg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = lg;
+        ctx.beginPath();
+        ctx.arc(x, y, 15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = C(lc, la * tw);
+        ctx.fill();
+      });
+    }
+
+    /* ─── POEIRA ─────────────────────────────────────── */
+    function spawnDust(x, y, sp) {
+      for (let i = 0; i < 3; i++)
+        dust.push({
+          x,
+          y: y + (Math.random() - 0.5) * 8,
+          vx: -(sp * 0.4 + Math.random() * sp * 0.3),
+          vy: -(Math.random() * sp * 0.3),
+          life: 1,
+          decay: 0.018 + Math.random() * 0.012,
+          r: Math.random() * 5 + 3,
+          color: Math.random() > 0.5 ? [220, 190, 130] : [180, 160, 100],
+        });
+    }
+    function updateDust() {
+      for (let i = dust.length - 1; i >= 0; i--) {
+        const d = dust[i];
+        d.x += d.vx;
+        d.y += d.vy;
+        d.r *= 1.04;
+        d.life -= d.decay;
+        if (d.life <= 0) dust.splice(i, 1);
       }
     }
-  }
+    function drawDust() {
+      dust.forEach((d) => {
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${d.color},${d.life * 0.32})`;
+        ctx.fill();
+      });
+    }
 
-  /* ─── LOOP ───────────────────────────────────────── */
-  let lastT2=0;
-  function frame(now){
-    const dt=Math.min(now-lastT2,50); lastT2=now; T+=dt;
-    ctx.clearRect(0,0,W,H);
-    const ph=phase();
-    drawSky(ph); drawStars(ph); drawGodRays(ph); drawClouds(ph);
-    drawMountains(ph); drawGround(ph); drawHaze(ph); drawRoad(ph);
-    drawCityLights(ph);
-    truck.progress+=truck.speed*(dt/16.6);
-    if(truck.progress>1.06) truck.progress=-0.28;
-    const pts2=roadPts(),pos2=iRoad(pts2,Math.max(0,truck.progress));
-    if(truck.progress>.01&&truck.progress<.92&&pos2.w>W*.045){
-      if(Math.random()<.28) spawnDust(pos2.x,pos2.y+8,pos2.w*.38);
+    /* ─── CAMINHÃO ───────────────────────────────────── */
+    function drawTruck(pr, ph, variant = 0) {
+      if (pr < 0 || pr > 0.97) return;
+      const pts = roadPts(),
+        pos = iRoad(pts, pr);
+      const sc2 = pos.w / (W * 0.16 + 0.001);
+      const tw = truck.bw * sc2 * 1.2,
+        th = truck.bh * sc2 * 1.2;
+      // cone de farol na noite
+      if (ph > 0.32) {
+        const la = (ph - 0.32) * 1.6;
+        const fx = pos.x + Math.cos(pos.ang) * tw * 0.52,
+          fy = pos.y + Math.sin(pos.ang) * tw * 0.52;
+        const lg = ctx.createRadialGradient(fx, fy, 0, fx, fy, tw * 2.2);
+        lg.addColorStop(0, `rgba(255,240,180,${la * 0.28})`);
+        lg.addColorStop(0.35, `rgba(255,200,100,${la * 0.1})`);
+        lg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = lg;
+        ctx.beginPath();
+        ctx.arc(fx, fy, tw * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.save();
+      ctx.translate(pos.x, pos.y);
+      ctx.rotate(pos.ang);
+      ctx.scale(1, -1);
+      const cw = tw * 0.53,
+        trW = tw * 0.98,
+        trH = th * 0.88;
+      const palettes = [
+        {
+          tank1: [178, 230, 255],
+          tank2: [85, 176, 238],
+          tankBand: [215, 244, 255],
+          cab1: [45, 126, 228],
+          cab2: [22, 86, 185],
+          accent: [255, 150, 38],
+          stripe: [92, 176, 236],
+        },
+      ];
+      const p = palettes[variant % palettes.length];
+      const tankC = LC(p.tank1, p.tank2, ph * 0.5),
+        tankHL = LC(p.tankBand, p.tank1, ph * 0.45);
+      const cabC = LC(p.cab1, p.cab2, ph * 0.5),
+        acC = LC(p.accent, [210, 110, 20], ph * 0.4);
+      // sombra
+      ctx.fillStyle = "rgba(0,0,0,.4)";
+      ctx.beginPath();
+      ctx.roundRect(
+        -trW * 0.62 + 3,
+        -trH * 0.42 + 5,
+        trW * 1.26,
+        trH * 1.02,
+        3 * sc2,
+      );
+      ctx.fill();
+      // tanque cilíndrico
+      const tankW = trW * 1.04,
+        tankH = trH * 0.82,
+        tankX = -trW * 0.52,
+        tankY = -trH * 0.4;
+      const tg = ctx.createLinearGradient(0, tankY, 0, tankY + tankH);
+      tg.addColorStop(0, C(tankHL));
+      tg.addColorStop(0.45, C(tankC));
+      tg.addColorStop(1, C(LC(tankC, [0, 0, 0], 0.35)));
+      ctx.fillStyle = tg;
+      ctx.beginPath();
+      ctx.roundRect(tankX, tankY, tankW, tankH, tankH * 0.5);
+      ctx.fill();
+      // faixa superior do tanque
+      ctx.fillStyle = `rgba(${p.tankBand[0]},${p.tankBand[1]},${p.tankBand[2]},${0.75 - ph * 0.18})`;
+      ctx.beginPath();
+      ctx.roundRect(
+        tankX + tankW * 0.14,
+        tankY + tankH * 0.16,
+        tankW * 0.7,
+        tankH * 0.18,
+        tankH * 0.18,
+      );
+      ctx.fill();
+      // faixa lateral colorida
+      ctx.fillStyle = `rgba(${p.stripe[0]},${p.stripe[1]},${p.stripe[2]},${0.82 - ph * 0.12})`;
+      ctx.beginPath();
+      ctx.roundRect(
+        tankX + tankW * 0.06,
+        tankY + tankH * 0.56,
+        tankW * 0.88,
+        tankH * 0.1,
+        tankH * 0.08,
+      );
+      ctx.fill();
+      // cabine estilo ilustração
+      const cabX = trW * 0.48,
+        ctY = -th * 0.55;
+      ctx.beginPath();
+      ctx.moveTo(cabX, trH * 0.4);
+      ctx.lineTo(cabX, ctY + th * 0.12);
+      ctx.lineTo(cabX + cw * 0.25, ctY + th * 0.05);
+      ctx.lineTo(cabX + cw * 0.72, ctY);
+      ctx.lineTo(cabX + cw * 1.06, ctY + th * 0.2);
+      ctx.lineTo(cabX + cw * 1.06, trH * 0.4);
+      ctx.closePath();
+      const cg = ctx.createLinearGradient(cabX, ctY, cabX + cw, ctY + th);
+      cg.addColorStop(0, C(LC(cabC, [255, 255, 255], 0.18)));
+      cg.addColorStop(0.55, C(cabC));
+      cg.addColorStop(1, C(LC(cabC, [0, 0, 0], 0.55)));
+      ctx.fillStyle = cg;
+      ctx.fill();
+      ctx.strokeStyle = C(acC, 0.5);
+      ctx.lineWidth = sc2;
+      ctx.stroke();
+      // para-brisa
+      ctx.beginPath();
+      ctx.moveTo(cabX + cw * 0.14, ctY + th * 0.1);
+      ctx.lineTo(cabX + cw * 0.68, ctY + th * 0.04);
+      ctx.lineTo(cabX + cw * 1.0, ctY + th * 0.22);
+      ctx.lineTo(cabX + cw * 0.14, ctY + th * 0.33);
+      ctx.closePath();
+      const wg = ctx.createLinearGradient(cabX, ctY, cabX + cw, ctY + th * 0.3);
+      wg.addColorStop(0, `rgba(130,205,255,${0.25 + (1 - ph) * 0.2})`);
+      wg.addColorStop(1, "rgba(45,90,180,.08)");
+      ctx.fillStyle = wg;
+      ctx.fill();
+      // grade frontal
+      ctx.fillStyle = "rgba(35,40,48,.95)";
+      ctx.beginPath();
+      ctx.roundRect(
+        cabX + cw * 0.05,
+        ctY + th * 0.3,
+        cw * 0.22,
+        th * 0.27,
+        2 * sc2,
+      );
+      ctx.fill();
+      ctx.strokeStyle = "rgba(95,105,120,.9)";
+      for (let gi = 0; gi < 3; gi++) {
+        const gy = ctY + th * (0.35 + gi * 0.08);
+        ctx.beginPath();
+        ctx.moveTo(cabX + cw * 0.08, gy);
+        ctx.lineTo(cabX + cw * 0.24, gy);
+        ctx.stroke();
+      }
+      // farol LED
+      const hla = 0.4 + ph * 0.5;
+      ctx.fillStyle = `rgba(255,230,120,${hla})`;
+      ctx.beginPath();
+      ctx.roundRect(
+        cabX + cw * 0.92,
+        -th * 0.05,
+        cw * 0.12,
+        th * 0.12,
+        2 * sc2,
+      );
+      ctx.fill();
+      // escapamento + fumaça animada
+      ctx.fillStyle = C(LC([20, 30, 40], [10, 15, 20], ph));
+      ctx.beginPath();
+      ctx.roundRect(
+        cabX + cw * 0.6,
+        -th * 0.55 - th * 0.26,
+        6 * sc2,
+        th * 0.26,
+        3 * sc2,
+      );
+      ctx.fill();
+      for (let i = 0; i < 3; i++) {
+        const fp = (T * 0.002 + i * 0.33) % 1;
+        const fx2 = cabX + cw * 0.63 + Math.sin(fp * 8) * 4 * sc2;
+        const fy2 = -th * 0.55 - th * 0.26 - fp * th * 0.48;
+        const fr = sc2 * (3 + fp * 9);
+        ctx.beginPath();
+        ctx.arc(fx2, fy2, fr, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(180,195,215,${(1 - fp) * 0.25})`;
+        ctx.fill();
+      }
+      // para-choque
+      ctx.fillStyle = C(LC([40, 50, 60], [15, 18, 22], ph));
+      ctx.beginPath();
+      ctx.roundRect(cabX + cw * 0.82, trH * 0.3, cw * 0.24, th * 0.12, 2 * sc2);
+      ctx.fill();
+      ctx.fillStyle = C(acC, 0.95);
+      ctx.beginPath();
+      ctx.roundRect(cabX + cw * 0.72, trH * 0.26, cw * 0.18, th * 0.1, 2 * sc2);
+      ctx.fill();
+      // placa
+      ctx.fillStyle = "rgba(240,240,240,.92)";
+      ctx.beginPath();
+      ctx.roundRect(
+        cabX + cw * 0.84,
+        trH * 0.22,
+        cw * 0.19,
+        th * 0.09,
+        1.5 * sc2,
+      );
+      ctx.fill();
+      ctx.fillStyle = "rgba(0,10,80,.9)";
+      ctx.font = `bold ${Math.max(4, 7 * sc2)}px monospace`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("RCV2A7", cabX + cw * 0.935, trH * 0.268);
+      // rodas
+      const wheels = [
+        { cx: trW * 0.28, cy: trH * 0.4 + th * 0.06 },
+        { cx: 0, cy: trH * 0.4 + th * 0.06 },
+        { cx: -trW * 0.3, cy: trH * 0.4 + th * 0.06 },
+        { cx: cabX + cw * 0.78, cy: trH * 0.4 + th * 0.06 },
+      ];
+      const wr = th * 0.22;
+      wheels.forEach((w) => {
+        ctx.beginPath();
+        ctx.ellipse(w.cx + 2, w.cy + 4, wr, wr * 0.3, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0,0,0,.38)";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(w.cx, w.cy, wr, 0, Math.PI * 2);
+        ctx.fillStyle = C(LC([28, 28, 28], [12, 12, 12], 0.5));
+        ctx.fill();
+        ctx.strokeStyle = C(acC, 0.65);
+        ctx.lineWidth = 1.5 * sc2;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(w.cx, w.cy, wr * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = C(LC([70, 80, 90], [30, 36, 40], ph));
+        ctx.fill();
+        const rot = (T * 0.055 + w.cx * 0.01) % (Math.PI * 2);
+        for (let i = 0; i < 6; i++) {
+          const a = rot + (i / 6) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(w.cx, w.cy);
+          ctx.lineTo(
+            w.cx + Math.cos(a) * wr * 0.55,
+            w.cy + Math.sin(a) * wr * 0.55,
+          );
+          ctx.strokeStyle = C(LC([100, 110, 120], [40, 45, 50], ph), 0.6);
+          ctx.lineWidth = 1.5 * sc2;
+          ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.arc(w.cx, w.cy, wr * 0.12, 0, Math.PI * 2);
+        ctx.fillStyle = C(acC, 0.95);
+        ctx.fill();
+      });
+      ctx.restore();
+      // rastro de velocidade (flash!)
+      if (pr > 0.08) {
+        const streak = Math.max(0, 1 - pos.w / (W * 0.15));
+        if (streak > 0.05) {
+          for (let i = 0; i < 6; i++) {
+            const yOff = (i - 2.5) * tw * 0.08;
+            const len = tw * (0.5 + Math.random() * 0.4) * streak;
+            ctx.beginPath();
+            ctx.moveTo(
+              pos.x + Math.sin(pos.ang) * yOff,
+              pos.y - Math.cos(pos.ang) * yOff,
+            );
+            ctx.lineTo(
+              pos.x + Math.sin(pos.ang) * yOff - Math.cos(pos.ang) * len,
+              pos.y - Math.cos(pos.ang) * yOff - Math.sin(pos.ang) * len,
+            );
+            ctx.strokeStyle = `rgba(255,240,180,${streak * 0.12})`;
+            ctx.lineWidth = Math.max(0.5, 1.5 * (pos.w / (W * 0.15)));
+            ctx.stroke();
+          }
+          // flash lateral
+          const fl = ctx.createRadialGradient(
+            pos.x,
+            pos.y,
+            0,
+            pos.x,
+            pos.y,
+            tw * 1.2,
+          );
+          fl.addColorStop(0, `rgba(255,255,200,${streak * 0.08})`);
+          fl.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = fl;
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, tw * 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
     }
-    updateDust(); drawDust();
-    if(truck.progress>0) drawTruck(truck.progress,ph,0);
-    if(truck.progress>.95){
-      ctx.fillStyle=`rgba(255,255,255,${((truck.progress-.95)/.05)*.07})`;
-      ctx.fillRect(0,0,W,H);
+
+    /* ─── LOOP ───────────────────────────────────────── */
+    let lastT2 = 0;
+    function frame(now) {
+      const dt = Math.min(now - lastT2, 50);
+      lastT2 = now;
+      T += dt;
+      ctx.clearRect(0, 0, W, H);
+      const ph = phase();
+      drawSky(ph);
+      drawStars(ph);
+      drawGodRays(ph);
+      drawClouds(ph);
+      drawMountains(ph);
+      drawGround(ph);
+      drawHaze(ph);
+      drawRoad(ph);
+      drawCityLights(ph);
+      truck.progress += truck.speed * (dt / 16.6);
+      if (truck.progress > 1.06) truck.progress = -0.28;
+      const pts2 = roadPts(),
+        pos2 = iRoad(pts2, Math.max(0, truck.progress));
+      if (
+        truck.progress > 0.01 &&
+        truck.progress < 0.92 &&
+        pos2.w > W * 0.045
+      ) {
+        if (Math.random() < 0.28) spawnDust(pos2.x, pos2.y + 8, pos2.w * 0.38);
+      }
+      updateDust();
+      drawDust();
+      if (truck.progress > 0) drawTruck(truck.progress, ph, 0);
+      if (truck.progress > 0.95) {
+        ctx.fillStyle = `rgba(255,255,255,${((truck.progress - 0.95) / 0.05) * 0.07})`;
+        ctx.fillRect(0, 0, W, H);
+      }
+      requestAnimationFrame(frame);
     }
+
+    window.addEventListener("resize", () => {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      resize();
+    });
+    resize();
     requestAnimationFrame(frame);
-  }
+  })();
 
-  window.addEventListener('resize',()=>{ctx.setTransform(1,0,0,1,0,0);resize();});
-  resize(); requestAnimationFrame(frame);
-})();
-
-document.getElementById('cpf').addEventListener('input',function(e){
-  let v=e.target.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
-  else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
-  else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
-  e.target.value=v;
-});
+  document.getElementById("cpf").addEventListener("input", function (e) {
+    let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+    if (v.length > 9)
+      v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, "$1.$2.$3-$4");
+    else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
+    else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, "$1.$2");
+    e.target.value = v;
+  });
 </script>
 {% endblock %}

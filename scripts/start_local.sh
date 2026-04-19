@@ -7,7 +7,7 @@
 set -euo pipefail
 
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; RED='\033[0;31m'; NC='\033[0m'
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 echo -e "${BLUE}╔══════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║   Costa do Dendê — Start Local           ║${NC}"
@@ -55,6 +55,9 @@ EOF
 # ── DIA A DIA: .venv já existe ──────────────────────
 else
     source .venv/bin/activate
+
+    # Garante que dependências do requirements.txt estejam instaladas
+    pip install -r requirements.txt -q
 
     # Aplica migrations pendentes silenciosamente
     PENDING=$(python manage.py showmigrations --plan 2>/dev/null | grep -c "\[ \]" || true)

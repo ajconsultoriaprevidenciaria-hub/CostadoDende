@@ -1,378 +1,484 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}Portal do Motorista{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg: #070d1a;
-            --panel: #0d1929;
-            --border: rgba(0,217,166,.14);
-            --primary: #00d9a6;
-            --primary-dim: rgba(0,217,166,.12);
-            --text: #e2e8f0;
-            --text-sec: rgba(255,255,255,.45);
-            --danger: #f43f5e;
-            --warning: #f59e0b;
-            --success: #10b981;
-            --radius: 12px;
-        }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100dvh;
-            -webkit-font-smoothing: antialiased;
-        }
-        /* ── Shell ── */
-        .mp-shell {
-            max-width: 560px;
-            margin: 0 auto;
-            padding: 0 16px 32px;
-        }
-        .mp-topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
-            gap: 12px;
-        }
-        .mp-topbar .brand-logo-wrap {
-            flex-shrink: 0;
-        }
-        .mp-topbar .brand-logo-wrap img {
-            height: clamp(60px, 15vw, 108px);
-            width: auto;
-            display: block;
-        }
-        .mp-topbar .brand-name {
-            font-size: .82rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -.2px;
-        }
-        .mp-topbar .brand-sub {
-            font-size: .65rem;
-            color: var(--text-sec);
-        }
-        .mp-topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .mp-topbar-right .user-name {
-            font-size: .75rem;
-            color: var(--text-sec);
-        }
-        .mp-btn-logout {
-            font-size: .7rem;
-            color: var(--danger);
-            text-decoration: none;
-            border: 1px solid rgba(244,63,94,.3);
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-        /* ── Cards ── */
-        .mp-card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
-            margin-bottom: 12px;
-        }
-        .mp-card h2,
-        .mp-card h3 {
-            font-size: .85rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        /* ── Buttons ── */
-        .mp-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: .8rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            transition: .15s;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .mp-btn-primary {
-            background: var(--primary);
-            color: #070d1a;
-        }
-        .mp-btn-primary:hover { filter: brightness(1.1); }
-        .mp-btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-        .mp-btn-danger {
-            background: var(--danger);
-            color: #fff;
-        }
-        .mp-btn-sm { padding: 6px 12px; font-size: .72rem; }
-        .mp-btn-block { width: 100%; }
-        /* ── Form ── */
-        .mp-field { margin-bottom: 14px; }
-        .mp-field label {
-            display: block;
-            font-size: .72rem;
-            font-weight: 600;
-            color: var(--text-sec);
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-        }
+      :root {
+        --bg: #070d1a;
+        --panel: #0d1929;
+        --border: rgba(0, 217, 166, 0.14);
+        --primary: #00d9a6;
+        --primary-dim: rgba(0, 217, 166, 0.12);
+        --text: #e2e8f0;
+        --text-sec: rgba(255, 255, 255, 0.45);
+        --danger: #f43f5e;
+        --warning: #f59e0b;
+        --success: #10b981;
+        --radius: 12px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100dvh;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* ── Shell ── */
+      .mp-shell {
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 0 16px 32px;
+      }
+      .mp-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 20px;
+        gap: 12px;
+      }
+      .mp-topbar .brand-logo-wrap {
+        flex-shrink: 0;
+      }
+      .mp-topbar .brand-logo-wrap img {
+        height: clamp(60px, 15vw, 108px);
+        width: auto;
+        display: block;
+      }
+      .mp-topbar .brand-name {
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: -0.2px;
+      }
+      .mp-topbar .brand-sub {
+        font-size: 0.65rem;
+        color: var(--text-sec);
+      }
+      .mp-topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .mp-topbar-right .user-name {
+        font-size: 0.75rem;
+        color: var(--text-sec);
+      }
+      .mp-btn-logout {
+        font-size: 0.7rem;
+        color: var(--danger);
+        text-decoration: none;
+        border: 1px solid rgba(244, 63, 94, 0.3);
+        padding: 4px 10px;
+        border-radius: 6px;
+      }
+      /* ── Cards ── */
+      .mp-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+      .mp-card h2,
+      .mp-card h3 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 10px;
+      }
+      /* ── Buttons ── */
+      .mp-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.15s;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mp-btn-primary {
+        background: var(--primary);
+        color: #070d1a;
+      }
+      .mp-btn-primary:hover {
+        filter: brightness(1.1);
+      }
+      .mp-btn-outline {
+        background: transparent;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+      }
+      .mp-btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+      .mp-btn-sm {
+        padding: 6px 12px;
+        font-size: 0.72rem;
+      }
+      .mp-btn-block {
+        width: 100%;
+      }
+      /* ── Form ── */
+      .mp-field {
+        margin-bottom: 14px;
+      }
+      .mp-field label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-sec);
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .mp-field input,
+      .mp-field select,
+      .mp-field textarea {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.82rem;
+        font-family: inherit;
+        outline: none;
+      }
+      .mp-field input:focus,
+      .mp-field select:focus,
+      .mp-field textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-dim);
+      }
+      .mp-field input[type="file"] {
+        padding: 8px;
+      }
+      /* ── Badge ── */
+      .mp-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+      .mp-badge-ok {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+      }
+      .mp-badge-atencao {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+      }
+      .mp-badge-critico {
+        background: rgba(244, 63, 94, 0.15);
+        color: var(--danger);
+      }
+      .mp-badge-pending {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-sec);
+      }
+      /* ── List ── */
+      .mp-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.8rem;
+      }
+      .mp-list-item:last-child {
+        border-bottom: none;
+      }
+      .mp-list-item .label {
+        color: var(--text-sec);
+        font-size: 0.72rem;
+      }
+      /* ── Messages ── */
+      .mp-messages {
+        margin-bottom: 16px;
+      }
+      .mp-msg {
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        margin-bottom: 6px;
+      }
+      .mp-msg-success {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--success);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+      .mp-msg-error {
+        background: rgba(244, 63, 94, 0.12);
+        color: var(--danger);
+        border: 1px solid rgba(244, 63, 94, 0.2);
+      }
+      .mp-msg-warning {
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--warning);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+      }
+      /* ── Image thumb ── */
+      .mp-thumb {
+        width: 100%;
+        max-width: 200px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        margin-top: 6px;
+      }
+      /* ── Checklist grid ── */
+      .mp-checklist-grid {
+        display: grid;
+        gap: 12px;
+      }
+      .mp-checklist-item {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+      }
+      .mp-checklist-item .cat-name {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+      }
+      /* ── Back link ── */
+      .mp-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.75rem;
+        color: var(--text-sec);
+        text-decoration: none;
+        margin-bottom: 12px;
+      }
+      .mp-back:hover {
+        color: var(--primary);
+      }
+      /* ── Section heading ── */
+      .mp-section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-sec);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 20px 0 10px;
+      }
+      /* ── Grid 2col ── */
+      .mp-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      /* ── empty ── */
+      .mp-empty {
+        text-align: center;
+        color: var(--text-sec);
+        font-size: 0.78rem;
+        padding: 24px 0;
+      }
+      /* ── Prevenir zoom iOS em inputs ── */
+      @media (max-width: 768px) {
         .mp-field input,
         .mp-field select,
         .mp-field textarea {
-            width: 100%;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 8px;
-            padding: 10px 12px;
-            font-size: .82rem;
-            font-family: inherit;
-            outline: none;
+          font-size: 16px;
         }
-        .mp-field input:focus,
-        .mp-field select:focus,
-        .mp-field textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-dim);
+      }
+      /* ── Ticker ── */
+      .mp-ticker-wrap {
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+        overflow: hidden;
+        position: relative;
+        height: 32px;
+        margin-bottom: 16px;
+      }
+      .mp-ticker-track {
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        height: 100%;
+        animation: ticker-scroll 40s linear infinite;
+        gap: 40px;
+        padding-left: 100%;
+      }
+      .mp-ticker-track:hover {
+        animation-play-state: paused;
+      }
+      @keyframes ticker-scroll {
+        0% {
+          transform: translateX(0);
         }
-        .mp-field input[type="file"] {
-            padding: 8px;
+        100% {
+          transform: translateX(-100%);
         }
-        /* ── Badge ── */
-        .mp-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: .68rem;
-            font-weight: 700;
-        }
-        .mp-badge-ok { background: rgba(16,185,129,.15); color: var(--success); }
-        .mp-badge-atencao { background: rgba(245,158,11,.15); color: var(--warning); }
-        .mp-badge-critico { background: rgba(244,63,94,.15); color: var(--danger); }
-        .mp-badge-pending { background: rgba(255,255,255,.06); color: var(--text-sec); }
-        /* ── List ── */
-        .mp-list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: .8rem;
-        }
-        .mp-list-item:last-child { border-bottom: none; }
-        .mp-list-item .label { color: var(--text-sec); font-size: .72rem; }
-        /* ── Messages ── */
-        .mp-messages { margin-bottom: 16px; }
-        .mp-msg {
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: .78rem;
-            margin-bottom: 6px;
-        }
-        .mp-msg-success { background: rgba(16,185,129,.12); color: var(--success); border: 1px solid rgba(16,185,129,.2); }
-        .mp-msg-error { background: rgba(244,63,94,.12); color: var(--danger); border: 1px solid rgba(244,63,94,.2); }
-        .mp-msg-warning { background: rgba(245,158,11,.12); color: var(--warning); border: 1px solid rgba(245,158,11,.2); }
-        /* ── Image thumb ── */
-        .mp-thumb {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-top: 6px;
-        }
-        /* ── Checklist grid ── */
-        .mp-checklist-grid {
-            display: grid;
-            gap: 12px;
-        }
-        .mp-checklist-item {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px;
-        }
-        .mp-checklist-item .cat-name {
-            font-size: .78rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        /* ── Back link ── */
-        .mp-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: .75rem;
-            color: var(--text-sec);
-            text-decoration: none;
-            margin-bottom: 12px;
-        }
-        .mp-back:hover { color: var(--primary); }
-        /* ── Section heading ── */
-        .mp-section-title {
-            font-size: .75rem;
-            font-weight: 700;
-            color: var(--text-sec);
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            margin: 20px 0 10px;
-        }
-        /* ── Grid 2col ── */
-        .mp-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        /* ── empty ── */
-        .mp-empty {
-            text-align: center;
-            color: var(--text-sec);
-            font-size: .78rem;
-            padding: 24px 0;
-        }
-        /* ── Prevenir zoom iOS em inputs ── */
-        @media (max-width: 768px) {
-            .mp-field input,
-            .mp-field select,
-            .mp-field textarea {
-                font-size: 16px;
-            }
-        }
-        /* ── Ticker ── */
-        .mp-ticker-wrap {
-            background: var(--panel);
-            border-bottom: 1px solid var(--border);
-            overflow: hidden;
-            position: relative;
-            height: 32px;
-            margin-bottom: 16px;
-        }
-        .mp-ticker-track {
-            display: inline-flex;
-            align-items: center;
-            white-space: nowrap;
-            height: 100%;
-            animation: ticker-scroll 40s linear infinite;
-            gap: 40px;
-            padding-left: 100%;
-        }
-        .mp-ticker-track:hover { animation-play-state: paused; }
-        @keyframes ticker-scroll {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-        .mp-ticker-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: .68rem;
-            color: var(--text);
-            flex-shrink: 0;
-        }
-        .mp-ticker-item .tk-icon { font-size: .85rem; }
-        .mp-ticker-item .tk-label { color: var(--primary); font-weight: 700; }
-        .mp-ticker-item .tk-sep { color: var(--border); margin: 0 4px; }
-        .mp-ticker-news { color: var(--text-sec); }
-        .mp-ticker-news:hover { color: var(--text); }
+      }
+      .mp-ticker-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.68rem;
+        color: var(--text);
+        flex-shrink: 0;
+      }
+      .mp-ticker-item .tk-icon {
+        font-size: 0.85rem;
+      }
+      .mp-ticker-item .tk-label {
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .mp-ticker-item .tk-sep {
+        color: var(--border);
+        margin: 0 4px;
+      }
+      .mp-ticker-news {
+        color: var(--text-sec);
+      }
+      .mp-ticker-news:hover {
+        color: var(--text);
+      }
     </style>
     {% block extra_css %}{% endblock %}
-</head>
-<body>
+  </head>
+  <body>
     <div class="mp-shell">
-        {% block topbar %}
-        <div class="mp-topbar">
-            <div class="brand-logo-wrap">
-                <img src="{% static 'img/logo_gf_white.png' %}" alt="Gonçalves &amp; Fonseca Transportadora"></div>
-            {% if request.user.is_authenticated %}
-            <div class="mp-topbar-right">
-                <span class="user-name">{{ request.user.motorista.nome }}</span>
-                <a href="{% url 'motorista_portal:logout' %}" class="mp-btn-logout">Sair</a>
-            </div>
-            {% endif %}
+      {% block topbar %}
+      <div class="mp-topbar">
+        <div class="brand-logo-wrap">
+          <img
+            src="{% static 'img/logo_gf_white.png' %}"
+            alt="Gonçalves &amp; Fonseca Transportadora"
+          />
         </div>
-        {% endblock %}
-
-        {# ── Ticker de avisos ── #}
         {% if request.user.is_authenticated %}
-        <div class="mp-ticker-wrap" id="mp-ticker">
-            <div class="mp-ticker-track" id="mp-ticker-track">
-                <span class="mp-ticker-item" style="color:var(--text-sec);">Carregando informações...</span>
-            </div>
+        <div class="mp-topbar-right">
+          <span class="user-name">{{ request.user.motorista.nome }}</span>
+          <a href="{% url 'motorista_portal:logout' %}" class="mp-btn-logout"
+            >Sair</a
+          >
         </div>
         {% endif %}
-
-        {% if messages %}
-        <div class="mp-messages">
-            {% for msg in messages %}
-            <div class="mp-msg mp-msg-{{ msg.tags }}">{{ msg }}</div>
-            {% endfor %}
+      </div>
+      {% endblock %} {# ── Ticker de avisos ── #} {% if
+      request.user.is_authenticated %}
+      <div class="mp-ticker-wrap" id="mp-ticker">
+        <div class="mp-ticker-track" id="mp-ticker-track">
+          <span class="mp-ticker-item" style="color: var(--text-sec)"
+            >Carregando informações...</span
+          >
         </div>
-        {% endif %}
-
-        {% block content %}{% endblock %}
+      </div>
+      {% endif %} {% if messages %}
+      <div class="mp-messages">
+        {% for msg in messages %}
+        <div class="mp-msg mp-msg-{{ msg.tags }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %}{% endblock %}
     </div>
-    {% block extra_js %}{% endblock %}
-    {% if request.user.is_authenticated %}
+    {% block extra_js %}{% endblock %} {% if request.user.is_authenticated %}
     <script>
-    (function() {
-        var track = document.getElementById('mp-ticker-track');
+      (function () {
+        var track = document.getElementById("mp-ticker-track");
         if (!track) return;
-        fetch("{% url 'motorista_portal:quadro-avisos-api' %}", {credentials:'same-origin'})
-            .then(function(r){ return r.json(); })
-            .then(function(data) {
-                var items = [];
-                var t = data.tempo;
-                if (t) {
-                    items.push('<span class="mp-ticker-item"><span class="tk-icon">' + t.icone + '</span><span class="tk-label">CLIMA</span> ' + t.temperatura + '°C · ' + t.descricao + ' · Vento ' + t.vento + 'km/h</span>');
-                    (t.proximos_dias||[]).forEach(function(d){
-                        items.push('<span class="mp-ticker-item">' + d.icone + ' ' + d.dia_semana + ' ' + d.data + ' ' + d.max + '°/' + d.min + '°</span>');
-                    });
-                }
-                if (data.noticias && data.noticias.length) {
-                    items.push('<span class="mp-ticker-item"><span class="tk-label">📰 NOTÍCIAS</span></span>');
-                    data.noticias.forEach(function(n){
-                        var safe = document.createElement('span');
-                        safe.textContent = n.titulo;
-                        items.push('<span class="mp-ticker-item mp-ticker-news">▸ ' + safe.innerHTML + '</span>');
-                    });
-                }
-                if (items.length) {
-                    // Duplicar itens para loop contínuo sem espaço vazio
-                    var html = items.join('') + items.join('');
-                    track.innerHTML = html;
-                    // Ajustar velocidade: ~50px/s
-                    var w = track.scrollWidth / 2;
-                    var dur = Math.max(w / 50, 20);
-                    track.style.animation = 'ticker-scroll ' + dur + 's linear infinite';
-                    track.style.paddingLeft = '480px';
-                }
-            })
-            .catch(function(){ track.innerHTML = '<span class="mp-ticker-item" style="color:var(--text-sec);">Avisos indisponíveis</span>'; });
-    })();
+        fetch("{% url 'motorista_portal:quadro-avisos-api' %}", {
+          credentials: "same-origin",
+        })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (data) {
+            var items = [];
+            var t = data.tempo;
+            if (t) {
+              items.push(
+                '<span class="mp-ticker-item"><span class="tk-icon">' +
+                  t.icone +
+                  '</span><span class="tk-label">CLIMA</span> ' +
+                  t.temperatura +
+                  "°C · " +
+                  t.descricao +
+                  " · Vento " +
+                  t.vento +
+                  "km/h</span>",
+              );
+              (t.proximos_dias || []).forEach(function (d) {
+                items.push(
+                  '<span class="mp-ticker-item">' +
+                    d.icone +
+                    " " +
+                    d.dia_semana +
+                    " " +
+                    d.data +
+                    " " +
+                    d.max +
+                    "°/" +
+                    d.min +
+                    "°</span>",
+                );
+              });
+            }
+            if (data.noticias && data.noticias.length) {
+              items.push(
+                '<span class="mp-ticker-item"><span class="tk-label">📰 NOTÍCIAS</span></span>',
+              );
+              data.noticias.forEach(function (n) {
+                var safe = document.createElement("span");
+                safe.textContent = n.titulo;
+                items.push(
+                  '<span class="mp-ticker-item mp-ticker-news">▸ ' +
+                    safe.innerHTML +
+                    "</span>",
+                );
+              });
+            }
+            if (items.length) {
+              // Duplicar itens para loop contínuo sem espaço vazio
+              var html = items.join("") + items.join("");
+              track.innerHTML = html;
+              // Ajustar velocidade: ~50px/s
+              var w = track.scrollWidth / 2;
+              var dur = Math.max(w / 50, 20);
+              track.style.animation =
+                "ticker-scroll " + dur + "s linear infinite";
+              track.style.paddingLeft = "480px";
+            }
+          })
+          .catch(function () {
+            track.innerHTML =
+              '<span class="mp-ticker-item" style="color:var(--text-sec);">Avisos indisponíveis</span>';
+          });
+      })();
     </script>
     {% endif %}
-</body>
+  </body>
 </html>

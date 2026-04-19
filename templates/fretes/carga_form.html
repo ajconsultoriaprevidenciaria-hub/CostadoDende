@@ -1,470 +1,683 @@
-{% extends 'base.html' %}
-
-{% block title %}{% if object %}Alterar Carga{% else %}Adicionar Carga{% endif %} | Costa do Dendê{% endblock %}
-{% block page_title %}{% if object %}Alterar Carga{% else %}Adicionar Carga{% endif %}{% endblock %}
-{% block page_subtitle %}{% endblock %}
-
-{% block content %}
-{% if form.non_field_errors %}
+{% extends 'base.html' %} {% block title %}{% if object %}Alterar Carga{% else
+%}Adicionar Carga{% endif %} | Costa do Dendê{% endblock %} {% block page_title
+%}{% if object %}Alterar Carga{% else %}Adicionar Carga{% endif %}{% endblock %}
+{% block page_subtitle %}{% endblock %} {% block content %} {% if
+form.non_field_errors %}
 <div class="cf-errors">
-    {% for error in form.non_field_errors %}
-    <p>{{ error }}</p>
-    {% endfor %}
+  {% for error in form.non_field_errors %}
+  <p>{{ error }}</p>
+  {% endfor %}
 </div>
 {% endif %}
 
 <form method="post" id="carga-form">
-{% csrf_token %}
-<input type="hidden" name="compartimentos_json" id="compartimentos_json">
+  {% csrf_token %}
+  <input type="hidden" name="compartimentos_json" id="compartimentos_json" />
 
-<!-- ── Fieldset principal ── -->
-<fieldset class="cf-fieldset">
+  <!-- ── Fieldset principal ── -->
+  <fieldset class="cf-fieldset">
     <!-- Ativo -->
     <div class="cf-row">
-        <label class="cf-label" style="min-width:0;">
-            {{ form.ativo }}
-            <span style="margin-left:6px;font-weight:600;text-transform:uppercase;font-size:.78rem;letter-spacing:.04em;">Ativo</span>
-        </label>
+      <label class="cf-label" style="min-width: 0">
+        {{ form.ativo }}
+        <span
+          style="
+            margin-left: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+          "
+          >Ativo</span
+        >
+      </label>
     </div>
 
     <!-- Data Carga -->
     <div class="cf-row">
-        <label class="cf-label">Data carga:</label>
-        <div class="cf-field">{{ form.data_carga }}
-            {% for e in form.data_carga.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
-        </div>
+      <label class="cf-label">Data carga:</label>
+      <div class="cf-field">
+        {{ form.data_carga }} {% for e in form.data_carga.errors %}<span
+          class="cf-err"
+          >{{ e }}</span
+        >{% endfor %}
+      </div>
     </div>
 
     <!-- Cliente -->
     <div class="cf-row">
-        <label class="cf-label">Cliente:</label>
-        <div class="cf-field cf-field--rel">
-            {{ form.cliente }}
-            <div class="cf-rel-btns">
-                <a href="/admin/fretes/cliente/add/" class="cf-ico" title="Adicionar">＋</a>
-            </div>
-            {% for e in form.cliente.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+      <label class="cf-label">Cliente:</label>
+      <div class="cf-field cf-field--rel">
+        {{ form.cliente }}
+        <div class="cf-rel-btns">
+          <a href="/admin/fretes/cliente/add/" class="cf-ico" title="Adicionar"
+            >＋</a
+          >
         </div>
+        {% for e in form.cliente.errors %}<span class="cf-err">{{ e }}</span>{%
+        endfor %}
+      </div>
     </div>
 
     <!-- Fornecedor -->
     <div class="cf-row">
-        <label class="cf-label">Fornecedor:</label>
-        <div class="cf-field cf-field--rel">
-            {{ form.fornecedor }}
-            <div class="cf-rel-btns">
-                <a href="/admin/fretes/fornecedor/add/" class="cf-ico" title="Adicionar">＋</a>
-            </div>
-            {% for e in form.fornecedor.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+      <label class="cf-label">Fornecedor:</label>
+      <div class="cf-field cf-field--rel">
+        {{ form.fornecedor }}
+        <div class="cf-rel-btns">
+          <a
+            href="/admin/fretes/fornecedor/add/"
+            class="cf-ico"
+            title="Adicionar"
+            >＋</a
+          >
         </div>
+        {% for e in form.fornecedor.errors %}<span class="cf-err">{{ e }}</span
+        >{% endfor %}
+      </div>
     </div>
 
     <!-- Caminhão -->
     <div class="cf-row">
-        <label class="cf-label">Caminhão:</label>
-        <div class="cf-field cf-field--rel">
-            {{ form.caminhao }}
-            <div class="cf-rel-btns">
-                <a href="/admin/fretes/caminhao/add/" class="cf-ico" title="Adicionar">＋</a>
-            </div>
-            {% for e in form.caminhao.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+      <label class="cf-label">Caminhão:</label>
+      <div class="cf-field cf-field--rel">
+        {{ form.caminhao }}
+        <div class="cf-rel-btns">
+          <a href="/admin/fretes/caminhao/add/" class="cf-ico" title="Adicionar"
+            >＋</a
+          >
         </div>
+        {% for e in form.caminhao.errors %}<span class="cf-err">{{ e }}</span>{%
+        endfor %}
+      </div>
     </div>
 
     <!-- Motorista -->
     <div class="cf-row">
-        <label class="cf-label">Motorista:</label>
-        <div class="cf-field cf-field--rel">
-            {{ form.motorista }}
-            <div class="cf-rel-btns">
-                <a href="/admin/fretes/motorista/add/" class="cf-ico" title="Adicionar">＋</a>
-            </div>
-            {% for e in form.motorista.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+      <label class="cf-label">Motorista:</label>
+      <div class="cf-field cf-field--rel">
+        {{ form.motorista }}
+        <div class="cf-rel-btns">
+          <a
+            href="/admin/fretes/motorista/add/"
+            class="cf-ico"
+            title="Adicionar"
+            >＋</a
+          >
         </div>
+        {% for e in form.motorista.errors %}<span class="cf-err">{{ e }}</span
+        >{% endfor %}
+      </div>
     </div>
 
     <!-- Rota -->
     <div class="cf-row">
-        <label class="cf-label">Rota:</label>
-        <div class="cf-field cf-field--rel">
-            {{ form.rota }}
-            <div class="cf-rel-btns">
-                <a href="/admin/fretes/rota/add/" class="cf-ico" title="Adicionar">＋</a>
-            </div>
-            {% for e in form.rota.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
+      <label class="cf-label">Rota:</label>
+      <div class="cf-field cf-field--rel">
+        {{ form.rota }}
+        <div class="cf-rel-btns">
+          <a href="/admin/fretes/rota/add/" class="cf-ico" title="Adicionar"
+            >＋</a
+          >
         </div>
+        {% for e in form.rota.errors %}<span class="cf-err">{{ e }}</span>{%
+        endfor %}
+      </div>
     </div>
 
     <!-- Litros -->
     <div class="cf-row">
-        <label class="cf-label">Litros:</label>
-        <div class="cf-field">{{ form.litros }}
-            {% for e in form.litros.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
-        </div>
+      <label class="cf-label">Litros:</label>
+      <div class="cf-field">
+        {{ form.litros }} {% for e in form.litros.errors %}<span class="cf-err"
+          >{{ e }}</span
+        >{% endfor %}
+      </div>
     </div>
 
     <!-- Valor frete litro -->
     <div class="cf-row">
-        <label class="cf-label">Valor frete litro:</label>
-        <div class="cf-field">{{ form.valor_frete_litro }}
-            {% for e in form.valor_frete_litro.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
-        </div>
+      <label class="cf-label">Valor frete litro:</label>
+      <div class="cf-field">
+        {{ form.valor_frete_litro }} {% for e in form.valor_frete_litro.errors
+        %}<span class="cf-err">{{ e }}</span>{% endfor %}
+      </div>
     </div>
 
     <!-- Valor total frete (calculado) -->
     <div class="cf-row">
-        <label class="cf-label">Valor total frete:</label>
-        <div class="cf-field">
-            <input type="text" id="valor_total_display" class="form-control" readonly
-                   placeholder="Preencha litros e valor por litro"
-                   style="background:rgba(0,217,166,.08);font-weight:700;color:var(--primary);border-color:rgba(0,217,166,.25);">
-        </div>
+      <label class="cf-label">Valor total frete:</label>
+      <div class="cf-field">
+        <input
+          type="text"
+          id="valor_total_display"
+          class="form-control"
+          readonly
+          placeholder="Preencha litros e valor por litro"
+          style="
+            background: rgba(0, 217, 166, 0.08);
+            font-weight: 700;
+            color: var(--primary);
+            border-color: rgba(0, 217, 166, 0.25);
+          "
+        />
+      </div>
     </div>
 
     <!-- Número documento -->
     <div class="cf-row">
-        <label class="cf-label">Número documento:</label>
-        <div class="cf-field">{{ form.numero_documento }}
-            {% for e in form.numero_documento.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
-        </div>
+      <label class="cf-label">Número documento:</label>
+      <div class="cf-field">
+        {{ form.numero_documento }} {% for e in form.numero_documento.errors
+        %}<span class="cf-err">{{ e }}</span>{% endfor %}
+      </div>
     </div>
 
     <!-- Observações -->
     <div class="cf-row cf-row--top">
-        <label class="cf-label">Observações:</label>
-        <div class="cf-field">{{ form.observacoes }}
-            {% for e in form.observacoes.errors %}<span class="cf-err">{{ e }}</span>{% endfor %}
-        </div>
+      <label class="cf-label">Observações:</label>
+      <div class="cf-field">
+        {{ form.observacoes }} {% for e in form.observacoes.errors %}<span
+          class="cf-err"
+          >{{ e }}</span
+        >{% endfor %}
+      </div>
     </div>
-</fieldset>
+  </fieldset>
 
-<!-- ── Selecionar Bocas & Produtos ── -->
-<div id="bocas-container" style="display:none;margin-bottom:18px;background:linear-gradient(145deg,#0d1929 40%,#0f2235);border:1px solid rgba(0,217,166,.18);border-radius:16px;overflow:hidden;box-shadow:0 6px 30px rgba(0,0,0,.3);">
-    <div style="padding:16px 22px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(0,217,166,.1);">
-        <span style="font-size:1.3rem;">🛢️</span>
-        <span style="font-size:.9rem;font-weight:800;color:#00d9a6;letter-spacing:.04em;">SELECIONAR BOCAS &amp; PRODUTOS</span>
-        <span style="flex:1"></span>
-        <span id="bocas-resumo" style="font-size:.7rem;color:#8892a4;"></span>
+  <!-- ── Selecionar Bocas & Produtos ── -->
+  <div
+    id="bocas-container"
+    style="
+      display: none;
+      margin-bottom: 18px;
+      background: linear-gradient(145deg, #0d1929 40%, #0f2235);
+      border: 1px solid rgba(0, 217, 166, 0.18);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+    "
+  >
+    <div
+      style="
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid rgba(0, 217, 166, 0.1);
+      "
+    >
+      <span style="font-size: 1.3rem">🛢️</span>
+      <span
+        style="
+          font-size: 0.9rem;
+          font-weight: 800;
+          color: #00d9a6;
+          letter-spacing: 0.04em;
+        "
+        >SELECIONAR BOCAS &amp; PRODUTOS</span
+      >
+      <span style="flex: 1"></span>
+      <span id="bocas-resumo" style="font-size: 0.7rem; color: #8892a4"></span>
     </div>
     <div class="bocas-inner-grid">
-        <div style="padding:16px;border-right:1px solid rgba(0,217,166,.1);">
-            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8892a4;margin-bottom:12px;">📦 Bocas do Caminhão</div>
-            <div id="bocas-grid" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+      <div
+        style="padding: 16px; border-right: 1px solid rgba(0, 217, 166, 0.1)"
+      >
+        <div
+          style="
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #8892a4;
+            margin-bottom: 12px;
+          "
+        >
+          📦 Bocas do Caminhão
         </div>
-        <div style="padding:16px;">
-            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8892a4;margin-bottom:12px;">🧪 Selecione o Produto</div>
-            <div id="produtos-grid" style="display:flex;flex-direction:column;gap:6px;"></div>
-            <div id="produtos-placeholder" style="font-size:.75rem;color:#5a6478;padding:20px;text-align:center;">👈 Clique em uma boca para ver os produtos</div>
+        <div
+          id="bocas-grid"
+          style="display: flex; flex-wrap: wrap; gap: 10px"
+        ></div>
+      </div>
+      <div style="padding: 16px">
+        <div
+          style="
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #8892a4;
+            margin-bottom: 12px;
+          "
+        >
+          🧪 Selecione o Produto
         </div>
+        <div
+          id="produtos-grid"
+          style="display: flex; flex-direction: column; gap: 6px"
+        ></div>
+        <div
+          id="produtos-placeholder"
+          style="
+            font-size: 0.75rem;
+            color: #5a6478;
+            padding: 20px;
+            text-align: center;
+          "
+        >
+          👈 Clique em uma boca para ver os produtos
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- ── Botões de ação ── -->
-<div class="cf-actions">
+  <!-- ── Botões de ação ── -->
+  <div class="cf-actions">
     <button type="submit" class="btn-primary">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Salvar
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+      Salvar
     </button>
     <a href="{% url 'fretes:carga-list' %}" class="btn-secondary">Cancelar</a>
-</div>
+  </div>
 </form>
 
 <!-- ── ESTILOS ────────────────────────────────────────────── -->
 <style>
-/* ── Fieldset ── */
-.cf-fieldset {
+  /* ── Fieldset ── */
+  .cf-fieldset {
     border: 1px solid var(--border);
     border-radius: 14px;
     background: var(--panel);
     margin-bottom: 18px;
     overflow: hidden;
-}
-.cf-fs-title {
-    display: flex; align-items: center; gap: 8px;
+  }
+  .cf-fs-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 12px 16px;
-    font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     color: var(--primary);
-    background: rgba(0,217,166,.06);
+    background: rgba(0, 217, 166, 0.06);
     border-bottom: 1px solid var(--border);
     margin: 0;
-}
+  }
 
-/* ── Rows ── */
-.cf-row {
+  /* ── Rows ── */
+  .cf-row {
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 11px 16px;
-    border-bottom: 1px solid rgba(0,217,166,.07);
-}
-.cf-row:last-child { border-bottom: none; }
-.cf-row--top { align-items: flex-start; }
+    border-bottom: 1px solid rgba(0, 217, 166, 0.07);
+  }
+  .cf-row:last-child {
+    border-bottom: none;
+  }
+  .cf-row--top {
+    align-items: flex-start;
+  }
 
-/* ── Label ── */
-.cf-label {
+  /* ── Label ── */
+  .cf-label {
     min-width: 150px;
     flex-shrink: 0;
-    font-size: .8rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .04em;
+    letter-spacing: 0.04em;
     color: var(--muted);
-}
+  }
 
-/* ── Field ── */
-.cf-field {
+  /* ── Field ── */
+  .cf-field {
     flex: 1;
     display: flex;
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-}
-.cf-field select,
-.cf-field input,
-.cf-field textarea {
+  }
+  .cf-field select,
+  .cf-field input,
+  .cf-field textarea {
     max-width: 360px;
-}
-.cf-field textarea {
+  }
+  .cf-field textarea {
     max-width: 100%;
     min-width: 360px;
     min-height: 80px;
-}
+  }
 
-/* ── Related buttons ── */
-.cf-field--rel { display: flex; align-items: center; gap: 8px; }
-.cf-rel-btns {
-    display: flex; gap: 4px;
-}
-.cf-ico {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px;
+  /* ── Related buttons ── */
+  .cf-field--rel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cf-rel-btns {
+    display: flex;
+    gap: 4px;
+  }
+  .cf-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
     border-radius: 8px;
-    background: rgba(0,217,166,.1);
+    background: rgba(0, 217, 166, 0.1);
     color: var(--primary);
-    font-size: 1rem; font-weight: 700;
+    font-size: 1rem;
+    font-weight: 700;
     text-decoration: none;
-    border: 1px solid rgba(0,217,166,.2);
-    transition: all .18s;
-}
-.cf-ico:hover {
-    background: var(--primary); color: #070d1a;
-}
+    border: 1px solid rgba(0, 217, 166, 0.2);
+    transition: all 0.18s;
+  }
+  .cf-ico:hover {
+    background: var(--primary);
+    color: #070d1a;
+  }
 
-/* ── Errors ── */
-.cf-err {
+  /* ── Errors ── */
+  .cf-err {
     display: block;
     color: var(--danger);
-    font-size: .78rem;
+    font-size: 0.78rem;
     font-weight: 600;
     width: 100%;
-}
-.cf-errors {
-    background: rgba(239,68,68,.12);
-    border: 1px solid rgba(239,68,68,.3);
+  }
+  .cf-errors {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 10px;
     padding: 12px 18px;
     margin-bottom: 16px;
     color: #ef4444;
-    font-size: .88rem;
+    font-size: 0.88rem;
     font-weight: 600;
-}
+  }
 
-/* ── Actions bar ── */
-.cf-actions {
-    display: flex; gap: 10px; align-items: center;
+  /* ── Actions bar ── */
+  .cf-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
     padding: 16px 0;
-}
+  }
 
-/* ── Checkbox ativo ── */
-.cf-row input[type="checkbox"] {
-    width: 18px; height: 18px;
+  /* ── Checkbox ativo ── */
+  .cf-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
     accent-color: var(--primary);
-}
+  }
 
-/* ── Bocas inner grid (2 col → 1 col em mobile) ── */
-.bocas-inner-grid {
+  /* ── Bocas inner grid (2 col → 1 col em mobile) ── */
+  .bocas-inner-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 200px;
-}
-@media (max-width: 640px) {
+  }
+  @media (max-width: 640px) {
     .bocas-inner-grid {
-        grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
     }
     .bocas-inner-grid > div:first-child {
-        border-right: none !important;
-        border-bottom: 1px solid rgba(0,217,166,.1);
+      border-right: none !important;
+      border-bottom: 1px solid rgba(0, 217, 166, 0.1);
     }
-}
+  }
 </style>
 
 <!-- ── SCRIPTS ────────────────────────────────────────────── -->
 <script>
-(function(){
-  var caminhaoSelect = document.getElementById('id_caminhao');
-  if(!caminhaoSelect) return;
+  (function () {
+    var caminhaoSelect = document.getElementById("id_caminhao");
+    if (!caminhaoSelect) return;
 
-  var COMP_URL = "/operacao/caminhao/{pk}/compartimentos/";
-  var produtos = [];
-  var compartimentos = [];
-  var selecionados = {};
-  var bocaAtiva = null;
-  var lastCaminhaoVal = '';
-  var container = document.getElementById('bocas-container');
+    var COMP_URL = "/operacao/caminhao/{pk}/compartimentos/";
+    var produtos = [];
+    var compartimentos = [];
+    var selecionados = {};
+    var bocaAtiva = null;
+    var lastCaminhaoVal = "";
+    var container = document.getElementById("bocas-container");
 
-  /* Buscar produtos */
-  fetch('/operacao/api/produtos/')
-    .then(function(r){ return r.json(); })
-    .then(function(d){ produtos = d.produtos || []; })
-    .catch(function(){});
-
-  /* Quando caminhão muda */
-  function onCaminhaoChange(){
-    var val = caminhaoSelect.value;
-    if(val === lastCaminhaoVal) return;
-    lastCaminhaoVal = val;
-    if(!val){
-      container.style.display = 'none';
-      compartimentos = []; selecionados = {}; bocaAtiva = null;
-      return;
-    }
-    fetch(COMP_URL.replace('{pk}', val))
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        compartimentos = data.compartimentos || [];
-        selecionados = {}; bocaAtiva = null;
-        if(compartimentos.length){
-          container.style.display = 'block';
-          renderBocas(); renderProdutos(); updateResumo();
-        } else {
-          container.style.display = 'none';
-        }
+    /* Buscar produtos */
+    fetch("/operacao/api/produtos/")
+      .then(function (r) {
+        return r.json();
       })
-      .catch(function(){ container.style.display = 'none'; });
-  }
+      .then(function (d) {
+        produtos = d.produtos || [];
+      })
+      .catch(function () {});
 
-  caminhaoSelect.addEventListener('change', onCaminhaoChange);
-  if(caminhaoSelect.value){ lastCaminhaoVal=''; setTimeout(onCaminhaoChange, 300); }
-
-  /* Renderizar bocas */
-  function renderBocas(){
-    var grid = document.getElementById('bocas-grid');
-    grid.innerHTML = '';
-    compartimentos.forEach(function(c){
-      var card = document.createElement('div');
-      card.dataset.compId = c.id;
-      var sel = selecionados[c.id];
-      var prodNome = sel ? getProdutoNome(sel) : null;
-      card.style.cssText =
-        'cursor:pointer;border-radius:12px;padding:14px 16px;min-width:110px;text-align:center;'
-        +'transition:all .2s;position:relative;'
-        +(sel
-          ? 'background:rgba(0,217,166,.12);border:2px solid #00d9a6;'
-          : (bocaAtiva===c.id
-            ? 'background:rgba(59,130,246,.12);border:2px solid #3b82f6;'
-            : 'background:#070d1a;border:2px solid rgba(0,217,166,.12);'));
-      card.innerHTML =
-        '<div style="font-size:1.6rem;margin-bottom:4px;">🛢️</div>'
-        +'<div style="font-size:.82rem;font-weight:800;color:'+(sel?'#00d9a6':'#dde6f0')+';">Boca '+c.numero+'</div>'
-        +'<div style="font-size:.62rem;color:#8892a4;margin-top:2px;">'+Number(c.capacidade_litros).toLocaleString('pt-BR')+' L</div>'
-        +(prodNome
-          ? '<div style="margin-top:6px;font-size:.6rem;font-weight:700;color:#00d9a6;background:rgba(0,217,166,.08);border-radius:6px;padding:3px 8px;">'+prodNome+'</div>'
-            +'<div class="boca-remove" style="position:absolute;top:4px;right:6px;font-size:.65rem;color:#ef4444;cursor:pointer;opacity:.7;" title="Remover">✕</div>'
-          : '');
-      card.addEventListener('click', function(e){
-        if(e.target.classList.contains('boca-remove')){
-          delete selecionados[c.id]; bocaAtiva=null;
-          renderBocas(); renderProdutos(); updateResumo(); updateLitros();
-          return;
-        }
-        bocaAtiva = c.id;
-        renderBocas(); renderProdutos();
-      });
-      card.addEventListener('mouseenter', function(){
-        if(!selecionados[c.id] && bocaAtiva!==c.id) card.style.borderColor='rgba(0,217,166,.4)';
-      });
-      card.addEventListener('mouseleave', function(){
-        if(!selecionados[c.id] && bocaAtiva!==c.id) card.style.borderColor='rgba(0,217,166,.12)';
-      });
-      grid.appendChild(card);
-    });
-  }
-
-  /* Renderizar produtos */
-  function renderProdutos(){
-    var grid = document.getElementById('produtos-grid');
-    var placeholder = document.getElementById('produtos-placeholder');
-    grid.innerHTML = '';
-    if(!bocaAtiva){ placeholder.style.display='block'; return; }
-    placeholder.style.display='none';
-    var boca = compartimentos.find(function(c){ return c.id===bocaAtiva; });
-    if(boca){
-      var hdr = document.createElement('div');
-      hdr.style.cssText='font-size:.75rem;color:#3b82f6;font-weight:700;margin-bottom:8px;';
-      hdr.textContent='🛢️ Boca '+boca.numero+' — selecione o produto:';
-      grid.appendChild(hdr);
+    /* Quando caminhão muda */
+    function onCaminhaoChange() {
+      var val = caminhaoSelect.value;
+      if (val === lastCaminhaoVal) return;
+      lastCaminhaoVal = val;
+      if (!val) {
+        container.style.display = "none";
+        compartimentos = [];
+        selecionados = {};
+        bocaAtiva = null;
+        return;
+      }
+      fetch(COMP_URL.replace("{pk}", val))
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function (data) {
+          compartimentos = data.compartimentos || [];
+          selecionados = {};
+          bocaAtiva = null;
+          if (compartimentos.length) {
+            container.style.display = "block";
+            renderBocas();
+            renderProdutos();
+            updateResumo();
+          } else {
+            container.style.display = "none";
+          }
+        })
+        .catch(function () {
+          container.style.display = "none";
+        });
     }
-    produtos.forEach(function(p){
-      var item = document.createElement('div');
-      var isSel = selecionados[bocaAtiva]===p.id;
-      item.style.cssText =
-        'padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;'
-        +'transition:all .15s;display:flex;align-items:center;gap:8px;'
-        +(isSel
-          ? 'background:rgba(0,217,166,.15);border:1px solid #00d9a6;color:#00d9a6;'
-          : 'background:#070d1a;border:1px solid rgba(0,217,166,.08);color:#dde6f0;');
-      item.innerHTML='<span style="font-size:1rem;">'+(isSel?'✅':'🧪')+'</span><span>'+p.nome+'</span>';
-      item.addEventListener('mouseenter', function(){ if(!isSel) item.style.background='rgba(0,217,166,.06)'; });
-      item.addEventListener('mouseleave', function(){ if(!isSel) item.style.background='#070d1a'; });
-      item.addEventListener('click', function(){
-        selecionados[bocaAtiva]=p.id; bocaAtiva=null;
-        renderBocas(); renderProdutos(); updateResumo(); updateLitros();
-      });
-      grid.appendChild(item);
-    });
-  }
 
-  /* Resumo */
-  function updateResumo(){
-    var el = document.getElementById('bocas-resumo');
-    el.textContent = Object.keys(selecionados).length + ' de ' + compartimentos.length + ' bocas com produto';
-  }
-
-  function getProdutoNome(id){
-    var p = produtos.find(function(x){ return x.id===id; });
-    return p ? p.nome : '';
-  }
-
-  /* Atualizar litros com base nas bocas selecionadas */
-  function updateLitros(){
-    var keys = Object.keys(selecionados);
-    if(keys.length > 0){
-      var total = 0;
-      keys.forEach(function(compId){
-        var comp = compartimentos.find(function(c){ return c.id == compId; });
-        if(comp) total += Number(comp.capacidade_litros);
-      });
-      document.getElementById('id_litros').value = total.toFixed(2);
+    caminhaoSelect.addEventListener("change", onCaminhaoChange);
+    if (caminhaoSelect.value) {
+      lastCaminhaoVal = "";
+      setTimeout(onCaminhaoChange, 300);
     }
+
+    /* Renderizar bocas */
+    function renderBocas() {
+      var grid = document.getElementById("bocas-grid");
+      grid.innerHTML = "";
+      compartimentos.forEach(function (c) {
+        var card = document.createElement("div");
+        card.dataset.compId = c.id;
+        var sel = selecionados[c.id];
+        var prodNome = sel ? getProdutoNome(sel) : null;
+        card.style.cssText =
+          "cursor:pointer;border-radius:12px;padding:14px 16px;min-width:110px;text-align:center;" +
+          "transition:all .2s;position:relative;" +
+          (sel
+            ? "background:rgba(0,217,166,.12);border:2px solid #00d9a6;"
+            : bocaAtiva === c.id
+              ? "background:rgba(59,130,246,.12);border:2px solid #3b82f6;"
+              : "background:#070d1a;border:2px solid rgba(0,217,166,.12);");
+        card.innerHTML =
+          '<div style="font-size:1.6rem;margin-bottom:4px;">🛢️</div>' +
+          '<div style="font-size:.82rem;font-weight:800;color:' +
+          (sel ? "#00d9a6" : "#dde6f0") +
+          ';">Boca ' +
+          c.numero +
+          "</div>" +
+          '<div style="font-size:.62rem;color:#8892a4;margin-top:2px;">' +
+          Number(c.capacidade_litros).toLocaleString("pt-BR") +
+          " L</div>" +
+          (prodNome
+            ? '<div style="margin-top:6px;font-size:.6rem;font-weight:700;color:#00d9a6;background:rgba(0,217,166,.08);border-radius:6px;padding:3px 8px;">' +
+              prodNome +
+              "</div>" +
+              '<div class="boca-remove" style="position:absolute;top:4px;right:6px;font-size:.65rem;color:#ef4444;cursor:pointer;opacity:.7;" title="Remover">✕</div>'
+            : "");
+        card.addEventListener("click", function (e) {
+          if (e.target.classList.contains("boca-remove")) {
+            delete selecionados[c.id];
+            bocaAtiva = null;
+            renderBocas();
+            renderProdutos();
+            updateResumo();
+            updateLitros();
+            return;
+          }
+          bocaAtiva = c.id;
+          renderBocas();
+          renderProdutos();
+        });
+        card.addEventListener("mouseenter", function () {
+          if (!selecionados[c.id] && bocaAtiva !== c.id)
+            card.style.borderColor = "rgba(0,217,166,.4)";
+        });
+        card.addEventListener("mouseleave", function () {
+          if (!selecionados[c.id] && bocaAtiva !== c.id)
+            card.style.borderColor = "rgba(0,217,166,.12)";
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    /* Renderizar produtos */
+    function renderProdutos() {
+      var grid = document.getElementById("produtos-grid");
+      var placeholder = document.getElementById("produtos-placeholder");
+      grid.innerHTML = "";
+      if (!bocaAtiva) {
+        placeholder.style.display = "block";
+        return;
+      }
+      placeholder.style.display = "none";
+      var boca = compartimentos.find(function (c) {
+        return c.id === bocaAtiva;
+      });
+      if (boca) {
+        var hdr = document.createElement("div");
+        hdr.style.cssText =
+          "font-size:.75rem;color:#3b82f6;font-weight:700;margin-bottom:8px;";
+        hdr.textContent = "🛢️ Boca " + boca.numero + " — selecione o produto:";
+        grid.appendChild(hdr);
+      }
+      produtos.forEach(function (p) {
+        var item = document.createElement("div");
+        var isSel = selecionados[bocaAtiva] === p.id;
+        item.style.cssText =
+          "padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;" +
+          "transition:all .15s;display:flex;align-items:center;gap:8px;" +
+          (isSel
+            ? "background:rgba(0,217,166,.15);border:1px solid #00d9a6;color:#00d9a6;"
+            : "background:#070d1a;border:1px solid rgba(0,217,166,.08);color:#dde6f0;");
+        item.innerHTML =
+          '<span style="font-size:1rem;">' +
+          (isSel ? "✅" : "🧪") +
+          "</span><span>" +
+          p.nome +
+          "</span>";
+        item.addEventListener("mouseenter", function () {
+          if (!isSel) item.style.background = "rgba(0,217,166,.06)";
+        });
+        item.addEventListener("mouseleave", function () {
+          if (!isSel) item.style.background = "#070d1a";
+        });
+        item.addEventListener("click", function () {
+          selecionados[bocaAtiva] = p.id;
+          bocaAtiva = null;
+          renderBocas();
+          renderProdutos();
+          updateResumo();
+          updateLitros();
+        });
+        grid.appendChild(item);
+      });
+    }
+
+    /* Resumo */
+    function updateResumo() {
+      var el = document.getElementById("bocas-resumo");
+      el.textContent =
+        Object.keys(selecionados).length +
+        " de " +
+        compartimentos.length +
+        " bocas com produto";
+    }
+
+    function getProdutoNome(id) {
+      var p = produtos.find(function (x) {
+        return x.id === id;
+      });
+      return p ? p.nome : "";
+    }
+
+    /* Atualizar litros com base nas bocas selecionadas */
+    function updateLitros() {
+      var keys = Object.keys(selecionados);
+      if (keys.length > 0) {
+        var total = 0;
+        keys.forEach(function (compId) {
+          var comp = compartimentos.find(function (c) {
+            return c.id == compId;
+          });
+          if (comp) total += Number(comp.capacidade_litros);
+        });
+        document.getElementById("id_litros").value = total.toFixed(2);
+      }
+      calcularFrete();
+    }
+
+    /* Calcular frete */
+    function calcularFrete() {
+      var litros = parseFloat(document.getElementById("id_litros").value) || 0;
+      var valorLitro =
+        parseFloat(document.getElementById("id_valor_frete_litro").value) || 0;
+      var total = litros * valorLitro;
+      var display = document.getElementById("valor_total_display");
+      if (litros > 0 && valorLitro > 0) {
+        display.value =
+          "R$ " +
+          total.toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+      } else {
+        display.value = "";
+        display.placeholder = "Preencha litros e valor por litro";
+      }
+    }
+    document
+      .getElementById("id_litros")
+      .addEventListener("input", calcularFrete);
+    document
+      .getElementById("id_valor_frete_litro")
+      .addEventListener("input", calcularFrete);
     calcularFrete();
-  }
-
-  /* Calcular frete */
-  function calcularFrete(){
-    var litros = parseFloat(document.getElementById('id_litros').value) || 0;
-    var valorLitro = parseFloat(document.getElementById('id_valor_frete_litro').value) || 0;
-    var total = litros * valorLitro;
-    var display = document.getElementById('valor_total_display');
-    if(litros > 0 && valorLitro > 0){
-      display.value = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-    } else {
-      display.value = '';
-      display.placeholder = 'Preencha litros e valor por litro';
-    }
-  }
-  document.getElementById('id_litros').addEventListener('input', calcularFrete);
-  document.getElementById('id_valor_frete_litro').addEventListener('input', calcularFrete);
-  calcularFrete();
-})();
+  })();
 </script>
 {% endblock %}

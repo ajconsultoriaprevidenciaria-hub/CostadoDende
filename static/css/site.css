@@ -739,6 +739,17 @@ td a:hover {
   }
 }
 
+@media (max-width: 768px) {
+  .four-columns,
+  .compact-grid,
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 960px) {
   .layout-shell {
     grid-template-columns: 1fr;

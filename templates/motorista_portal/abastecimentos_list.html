@@ -1,212 +1,393 @@
-{% extends "motorista_portal/base.html" %}
-{% block title %}Abastecimentos por Posto{% endblock %}
-{% block extra_css %}
+{% extends "motorista_portal/base.html" %} {% block title %}Abastecimentos por
+Posto{% endblock %} {% block extra_css %}
 <style>
+  .abast-shell {
+    max-width: 860px;
+  }
+  .abast-filtros {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+    align-items: end;
+  }
+  .abast-filtros .abast-full {
+    grid-column: 1 / -1;
+  }
+  .abast-periodo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    grid-column: 1 / -1;
+  }
+  .abast-acoes {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+  }
+  .abast-mes-wrap {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 120px 32px;
+    gap: 8px;
+    align-items: center;
+  }
+  .abast-mes-bloco {
+    grid-column: 1 / -1;
+  }
+  .abast-mes-input {
+    padding-right: 12px !important;
+  }
+  .abast-ano-select {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--text);
+  }
+  .abast-mes-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(0, 217, 166, 0.08);
+    color: var(--primary);
+    cursor: pointer;
+  }
+  @media (max-width: 640px) {
     .abast-shell {
-        max-width: 860px;
+      max-width: 100%;
     }
-    .abast-filtros {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        margin-bottom: 18px;
-        align-items: end;
-    }
-    .abast-filtros .abast-full {
-        grid-column: 1 / -1;
-    }
+    .abast-filtros,
     .abast-periodo {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        grid-column: 1 / -1;
-    }
-    .abast-acoes {
-        display: flex;
-        gap: 10px;
-        align-items: end;
+      grid-template-columns: 1fr;
     }
     .abast-mes-wrap {
-        display: grid;
-        grid-template-columns: minmax(220px, 1fr) 120px 32px;
-        gap: 8px;
-        align-items: center;
+      grid-template-columns: 1fr;
     }
-    .abast-mes-bloco {
-        grid-column: 1 / -1;
+    /* Mobile card-view para tabela de abastecimentos */
+    .abast-table thead {
+      display: none;
     }
-    .abast-mes-input {
-        padding-right: 12px !important;
+    .abast-table tbody tr {
+      display: block;
+      border: 1px solid rgba(0, 217, 166, 0.14);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      background: var(--panel);
     }
-    .abast-ano-select {
-        width: 100%;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 10px 12px;
-        color: var(--text);
+    .abast-table td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(0, 217, 166, 0.07);
+      border-top: none !important;
+      font-size: 0.82rem;
+      gap: 8px;
     }
-    .abast-mes-btn {
-        width: 32px;
-        height: 32px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        background: rgba(0,217,166,.08);
-        color: var(--primary);
-        cursor: pointer;
+    .abast-table td:last-child {
+      border-bottom: none;
     }
-    @media (max-width: 640px) {
-        .abast-shell {
-            max-width: 100%;
-        }
-        .abast-filtros,
-        .abast-periodo {
-            grid-template-columns: 1fr;
-        }
-        .abast-mes-wrap {
-            grid-template-columns: 1fr;
-        }
-        /* Mobile card-view para tabela de abastecimentos */
-        .abast-table thead { display: none; }
-        .abast-table tbody tr {
-            display: block;
-            border: 1px solid rgba(0,217,166,.14);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 10px;
-            background: var(--panel);
-        }
-        .abast-table td {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(0,217,166,.07);
-            border-top: none !important;
-            font-size: .82rem;
-            gap: 8px;
-        }
-        .abast-table td:last-child { border-bottom: none; }
-        .abast-table td::before {
-            content: attr(data-label);
-            color: rgba(255,255,255,.45);
-            font-size: .66rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            flex-shrink: 0;
-        }
+    .abast-table td::before {
+      content: attr(data-label);
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
     }
+  }
 </style>
-{% endblock %}
-{% block content %}
+{% endblock %} {% block content %}
 <div class="abast-shell">
-<div style="display:flex; justify-content:flex-start; margin-bottom:12px;">
-    <button type="button" class="mp-btn mp-btn-outline mp-btn-sm" onclick="window.history.back()">Voltar</button>
-</div>
-<h2 style="font-size:1.1rem; font-weight:800; margin-bottom:18px;">Abastecimentos por Posto</h2>
-<form method="get" class="abast-filtros">
+  <div style="display: flex; justify-content: flex-start; margin-bottom: 12px">
+    <button
+      type="button"
+      class="mp-btn mp-btn-outline mp-btn-sm"
+      onclick="window.history.back()"
+    >
+      Voltar
+    </button>
+  </div>
+  <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 18px">
+    Abastecimentos por Posto
+  </h2>
+  <form method="get" class="abast-filtros">
     <div class="abast-full">
-        <label for="posto" style="display:block; margin-bottom:6px; font-size:.78rem; color:var(--text-sec);">Posto</label>
-        <input id="posto" name="posto" type="text" list="postos-cadastrados" value="{{ filtros.posto }}" placeholder="Pesquisar posto" style="width:100%; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text);">
-        <datalist id="postos-cadastrados">
-            {% for posto_nome in sugestoes_postos %}
-            <option value="{{ posto_nome }}"></option>
-            {% endfor %}
-        </datalist>
+      <label
+        for="posto"
+        style="
+          display: block;
+          margin-bottom: 6px;
+          font-size: 0.78rem;
+          color: var(--text-sec);
+        "
+        >Posto</label
+      >
+      <input
+        id="posto"
+        name="posto"
+        type="text"
+        list="postos-cadastrados"
+        value="{{ filtros.posto }}"
+        placeholder="Pesquisar posto"
+        style="
+          width: 100%;
+          background: var(--panel);
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 10px 12px;
+          color: var(--text);
+        "
+      />
+      <datalist id="postos-cadastrados">
+        {% for posto_nome in sugestoes_postos %}
+        <option value="{{ posto_nome }}"></option>
+        {% endfor %}
+      </datalist>
     </div>
     <div class="abast-periodo">
-        <div>
-            <label for="data_inicial" style="display:block; margin-bottom:6px; font-size:.78rem; color:var(--text-sec);">Data inicial</label>
-            <input id="data_inicial" name="data_inicial" type="date" value="{{ filtros.data_inicial }}" style="width:100%; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text);">
-        </div>
-        <div>
-            <label for="data_final" style="display:block; margin-bottom:6px; font-size:.78rem; color:var(--text-sec);">Data final</label>
-            <input id="data_final" name="data_final" type="date" value="{{ filtros.data_final }}" style="width:100%; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text);">
-        </div>
+      <div>
+        <label
+          for="data_inicial"
+          style="
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.78rem;
+            color: var(--text-sec);
+          "
+          >Data inicial</label
+        >
+        <input
+          id="data_inicial"
+          name="data_inicial"
+          type="date"
+          value="{{ filtros.data_inicial }}"
+          style="
+            width: 100%;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: var(--text);
+          "
+        />
+      </div>
+      <div>
+        <label
+          for="data_final"
+          style="
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.78rem;
+            color: var(--text-sec);
+          "
+          >Data final</label
+        >
+        <input
+          id="data_final"
+          name="data_final"
+          type="date"
+          value="{{ filtros.data_final }}"
+          style="
+            width: 100%;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: var(--text);
+          "
+        />
+      </div>
     </div>
     <div class="abast-mes-bloco">
-        <label for="mes" style="display:block; margin-bottom:6px; font-size:.78rem; color:var(--text-sec);">Mês</label>
-        <div class="abast-mes-wrap">
-            <input id="mes" name="mes" type="month" value="{{ filtros.mes }}" class="abast-mes-input" style="width:100%; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text);">
-            <select id="mes_ano" class="abast-ano-select" aria-label="Selecionar ano">
-                {% for ano in anos_disponiveis %}
-                <option value="{{ ano }}" {% if ano == selected_year %}selected{% endif %}>{{ ano }}</option>
-                {% endfor %}
-            </select>
-            <button type="button" class="abast-mes-btn" id="abrir-calendario-mes" aria-label="Selecionar mês">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-            </button>
-        </div>
+      <label
+        for="mes"
+        style="
+          display: block;
+          margin-bottom: 6px;
+          font-size: 0.78rem;
+          color: var(--text-sec);
+        "
+        >Mês</label
+      >
+      <div class="abast-mes-wrap">
+        <input
+          id="mes"
+          name="mes"
+          type="month"
+          value="{{ filtros.mes }}"
+          class="abast-mes-input"
+          style="
+            width: 100%;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: var(--text);
+          "
+        />
+        <select
+          id="mes_ano"
+          class="abast-ano-select"
+          aria-label="Selecionar ano"
+        >
+          {% for ano in anos_disponiveis %}
+          <option
+            value="{{ ano }}"
+            {%
+            if
+            ano=""
+            ="selected_year"
+            %}selected{%
+            endif
+            %}
+          >
+            {{ ano }}
+          </option>
+          {% endfor %}
+        </select>
+        <button
+          type="button"
+          class="abast-mes-btn"
+          id="abrir-calendario-mes"
+          aria-label="Selecionar mês"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="abast-acoes">
-        <button type="submit" style="background:var(--primary); color:#07111b; border:none; border-radius:10px; padding:10px 14px; font-weight:800; cursor:pointer;">Pesquisar</button>
-        <a href="{% url 'motorista_portal:abastecimentos-list' %}" style="display:inline-flex; align-items:center; justify-content:center; background:transparent; color:var(--text-sec); border:1px solid var(--border); border-radius:10px; padding:10px 14px; text-decoration:none; font-weight:700;">Limpar</a>
+      <button
+        type="submit"
+        style="
+          background: var(--primary);
+          color: #07111b;
+          border: none;
+          border-radius: 10px;
+          padding: 10px 14px;
+          font-weight: 800;
+          cursor: pointer;
+        "
+      >
+        Pesquisar
+      </button>
+      <a
+        href="{% url 'motorista_portal:abastecimentos-list' %}"
+        style="
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          color: var(--text-sec);
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 10px 14px;
+          text-decoration: none;
+          font-weight: 700;
+        "
+        >Limpar</a
+      >
     </div>
-</form>
-<table class="abast-table" style="width:100%; background:var(--panel); border-radius:12px; border:1px solid var(--border);">
+  </form>
+  <table
+    class="abast-table"
+    style="
+      width: 100%;
+      background: var(--panel);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    "
+  >
     <thead>
-        <tr style="color:var(--primary); font-size:.92rem;">
-            <th style="text-align:left; padding:10px 8px;">Posto</th>
-            <th style="text-align:right; padding:10px 8px;">Total Litros</th>
-            <th style="text-align:right; padding:10px 8px;">Nº Abastecimentos</th>
-            <th style="text-align:right; padding:10px 8px;">Valor Total (R$)</th>
-        </tr>
+      <tr style="color: var(--primary); font-size: 0.92rem">
+        <th style="text-align: left; padding: 10px 8px">Posto</th>
+        <th style="text-align: right; padding: 10px 8px">Total Litros</th>
+        <th style="text-align: right; padding: 10px 8px">Nº Abastecimentos</th>
+        <th style="text-align: right; padding: 10px 8px">Valor Total (R$)</th>
+      </tr>
     </thead>
     <tbody>
-        {% for p in postos %}
-        <tr style="border-top:1px solid var(--border);">
-            <td data-label="Posto" style="padding:8px 8px;">{{ p.posto }}</td>
-            <td data-label="Litros" style="padding:8px 8px; text-align:right;">{{ p.total_litros|floatformat:2 }}</td>
-            <td data-label="Nº Abast." style="padding:8px 8px; text-align:right;">{{ p.total_abastecimentos }}</td>
-            <td data-label="Valor" style="padding:8px 8px; text-align:right;">{{ p.total_valor|floatformat:2 }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4" style="text-align:center; color:var(--text-sec); padding:18px;">Nenhum abastecimento registrado.</td></tr>
-        {% endfor %}
+      {% for p in postos %}
+      <tr style="border-top: 1px solid var(--border)">
+        <td data-label="Posto" style="padding: 8px 8px">{{ p.posto }}</td>
+        <td data-label="Litros" style="padding: 8px 8px; text-align: right">
+          {{ p.total_litros|floatformat:2 }}
+        </td>
+        <td data-label="Nº Abast." style="padding: 8px 8px; text-align: right">
+          {{ p.total_abastecimentos }}
+        </td>
+        <td data-label="Valor" style="padding: 8px 8px; text-align: right">
+          {{ p.total_valor|floatformat:2 }}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td
+          colspan="4"
+          style="text-align: center; color: var(--text-sec); padding: 18px"
+        >
+          Nenhum abastecimento registrado.
+        </td>
+      </tr>
+      {% endfor %}
     </tbody>
-</table>
+  </table>
 </div>
-{% endblock %}
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
-    (function () {
-        const monthInput = document.getElementById('mes');
-        const yearSelect = document.getElementById('mes_ano');
-        const openButton = document.getElementById('abrir-calendario-mes');
-        if (!monthInput || !openButton || !yearSelect) return;
+  (function () {
+    const monthInput = document.getElementById("mes");
+    const yearSelect = document.getElementById("mes_ano");
+    const openButton = document.getElementById("abrir-calendario-mes");
+    if (!monthInput || !openButton || !yearSelect) return;
 
-        function syncMonthWithYear() {
-            const currentValue = monthInput.value || '';
-            const currentMonth = currentValue.split('-')[1] || '{{ selected_month|default:"01" }}' || '01';
-            monthInput.value = `${yearSelect.value}-${currentMonth}`;
-        }
+    function syncMonthWithYear() {
+      const currentValue = monthInput.value || "";
+      const currentMonth =
+        currentValue.split("-")[1] ||
+        '{{ selected_month|default:"01" }}' ||
+        "01";
+      monthInput.value = `${yearSelect.value}-${currentMonth}`;
+    }
 
-        yearSelect.addEventListener('change', syncMonthWithYear);
+    yearSelect.addEventListener("change", syncMonthWithYear);
 
-        monthInput.addEventListener('change', function () {
-            const valueParts = monthInput.value.split('-');
-            if (valueParts.length === 2) {
-                yearSelect.value = valueParts[0];
-            }
-        });
+    monthInput.addEventListener("change", function () {
+      const valueParts = monthInput.value.split("-");
+      if (valueParts.length === 2) {
+        yearSelect.value = valueParts[0];
+      }
+    });
 
-        openButton.addEventListener('click', function () {
-            if (typeof monthInput.showPicker === 'function') {
-                monthInput.showPicker();
-                return;
-            }
-            monthInput.focus();
-            monthInput.click();
-        });
-    })();
+    openButton.addEventListener("click", function () {
+      if (typeof monthInput.showPicker === "function") {
+        monthInput.showPicker();
+        return;
+      }
+      monthInput.focus();
+      monthInput.click();
+    });
+  })();
 </script>
 {% endblock %}

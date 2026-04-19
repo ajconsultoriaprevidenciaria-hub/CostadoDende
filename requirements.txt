@@ -7,3 +7,4 @@ whitenoise>=6.9,<7
 gunicorn>=23,<24
 psycopg2-binary>=2.9
 python-dotenv>=1.0.0
+django-browser-reload>=1.12

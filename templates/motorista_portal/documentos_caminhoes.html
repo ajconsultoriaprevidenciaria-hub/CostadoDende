@@ -1,132 +1,251 @@
-{% extends "motorista_portal/base.html" %}
-
-{% block title %}Documentos dos Caminhões - Portal do Motorista{% endblock %}
-
-{% block extra_css %}
+{% extends "motorista_portal/base.html" %} {% block title %}Documentos dos
+Caminhões - Portal do Motorista{% endblock %} {% block extra_css %}
 <style>
-@media (max-width: 420px) {
+  @media (max-width: 420px) {
     .docs-filter-grid {
-        grid-template-columns: 1fr !important;
+      grid-template-columns: 1fr !important;
     }
-}
+  }
 </style>
-{% endblock %}
-
-{% block content %}
-<div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px;">
-    <div>
-        <h2 style="font-size:.95rem; font-weight:700; margin-bottom:4px;">Documentos dos Caminhões</h2>
-        <p style="font-size:.72rem; color:var(--text-sec); margin:0;">Organizado por caminhão</p>
-    </div>
-    <a href="{% url 'motorista_portal:painel' %}" class="mp-btn mp-btn-outline" style="padding:12px 16px; font-size:.78rem;">
-        ← Voltar ao painel
-    </a>
+{% endblock %} {% block content %}
+<div
+  style="
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  "
+>
+  <div>
+    <h2 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 4px">
+      Documentos dos Caminhões
+    </h2>
+    <p style="font-size: 0.72rem; color: var(--text-sec); margin: 0">
+      Organizado por caminhão
+    </p>
+  </div>
+  <a
+    href="{% url 'motorista_portal:painel' %}"
+    class="mp-btn mp-btn-outline"
+    style="padding: 12px 16px; font-size: 0.78rem"
+  >
+    ← Voltar ao painel
+  </a>
 </div>
 
-<div class="mp-card" style="margin-bottom:18px; display:grid; gap:12px;">
-    <div style="font-size:.78rem; color:var(--text-sec);">Selecione a placa do caminhão para ver os documentos anexados.</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end;" class="docs-filter-grid">
-        <label style="display:block;">
-            <span style="font-size:.72rem; color:var(--text-sec);">Buscar placa</span>
-            <input id="plate-search" type="search" placeholder="Digite a placa" style="width:100%; margin-top:6px; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--panel); color:var(--text);" />
-        </label>
-        <label style="display:block;">
-            <span style="font-size:.72rem; color:var(--text-sec);">Placas disponíveis</span>
-            <select id="plate-filter" style="width:100%; margin-top:6px; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--panel); color:var(--text);">
-                <option value="">Todas as placas</option>
-                {% for caminhao in caminhoes %}
-                <option value="{{ caminhao.placa }}">{{ caminhao.placa }}</option>
-                {% endfor %}
-            </select>
-        </label>
-    </div>
+<div class="mp-card" style="margin-bottom: 18px; display: grid; gap: 12px">
+  <div style="font-size: 0.78rem; color: var(--text-sec)">
+    Selecione a placa do caminhão para ver os documentos anexados.
+  </div>
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: end;
+    "
+    class="docs-filter-grid"
+  >
+    <label style="display: block">
+      <span style="font-size: 0.72rem; color: var(--text-sec)"
+        >Buscar placa</span
+      >
+      <input
+        id="plate-search"
+        type="search"
+        placeholder="Digite a placa"
+        style="
+          width: 100%;
+          margin-top: 6px;
+          padding: 10px 12px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: var(--panel);
+          color: var(--text);
+        "
+      />
+    </label>
+    <label style="display: block">
+      <span style="font-size: 0.72rem; color: var(--text-sec)"
+        >Placas disponíveis</span
+      >
+      <select
+        id="plate-filter"
+        style="
+          width: 100%;
+          margin-top: 6px;
+          padding: 10px 12px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: var(--panel);
+          color: var(--text);
+        "
+      >
+        <option value="">Todas as placas</option>
+        {% for caminhao in caminhoes %}
+        <option value="{{ caminhao.placa }}">{{ caminhao.placa }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
 </div>
 
-{% if caminhoes %}
-    {% for caminhao in caminhoes %}
-    <div class="mp-card doc-card" data-plate="{{ caminhao.placa }}" style="margin-bottom:16px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
-            <div style="display:flex; align-items:center; gap:12px;">
-                {% if caminhao.placa == 'RCV' or caminhao.placa == 'RPG' or caminhao.placa == 'RDM' %}
-                <span style="display:inline-flex; align-items:center; justify-content:center; width:42px; height:34px; border-radius:12px; background:rgba(16,185,129,.12); color:var(--primary);">
-                    <svg viewBox="0 0 36 24" width="28" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="8" width="20" height="10" rx="2"/>
-                        <path d="M23 8h6l4 5v5h-4"/>
-                        <circle cx="9" cy="20" r="3"/>
-                        <circle cx="23" cy="20" r="3"/>
-                        <path d="M3 18h6"/>
-                    </svg>
-                </span>
-                {% elif caminhao.placa == 'RDG' %}
-                <span style="display:inline-flex; align-items:center; justify-content:center; width:42px; height:34px; border-radius:12px; background:rgba(59,130,246,.12); color:#3b82f6;">
-                    <svg viewBox="0 0 40 24" width="30" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 14h18v-7h10l4 6v8h-4"/>
-                        <path d="M10 14v6"/>
-                        <path d="M26 14v6"/>
-                        <circle cx="10" cy="22" r="3"/>
-                        <circle cx="26" cy="22" r="3"/>
-                        <path d="M18 14h6"/>
-                    </svg>
-                </span>
-                {% endif %}
-                <div>
-                    <div style="font-size:.85rem; font-weight:700;">Caminhão {{ caminhao.placa }}</div>
-                    <div style="font-size:.72rem; color:var(--text-sec);">Documentos disponíveis</div>
-                </div>
-            </div>
-            <span class="mp-badge mp-badge-atencao" style="font-size:.72rem; padding:6px 10px;">{{ caminhao.documentos.count }} itens</span>
+{% if caminhoes %} {% for caminhao in caminhoes %}
+<div
+  class="mp-card doc-card"
+  data-plate="{{ caminhao.placa }}"
+  style="margin-bottom: 16px"
+>
+  <div
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    "
+  >
+    <div style="display: flex; align-items: center; gap: 12px">
+      {% if caminhao.placa == 'RCV' or caminhao.placa == 'RPG' or caminhao.placa
+      == 'RDM' %}
+      <span
+        style="
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 42px;
+          height: 34px;
+          border-radius: 12px;
+          background: rgba(16, 185, 129, 0.12);
+          color: var(--primary);
+        "
+      >
+        <svg
+          viewBox="0 0 36 24"
+          width="28"
+          height="22"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="8" width="20" height="10" rx="2" />
+          <path d="M23 8h6l4 5v5h-4" />
+          <circle cx="9" cy="20" r="3" />
+          <circle cx="23" cy="20" r="3" />
+          <path d="M3 18h6" />
+        </svg>
+      </span>
+      {% elif caminhao.placa == 'RDG' %}
+      <span
+        style="
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 42px;
+          height: 34px;
+          border-radius: 12px;
+          background: rgba(59, 130, 246, 0.12);
+          color: #3b82f6;
+        "
+      >
+        <svg
+          viewBox="0 0 40 24"
+          width="30"
+          height="22"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M4 14h18v-7h10l4 6v8h-4" />
+          <path d="M10 14v6" />
+          <path d="M26 14v6" />
+          <circle cx="10" cy="22" r="3" />
+          <circle cx="26" cy="22" r="3" />
+          <path d="M18 14h6" />
+        </svg>
+      </span>
+      {% endif %}
+      <div>
+        <div style="font-size: 0.85rem; font-weight: 700">
+          Caminhão {{ caminhao.placa }}
         </div>
-
-        {% if caminhao.documentos.all %}
-            {% for doc in caminhao.documentos.all %}
-            <div style="display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; padding:12px 0; border-top:1px solid rgba(255,255,255,.08);">
-                <div>
-                    <div style="font-size:.82rem; font-weight:600; color:var(--text);">{{ doc.get_tipo_display }}{% if doc.descricao %} — {{ doc.descricao }}{% endif %}</div>
-                    <div style="color:var(--text-sec); font-size:.72rem; margin-top:4px;">
-                        {% if doc.data_validade %}
-                            Validade: {{ doc.data_validade|date:"d/m/Y" }}
-                        {% else %}
-                            Sem validade definida
-                        {% endif %}
-                    </div>
-                </div>
-                <a href="{{ doc.arquivo.url }}" download class="mp-btn mp-btn-outline mp-btn-sm" style="white-space:nowrap;">
-                    📥 Baixar doc
-                </a>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="mp-empty" style="padding:14px 0 0;">Nenhum documento cadastrado para este caminhão.</div>
-        {% endif %}
+        <div style="font-size: 0.72rem; color: var(--text-sec)">
+          Documentos disponíveis
+        </div>
+      </div>
     </div>
-    {% endfor %}
-{% else %}
-    <div class="mp-empty">Nenhum caminhão com documentos encontrados.</div>
-{% endif %}
+    <span
+      class="mp-badge mp-badge-atencao"
+      style="font-size: 0.72rem; padding: 6px 10px"
+      >{{ caminhao.documentos.count }} itens</span
+    >
+  </div>
 
-{% endblock %}
-
-{% block extra_js %}
+  {% if caminhao.documentos.all %} {% for doc in caminhao.documentos.all %}
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    "
+  >
+    <div>
+      <div style="font-size: 0.82rem; font-weight: 600; color: var(--text)">
+        {{ doc.get_tipo_display }}{% if doc.descricao %} — {{ doc.descricao }}{%
+        endif %}
+      </div>
+      <div style="color: var(--text-sec); font-size: 0.72rem; margin-top: 4px">
+        {% if doc.data_validade %} Validade: {{ doc.data_validade|date:"d/m/Y"
+        }} {% else %} Sem validade definida {% endif %}
+      </div>
+    </div>
+    <a
+      href="{{ doc.arquivo.url }}"
+      download
+      class="mp-btn mp-btn-outline mp-btn-sm"
+      style="white-space: nowrap"
+    >
+      📥 Baixar doc
+    </a>
+  </div>
+  {% endfor %} {% else %}
+  <div class="mp-empty" style="padding: 14px 0 0">
+    Nenhum documento cadastrado para este caminhão.
+  </div>
+  {% endif %}
+</div>
+{% endfor %} {% else %}
+<div class="mp-empty">Nenhum caminhão com documentos encontrados.</div>
+{% endif %} {% endblock %} {% block extra_js %}
 <script>
-(function() {
-    var search = document.getElementById('plate-search');
-    var filter = document.getElementById('plate-filter');
-    var cards = Array.from(document.querySelectorAll('.doc-card'));
+  (function () {
+    var search = document.getElementById("plate-search");
+    var filter = document.getElementById("plate-filter");
+    var cards = Array.from(document.querySelectorAll(".doc-card"));
     if (!search || !filter || !cards.length) return;
 
     function applyFilter() {
-        var query = search.value.trim().toUpperCase();
-        var selected = filter.value.toUpperCase();
-        cards.forEach(function(card) {
-            var plate = card.dataset.plate.toUpperCase();
-            var matchesQuery = !query || plate.indexOf(query) !== -1;
-            var matchesSelect = !selected || selected === plate;
-            card.style.display = (matchesQuery && matchesSelect) ? 'block' : 'none';
-        });
+      var query = search.value.trim().toUpperCase();
+      var selected = filter.value.toUpperCase();
+      cards.forEach(function (card) {
+        var plate = card.dataset.plate.toUpperCase();
+        var matchesQuery = !query || plate.indexOf(query) !== -1;
+        var matchesSelect = !selected || selected === plate;
+        card.style.display = matchesQuery && matchesSelect ? "block" : "none";
+      });
     }
 
-    search.addEventListener('input', applyFilter);
-    filter.addEventListener('change', applyFilter);
-})();
+    search.addEventListener("input", applyFilter);
+    filter.addEventListener("change", applyFilter);
+  })();
 </script>
 {% endblock %}

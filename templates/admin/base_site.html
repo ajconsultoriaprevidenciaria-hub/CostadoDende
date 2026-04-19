@@ -162,11 +162,12 @@ body {
 /* ── Sub-links hierárquicos (hover) ── */
 .adm-nav-group { position: relative; }
 .adm-nav-group .adm-nav-subs {
-  max-height: 0; overflow: hidden; transition: max-height .25s ease;
+  max-height: 0; overflow: hidden; transition: max-height .28s ease;
 }
 .adm-nav-group:hover .adm-nav-subs,
+.adm-nav-group.open .adm-nav-subs,
 .adm-nav-group.has-active .adm-nav-subs {
-  max-height: 300px;
+  max-height: 400px;
 }
 .adm-nav-sub {
   display: flex; align-items: center; gap: 6px;
@@ -647,6 +648,116 @@ body.popup .adm-footer { display: none; }
 body.popup .adm-shell { display: block; }
 body.popup .adm-main { min-height: auto; }
 body.popup .adm-content { max-width: 100%; padding: 18px; }
+
+/* ════════════════ RESPONSIVO ═════════════════════════════════ */
+
+/* Hambúrguer — oculto no desktop */
+.adm-hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 6px 8px;
+  color: var(--text);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  transition: background .18s;
+}
+.adm-hamburger:hover { background: rgba(0,217,166,.08); }
+
+/* Overlay escurecedor atrás do drawer */
+.adm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 199;
+  backdrop-filter: blur(2px);
+}
+.adm-overlay.open { display: block; }
+
+/* ── ≤960px: sidebar vira drawer lateral ── */
+@media (max-width: 960px) {
+  .adm-shell { grid-template-columns: 1fr; }
+
+  .adm-sb {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sbw);
+    height: 100vh;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+  }
+  .adm-sb.open {
+    transform: translateX(0);
+    box-shadow: 6px 0 28px rgba(0,0,0,.6);
+  }
+
+  .adm-hamburger { display: flex; }
+
+  /* Topbar: esconde elementos secundários para não transbordar */
+  .adm-topbar-sep,
+  .adm-topbar-user a { display: none; }
+}
+
+/* ── ≤768px: formulários, tabelas e inlines em coluna única ── */
+@media (max-width: 768px) {
+  .adm-content { padding: 14px; }
+
+  /* Form rows: label em cima do campo */
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 4px 0;
+  }
+
+  /* Inline compartimentos: empilha */
+  .cpt-hdr { display: none; }
+  .cpt-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .cpt-cap { justify-content: flex-start; }
+
+  /* Tabelas: scroll horizontal */
+  #result_list, table.results {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Changelist: filtro lateral vai para baixo */
+  #changelist { flex-direction: column; }
+  #changelist-filter { min-width: 0; width: 100%; }
+
+  /* Toolbar: campo de busca ocupa toda a largura */
+  #toolbar { flex-direction: column; align-items: stretch; }
+  #searchbar,
+  #toolbar input[type="text"],
+  #toolbar input[type="search"] { min-width: 0; width: 100%; }
+
+  /* Ações: empilha */
+  .actions { flex-direction: column; align-items: flex-start; }
+  .actions select { max-width: 100%; width: 100%; }
+}
+
+/* ── ≤480px: refinamentos extremos ── */
+@media (max-width: 480px) {
+  .adm-topbar { padding: 0 12px; gap: 8px; }
+  .adm-content { padding: 10px; }
+  .adm-page-header h1 { font-size: 1.1rem; }
+
+  ul.object-tools { flex-direction: column; }
+  ul.object-tools li { width: 100%; }
+  ul.object-tools a { display: block; text-align: center; }
+
+  .submit-row { flex-direction: column; align-items: stretch; }
+  .submit-row p { flex: 0; }
+  .submit-row a.deletelink { margin-right: 0; }
+}
 </style>
 
 {% block extrahead %}{% endblock %}
@@ -870,10 +981,20 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
 
   </aside>
 
+  {# Overlay para fechar o drawer no mobile #}
+  <div class="adm-overlay" id="adm-overlay"></div>
+
   {# ═══════════════════════ MAIN ════════════════════════════════ #}
   <div class="adm-main">
 
     <header class="adm-topbar">
+      <button class="adm-hamburger" id="adm-hamburger" aria-label="Abrir menu" title="Menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
       <div class="adm-topbar-bread">
         {% block nav-breadcrumbs %}
           <a href="{% url 'admin:index' %}">Início</a>
@@ -932,6 +1053,46 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
 (function(){
   'use strict';
   var path = window.location.pathname;
+
+  /* ── Hamburger / Drawer ── */
+  var sb       = document.querySelector('.adm-sb');
+  var overlay  = document.getElementById('adm-overlay');
+  var hamburger = document.getElementById('adm-hamburger');
+
+  function openSidebar() {
+    sb.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    sb.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (hamburger) hamburger.addEventListener('click', function(){ sb.classList.contains('open') ? closeSidebar() : openSidebar(); });
+  if (overlay)   overlay.addEventListener('click', closeSidebar);
+
+  /* Fecha o drawer ao clicar em qualquer link do menu */
+  sb.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      if (window.innerWidth <= 960) closeSidebar();
+    });
+  });
+
+  /* Sub-menus: mouseenter/leave na group para abrir/fechar de forma confiável */
+  document.querySelectorAll('.adm-nav-group').forEach(function(group){
+    var timer;
+    group.addEventListener('mouseenter', function(){
+      clearTimeout(timer);
+      group.classList.add('open');
+    });
+    group.addEventListener('mouseleave', function(){
+      // pequeno delay para não fechar ao mover entre link e submenu
+      timer = setTimeout(function(){ group.classList.remove('open'); }, 80);
+    });
+  });
+
   document.querySelectorAll('.adm-nav-link[href]').forEach(function(a){
     var href = a.getAttribute('href');
     if(!href || href === '/admin/') return;
