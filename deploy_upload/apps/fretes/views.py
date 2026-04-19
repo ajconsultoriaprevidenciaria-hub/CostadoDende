@@ -12,7 +12,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CargaForm
 from .models import Caminhao, Carga, Compartimento, Produto
-from .models import CargaCompartimento
+from .models import CargaCompartimento, Fornecedor, Motorista
 
 
 @login_required
@@ -156,6 +156,36 @@ def rota_info(request, pk):
 		'distancia_km': float(rota.distancia_km) if rota.distancia_km else None,
 		'tempo_total_min': rota.tempo_total_min,
 	})
+
+
+@login_required
+def caminhoes_json(request):
+	"""Retorna lista de caminhões com placa e motorista principal."""
+	caminhoes = Caminhao.objects.filter(ativo=True).select_related('motorista_principal').order_by('placa')
+	data = []
+	for c in caminhoes:
+		data.append({
+			'placa': c.placa,
+			'motorista': c.motorista_principal.nome if c.motorista_principal else '',
+			'telefone': c.motorista_principal.telefone if c.motorista_principal else '',
+		})
+	return JsonResponse({'caminhoes': data})
+
+
+@login_required
+def motoristas_json(request):
+	"""Retorna lista de motoristas."""
+	motoristas = Motorista.objects.filter(ativo=True).order_by('nome')
+	data = [{'nome': m.nome, 'telefone': m.telefone} for m in motoristas]
+	return JsonResponse({'motoristas': data})
+
+
+@login_required
+def fornecedores_json(request):
+	"""Retorna lista de fornecedores (distribuidoras)."""
+	fornecedores = Fornecedor.objects.filter(ativo=True).order_by('nome')
+	data = [{'razao': f.nome, 'cnpj': f.documento} for f in fornecedores]
+	return JsonResponse({'fornecedores': data})
 
 
 @staff_member_required

@@ -2312,6 +2312,43 @@ function removerFechamento(idx) {
 }
 
 function renderFechamentoCarga() {
+  // Buscar dados do sistema de transporte (CostadoDende) e mesclar com locais
+  _syncTransporteData().then(() => _renderFechamentoInterno());
+}
+
+async function _syncTransporteData() {
+  try {
+    const [resCam, resMot, resForn] = await Promise.all([
+      fetch('/operacao/api/caminhoes/').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/operacao/api/motoristas/').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/operacao/api/fornecedores/').then(r => r.ok ? r.json() : null).catch(() => null),
+    ]);
+
+    // Mesclar caminhões: adicionar do transporte se placa não existir localmente
+    if (resCam && resCam.caminhoes) {
+      const locais = getCaminhoes();
+      resCam.caminhoes.forEach(c => {
+        if (!locais.find(l => l.placa === c.placa)) {
+          locais.push({ placa: c.placa, motorista: c.motorista, telefone: c.telefone, origem: 'transporte' });
+        }
+      });
+      saveCaminhoes(locais);
+    }
+
+    // Mesclar distribuidoras/fornecedores
+    if (resForn && resForn.fornecedores) {
+      const locais = getDistribuidoras();
+      resForn.fornecedores.forEach(f => {
+        if (!locais.find(l => l.razao.toLowerCase() === f.razao.toLowerCase())) {
+          locais.push({ razao: f.razao, cnpj: f.cnpj, base: '', origem: 'transporte' });
+        }
+      });
+      saveDistribuidoras(locais);
+    }
+  } catch(e) { /* silently continue with local data */ }
+}
+
+function _renderFechamentoInterno() {
   // Popula select de distribuidoras
   const distribs = getDistribuidoras();
   const selDist = document.getElementById('fchDistribuidora');
@@ -2402,6 +2439,13 @@ function renderFechamentoCarga() {
       htmlFech += `<option value="${d}">${d.split('-').reverse().join('/')}</option>`;
     });
     htmlFech += '</select>';
+    const placasUnicasRel = [...new Set(fechamentos.map(f => f.placa).filter(p => p))];
+    htmlFech += '<select id="selPlacaRelatorio" style="padding:6px 10px;font-size:.82rem;">';
+    htmlFech += '<option value="">Todas as placas</option>';
+    placasUnicasRel.forEach(p => {
+      htmlFech += `<option value="${p}">${p}</option>`;
+    });
+    htmlFech += '</select>';
     htmlFech += '<button class="btn btn-success btn-sm" onclick="gerarRelatorioCargaTXT()" style="font-size:.78rem;">📄 Bloco de Notas</button>';
     htmlFech += '<button class="btn btn-danger btn-sm" onclick="gerarRelatorioCargaPDF()" style="font-size:.78rem;">📕 PDF</button>';
     htmlFech += '</div>';
@@ -2428,8 +2472,9 @@ function renderFechamentoCarga() {
   document.getElementById('tabelaFechamentos').innerHTML = htmlFech;
 }
 
-function montarTextoCarga(dataSel) {
-  const fechamentos = getFechamentos().filter(f => f.data === dataSel);
+function montarTextoCarga(dataSel, placaFiltro) {
+  let fechamentos = getFechamentos().filter(f => f.data === dataSel);
+  if (placaFiltro) fechamentos = fechamentos.filter(f => f.placa === placaFiltro);
   if (fechamentos.length === 0) return null;
 
   const diasSemana = ['DOMINGO','SEGUNDA FEIRA','TERÇA FEIRA','QUARTA FEIRA','QUINTA FEIRA','SEXTA FEIRA','SÁBADO'];
@@ -2500,10 +2545,25 @@ function montarTextoCarga(dataSel) {
   return txt;
 }
 
+function montarTextoTodasPlacas(dataSel) {
+  const fechamentos = getFechamentos().filter(f => f.data === dataSel);
+  if (fechamentos.length === 0) return null;
+  const placas = [...new Set(fechamentos.map(f => f.placa).filter(p => p))];
+  if (placas.length === 0) return montarTextoCarga(dataSel, '');
+  const blocos = [];
+  placas.forEach(placa => {
+    const txt = montarTextoCarga(dataSel, placa);
+    if (txt) blocos.push(txt);
+  });
+  if (blocos.length === 0) return null;
+  return blocos.join('\n\n' + '═'.repeat(50) + '\n\n');
+}
+
 function gerarRelatorioCargaTXT() {
   const dataSel = document.getElementById('selDataRelatorio').value;
-  const txt = montarTextoCarga(dataSel);
-  if (!txt) { showToast('Nenhuma carga nesta data!', 'error'); return; }
+  const placaSel = document.getElementById('selPlacaRelatorio')?.value || '';
+  const txt = placaSel ? montarTextoCarga(dataSel, placaSel) : montarTextoTodasPlacas(dataSel);
+  if (!txt) { showToast('Nenhuma carga nesta data/placa!', 'error'); return; }
   const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -2515,14 +2575,16 @@ function gerarRelatorioCargaTXT() {
 
 function gerarRelatorioCargaPDF() {
   const dataSel = document.getElementById('selDataRelatorio').value;
-  const txt = montarTextoCarga(dataSel);
-  if (!txt) { showToast('Nenhuma carga nesta data!', 'error'); return; }
+  const placaSel = document.getElementById('selPlacaRelatorio')?.value || '';
+  const txt = placaSel ? montarTextoCarga(dataSel, placaSel) : montarTextoTodasPlacas(dataSel);
+  if (!txt) { showToast('Nenhuma carga nesta data/placa!', 'error'); return; }
 
   const win = window.open('', '_blank');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Carga ${dataSel}</title>
     <style>body{font-family:monospace;font-size:14px;padding:30px;white-space:pre-wrap;line-height:1.6;}
+    hr{border:none;border-top:2px solid #333;margin:20px 0;}
     @media print{body{margin:0;padding:20px;}}</style></head>
-    <body>${txt.replace(/\n/g, '<br>')}</body></html>`);
+    <body>${txt.replace(/\n/g, '<br>').replace(/═{50}/g, '<hr>')}</body></html>`);
   win.document.close();
   setTimeout(() => { win.print(); }, 400);
   showToast('Relatório PDF gerado!');

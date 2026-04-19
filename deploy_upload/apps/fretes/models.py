@@ -263,6 +263,12 @@ class Carga(BaseModel):
 	caminhao = models.ForeignKey(Caminhao, on_delete=models.PROTECT, related_name='cargas')
 	motorista = models.ForeignKey(Motorista, on_delete=models.PROTECT, related_name='cargas')
 	rota = models.ForeignKey(Rota, on_delete=models.PROTECT, related_name='cargas')
+	origem = models.CharField(max_length=150, blank=True, default='', choices=[
+		('Candeias/BA', 'Candeias - BA'),
+		('São Francisco do Conde/BA', 'São Francisco do Conde - BA'),
+		('Madre de Deus/BA', 'Madre de Deus - BA'),
+		('Suape/PE', 'Suape - PE'),
+	], verbose_name='Origem')
 	litros = models.DecimalField(max_digits=12, decimal_places=2)
 	valor_frete_litro = models.DecimalField(max_digits=10, decimal_places=4, blank=True, null=True)
 	valor_total_frete = models.DecimalField(max_digits=14, decimal_places=2, blank=True, null=True)
@@ -414,6 +420,12 @@ class Pneu(BaseModel):
 		('atencao', 'Atenção'),
 		('ruim', 'Ruim'),
 	]
+	RECAPAGEM_CHOICES = [
+		('', 'Não recapado'),
+		('1', '1° Recapeamento'),
+		('2', '2° Recapeamento'),
+		('3', '3° Recapeamento'),
+	]
 
 	caminhao = models.ForeignKey(Caminhao, on_delete=models.CASCADE, related_name='pneus')
 	posicao = models.CharField(max_length=10, choices=POSICAO_CHOICES, verbose_name='Posição')
@@ -423,7 +435,7 @@ class Pneu(BaseModel):
 	data_instalacao = models.DateField(null=True, blank=True, verbose_name='Data de instalação')
 	km_instalacao = models.PositiveIntegerField(null=True, blank=True, verbose_name='KM na instalação')
 	sulco_mm = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True, verbose_name='Sulco (mm)')
-	recapado = models.BooleanField(default=False)
+	recapagem = models.CharField(max_length=1, choices=RECAPAGEM_CHOICES, default='', blank=True, verbose_name='Recapeamento')
 	status = models.CharField(max_length=10, choices=STATUS_PNEU_CHOICES, default='bom')
 	observacoes = models.TextField(blank=True)
 

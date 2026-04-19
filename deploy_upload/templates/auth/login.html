@@ -102,6 +102,15 @@
     }
     .forgot-link:hover { color: #1e5fa8; }
 
+    .back-link {
+      display: block; text-align: center; margin-top: 10px; padding-top: 16px;
+      border-top: 1px solid rgba(30,60,100,.12);
+      font-size: .78rem; color: rgba(30,60,100,.45);
+      text-decoration: none; transition: color .2s;
+    }
+    .back-link:hover { color: #1e5fa8; }
+    .back-link::before { content: '← '; }
+
     .location-label {
       position: fixed; bottom: 14px; left: 0; right: 0; z-index: 2;
       text-align: center; pointer-events: none;
@@ -140,6 +149,7 @@
         <button type="submit" class="login-btn">Entrar no Sistema &rarr;</button>
       </form>
       <a href="{% url 'password_reset' %}" class="forgot-link">Esqueceu a senha?</a>
+      <a href="/" class="back-link">Voltar para o site</a>
     </div>
   </div>
 
