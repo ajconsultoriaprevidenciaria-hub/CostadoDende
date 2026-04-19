@@ -48,7 +48,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -150,6 +152,17 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]
+
+# Desabilitar todo cache no ambiente de desenvolvimento
+# Evita que o Chrome sirva páginas antigas mesmo com o servidor desligado
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+# Instrui o navegador a nunca cachear respostas do servidor local
+CACHE_MIDDLEWARE_SECONDS = 0
 
 # Email via Gmail SMTP (gratuito — até 500 e-mails/dia)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
