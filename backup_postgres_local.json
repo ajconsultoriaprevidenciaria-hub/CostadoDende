@@ -1,0 +1,3478 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$WAj0y8sVFbWcLLPKbSng9I$N0o9OM2n43Ej0IGT/igmIaRsUBJ2xAKe0aQcwRXw99w=",
+    "last_login": "2026-04-19T00:12:11.469Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@costadodende.local",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-08T19:41:59.253Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$lzO7mFQCnt9sZ9IVHst2xz$S+U050bWAedYG56qjp1R3tOHnHAoHGPB5EWEzOZbtPM=",
+    "last_login": "2026-04-16T23:47:18.767Z",
+    "is_superuser": false,
+    "username": "mot_22222222222",
+    "first_name": "FLORIANO",
+    "last_name": "ALVES MARQUES NETO",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-10T02:39:24.846Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$G4S1X5xkdQJ983CkRoYml5$o/ADLPVDRozOGW6To5jgB+b4HYBMobI+GyVNenr9S5E=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "03888170540",
+    "first_name": "JONATHAN",
+    "last_name": "RAMON BOMFIM FONSECA",
+    "email": "jonathan_fsa@hotmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-15T18:43:16.627Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$dlQG61BJVCqZLNJxkKRwXR$uKWisOMZ35VlhL4To5kWN+rw0XMEqW2eZEy1uLI3Hu0=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "__test_inspect",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-15T23:08:43.723Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "3gaitr6d91gnqpfnmx7lvtbzgyurreay",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lz1KyMel2e1Tw7B-EzYsWHylNehL_XYQe9DozzAucbG1yW02rmyOMgHD4ZV7CLT2_Qpaldo_SyjrXJm4pa5N7t_vana-X097-DSapE4ygidkqL0aQySfDjInU0Ns4EArrJDka1WMIpIOyKmXCSGZAyjYeOcL7A-I3N4E:1wDACc:F7QGomYFzmOZIMTfuyFfj7pbW5xDxAdGDTGAivr7vaM",
+    "expire_date": "2026-04-30T00:03:26.782Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "3ivdb0k89n1tc548qtx0tq6kuklaacsy",
+  "fields": {
+    "session_data": ".eJxVjEkKAjEQAP_SZwlmNT1HBzz7g9DZyOCSMMmcxL-LMAe9VhX1AkfbKG7raXVLhAkEHH6Zp3BLz6-g1jp71FHXpQ9yra6D7mz3nc3Xy3lv_waFeoEJskJuEZOw3GhryGYdyUhhjAxc-nyMiJxCzEZLnU8kSHmfLWrEoFEJeH8A5ow3mA:1wD0QW:L5MbZdFm1gesBTOqiOkdiQphJahBBM8MMpYCUubjklE",
+    "expire_date": "2026-04-29T13:37:08.445Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "508nixymhvg0w1icuzu18rb904orevsm",
+  "fields": {
+    "session_data": "eyJfcGFzc3dvcmRfcmVzZXRfdG9rZW4iOiJkNzM3Y3MtYjIzNzVkNDU1OGYxMzNkZDdlNjYzMWE2NzExMDNlNTEifQ:1wD6th:DOHEhC_1pkL2lTIuvQvbAqNBMTrPw-oFaAd0L_zrCuw",
+    "expire_date": "2026-04-29T20:31:41.099Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "56aj81r1hean2sogffi4h36c5et4m6qx",
+  "fields": {
+    "session_data": ".eJxVjEEOgjAUBe_y16Yp-FsoS_ecoXntby1qIKGwMt7dkLDQ7cxk3uSxb8XvNa1-EhrI0OWXBcRnmg8hD8z3RcVl3tYpqCNRp61qXCS9bmf7NyiohQZi5mw5Opu1M5J0j5S5M0GMBlzDNsagYaVrG5FscAVMhza6HsEJ9_T5AvMQOJY:1wDA6R:6DlvwGhOkEmQ4HqPJ2k0ZpmfXgNetuK8cxydRc_qZ3g",
+    "expire_date": "2026-04-29T23:57:03.601Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "68m0f069kf8f57iwqodoe77j4ie6xksb",
+  "fields": {
+    "session_data": ".eJxVjEkKAjEQAP_SZwlmNT1HBzz7g9DZyOCSMMmcxL-LMAe9VhX1AkfbKG7raXVLhAkEHH6Zp3BLz6-g1jp71FHXpQ9yra6D7mz3nc3Xy3lv_waFeoEJskJuEZOw3GhryGYdyUhhjAxc-nyMiJxCzEZLnU8kSHmfLWrEoFEJeH8A5ow3mA:1wD1Nb:iILQHWVcq1vNN2xUsPET_-64VLw5J3vhkb2G5xIkxGM",
+    "expire_date": "2026-04-29T14:38:11.743Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "6nc38rhrr5ub3w46a8pvtkljd2ye5ym9",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDWYe:kjb-SmwpQ988_4FpON3UAa6gJv6RD124K7gRoGCMo4c",
+    "expire_date": "2026-04-30T23:55:40.310Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "6uizbm5kplrdre9y0thsaij9nlcsh079",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDX4J:eEMakKPveSDGhNrd-3lthC1L-eO-pfAZRZuDfQ6wMFg",
+    "expire_date": "2026-05-01T00:28:23.554Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9u27oouiev8eciayfnhm0fc7tozo8dfw",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDAMv:wAi-Y4RHhAu5jKk2FJcnsWuGN4gQnHyONAEWb0ZcG-4",
+    "expire_date": "2026-04-30T00:14:05.228Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9upyv0necb5d8z1b09cu3i908wzwxk2x",
+  "fields": {
+    "session_data": "e30:1wD9Lf:ah9pf3yr2eVhbfoJdKGl9dFiHi1-IZjv9xK_6CQuqno",
+    "expire_date": "2026-04-29T23:08:43.762Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "aiby7ia3r9dkd11rh560ldee266mmmc0",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lzxLyTtujd78hZLMbU5UGmvYk_rsUetDrzDBviGnfatw7r3EmmEDB5Zdhyk9eDkGPtNybyG3Z1hnFkYjTdnFrxK_r2f4NauoVJnBaSQ5BEatQRrKYGRG99lZSGoof0QZjRpaOg9FUnM4yePbOaeUHaeHzBeI3N0c:1wAZ7w:Kc6GmQW1xu2rWBEj7zkKpJm_xi-QmSK9Btnj0p9Yvyw",
+    "expire_date": "2026-04-22T20:03:52.099Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "bn1ecq3kllv2ay76q468lrijrgj8qpei",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wAwqt:vxmGB5dwaEUsODI8S-hCvtMVrGotOOCiaxsjeFc4lbE",
+    "expire_date": "2026-04-23T21:23:51.256Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "cwzc2aejfsbyc2b8nirektj6mwhq4a47",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wAx0e:R5NuPoPWqvfswXprQLvUrwj-HqG4ZMN78uRjK9nbKc8",
+    "expire_date": "2026-04-23T21:33:56.516Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "d95zff5vbqjvyrrg8r4dlz17wlrba5jl",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbLsdfCRkj5vsHZ94ABypDipEH9HkVJAOzOaNwTatxr2ntcwJxhBweWXMcVnbodID2r3RcSlbevM4kjEabuYlpRft7P9G1TqFUYouTAxZ3Ze6pgUWTfEq0WNRjssZkAs1qPxxqPkYlCTVDIyaelTQQWfL_PaN5U:1wAp9u:PAmIyLT87WYohzMqfRVqDNznkyhOFXxXexFawhHwpZI",
+    "expire_date": "2026-04-23T13:10:58.558Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ffjc3dz6bi7jbv5m7f5p99m9y1fi3op6",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDALa:3K95XJWqBYrmthfP--ev8bYlLynqhTV1CZSP1BkfDtM",
+    "expire_date": "2026-04-30T00:12:42.064Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gxcx9stbq6tj207n2fl52xd9dlgusa72",
+  "fields": {
+    "session_data": ".eJxVjEkKAjEQAP_SZwlmNT1HBzz7g9DZyOCSMMmcxL-LMAe9VhX1AkfbKG7raXVLhAkEHH6Zp3BLz6-g1jp71FHXpQ9yra6D7mz3nc3Xy3lv_waFeoEJskJuEZOw3GhryGYdyUhhjAxc-nyMiJxCzEZLnU8kSHmfLWrEoFEJeH8A5ow3mA:1wDC7V:dawsaH3xXCEuk9taRQMfWqw6xSsX6cRdVLf4vo023Hc",
+    "expire_date": "2026-04-30T02:06:17.129Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "htz0d7z604o8657squal8giikcc6ntr8",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lz1KyMel2e1Tw7B-EzYsWHylNehL_XYQe9DozzAucbG1yW02rmyOMgHD4ZV7CLT2_Qpaldo_SyjrXJm4pa5N7t_vana-X097-DSapE4ygidkqL0aQySfDjInU0Ns4EArrJDka1WMIpIOyKmXCSGZAyjYeOcL7A-I3N4E:1wDAEU:fEizro9SLOYYzGdsWGwMfYt36GH2B3usZSy5A10D95k",
+    "expire_date": "2026-04-30T00:05:22.746Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "hwyhg8pej2sq60xybxytclna5q8c342l",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lzxLyTtujd78hZLMbU5UGmvYk_rsUetDrzDBviGnfatw7r3EmmEDB5Zdhyk9eDkGPtNybyG3Z1hnFkYjTdnFrxK_r2f4NauoVJnBaSQ5BEatQRrKYGRG99lZSGoof0QZjRpaOg9FUnM4yePbOaeUHaeHzBeI3N0c:1wAZ4y:0STXaKYOCrDrN7jTXidXXBqkZz9ZNE4VnS8277Dum3M",
+    "expire_date": "2026-04-22T20:00:48.603Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ipdsqxuwjemr040femyezcqsvp78xnnb",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wD6P7:2rND3MXGr0sQUkKGchIjwQBBR4g-nau0ZsfBvVbGJ3A",
+    "expire_date": "2026-04-29T20:00:05.506Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "irodpkyyiva9sdtdezoqwuo30eim6wso",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wD4kb:5Zdf13NnD3w7WddXmqq1DqpaiErJyjvHt9VBy1XzQWk",
+    "expire_date": "2026-04-29T18:14:09.588Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "jnbvixd2p2ehg2uwlauirl998cnw1o0s",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wD0f0:cerScYmnLYaEJ94oDonxkr3qZwaf4njHwPm-C-qQxhI",
+    "expire_date": "2026-04-29T13:52:06.359Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "jovx0biu6l4hap3zmn7u2uzhmeg81835",
+  "fields": {
+    "session_data": ".eJxVjEkKAjEQAP_SZwlmNT1HBzz7g9DZyOCSMMmcxL-LMAe9VhX1AkfbKG7raXVLhAkEHH6Zp3BLz6-g1jp71FHXpQ9yra6D7mz3nc3Xy3lv_waFeoEJskJuEZOw3GhryGYdyUhhjAxc-nyMiJxCzEZLnU8kSHmfLWrEoFEJeH8A5ow3mA:1wD3UK:BMeaP3fJ8uA_JxHOASlLSx8SP5JXJct0sj4DTiLWSOs",
+    "expire_date": "2026-04-29T16:53:16.904Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "jxl14siz6aipspfihfvxge5p3mvrpzcy",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbJwfKw3JX3eYO3GDg4gW8pRIf6OIqWAdmY0b4i8byXua17inKAHDZdfJjw-cz1EenC9NzW2ui2zqCNRp13V0FJ-3c72b1B4LdCDJ6aEgqHLZLLz3tlJrCVmIaODGHdFDBNbF5BNcjp1GokohMmKdwifL8vONuo:1wAqda:PTyt8BW-W2ey0R76YwgQLWst6tnbc3q14hpdfWekjyk",
+    "expire_date": "2026-04-23T14:45:42.011Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "losrscwwqyh5bt1jamwnhua96k1rhazn",
+  "fields": {
+    "session_data": ".eJxVjEEOgjAUBe_y16Yp-FsoS_ecoXntby1qIKGwMt7dkLDQ7cxk3uSxb8XvNa1-EhrI0OWXBcRnmg8hD8z3RcVl3tYpqCNRp61qXCS9bmf7NyiohQZi5mw5Opu1M5J0j5S5M0GMBlzDNsagYaVrG5FscAVMhza6HsEJ9_T5AvMQOJY:1wDA4l:S70GA4YZhwX4mxnCc-I-sy0HI43ShEf0ZS-jcDLyHpg",
+    "expire_date": "2026-04-29T23:55:19.844Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "mkp6qhitcfkf1voiubcjsx0z078lml97",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lz1KyMel2e1Tw7B-EzYsWHylNehL_XYQe9DozzAucbG1yW02rmyOMgHD4ZV7CLT2_Qpaldo_SyjrXJm4pa5N7t_vana-X097-DSapE4ygidkqL0aQySfDjInU0Ns4EArrJDka1WMIpIOyKmXCSGZAyjYeOcL7A-I3N4E:1wDACl:l3mv2dCZzpM3tgyZdTn1dW1RCq85RjdVWKfLDu4DkFY",
+    "expire_date": "2026-04-30T00:03:35.216Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "mvekv5ao3xwpg5g1cjrq1me6xvtk1yp3",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDAMe:46U7vhmCGz4B1aj4VXeU_WzMGn8QctIg8ScpZj0c3so",
+    "expire_date": "2026-04-30T00:13:48.750Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nnqba8dgsbchvigv2jhc9cjb4s2v5h5s",
+  "fields": {
+    "session_data": ".eJxVjEEOgjAUBe_y16Yp-FsoS_ecoXntby1qIKGwMt7dkLDQ7cxk3uSxb8XvNa1-EhrI0OWXBcRnmg8hD8z3RcVl3tYpqCNRp61qXCS9bmf7NyiohQZi5mw5Opu1M5J0j5S5M0GMBlzDNsagYaVrG5FscAVMhza6HsEJ9_T5AvMQOJY:1wDA51:i1ZQ8myT0U2g0DjaSQZRmcJMrMbiyopwXYkKFtC2DOg",
+    "expire_date": "2026-04-29T23:55:35.835Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nohrhnfuje87b8xudx7xkb3eklv2zc2v",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDABe:Hfn2BKE0ItnbEf8gzLxI-1CebYL3KYnRWkyoGw5smmc",
+    "expire_date": "2026-04-30T00:02:26.615Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "p8f8bvwjzysgw7qm3taonxcwaptbpjf0",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lz1KyMel2e1Tw7B-EzYsWHylNehL_XYQe9DozzAucbG1yW02rmyOMgHD4ZV7CLT2_Qpaldo_SyjrXJm4pa5N7t_vana-X097-DSapE4ygidkqL0aQySfDjInU0Ns4EArrJDka1WMIpIOyKmXCSGZAyjYeOcL7A-I3N4E:1wDAFs:dGHVrg4nyB_8XEN0AMeGhFNxZBe0kx3qMSk3UUesxiE",
+    "expire_date": "2026-04-30T00:06:48.163Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "phkqhmfpd238xvmag9w6fykfcuracag6",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lz1KyMel2e1Tw7B-EzYsWHylNehL_XYQe9DozzAucbG1yW02rmyOMgHD4ZV7CLT2_Qpaldo_SyjrXJm4pa5N7t_vana-X097-DSapE4ygidkqL0aQySfDjInU0Ns4EArrJDka1WMIpIOyKmXCSGZAyjYeOcL7A-I3N4E:1wDADi:wnxzI3cGit2AbmTztlDRyi84Q1FyTwIiiHuaAiA1ugo",
+    "expire_date": "2026-04-30T00:04:34.076Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "pp2lw7wpqr7hqxheahudpjp533sx3xos",
+  "fields": {
+    "session_data": "eyJfcGFzc3dvcmRfcmVzZXRfdG9rZW4iOiJkNzM2em4tY2YwY2ZhMDUwOTk4MTIwNmIwZjUzZmYzOTI1N2M4ZWEifQ:1wD6wr:f8uk-uNvT0Y_w8VtZ7CNlbi_Tg9zD94c-loarNH4QYs",
+    "expire_date": "2026-04-29T20:34:57.296Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "q9102wlpkgewfdl85opfzqaux0dtc6aj",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wD0cV:fCKdffX4L2ZsnwiXAfuEat3RJ4kyLXI8lJvP-klCS4E",
+    "expire_date": "2026-04-29T13:49:31.325Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "qizxh8qf6lyqyzurhl4j9a8up618iucn",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDAKx:86IJaWUN2APEQUGYFjaRA-zBib704qNj_EXH030jCGg",
+    "expire_date": "2026-04-30T00:12:03.546Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ra44oap7g04svxzmuibaa77546z0a75i",
+  "fields": {
+    "session_data": "e30:1wBP3w:HaA4mD2OrLHnf8BmDW5kRaftyZADFZNaFV2Eu2OZM0M",
+    "expire_date": "2026-04-25T03:31:12.814Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "rk9hddbcnio52pcvtfaymsr57hfp0263",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wAwpP:xnpbsJyo-E-Y2UVsLGuoBkzWMysKicY419HNl5GEbGc",
+    "expire_date": "2026-04-23T21:22:19.353Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ryn5n70czkmgz3rnwaxwbxj9mmb2gz11",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wAwlz:y5Pa4LaqIt5EkrE-6wGXtrCoGla4YNy1Gh-iCJkxTSg",
+    "expire_date": "2026-04-23T21:18:47.716Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "u4zktmgqq4gt23hq05p7lj5s233khz52",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wD0d0:PHfR6ja1X5gzC2SNjnLLKDE_RKmpXbRR3aGK1b08opk",
+    "expire_date": "2026-04-29T13:50:02.508Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "uhl0nplr5t5xhg761up7yhk11zwkd850",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDANT:3DL-Q7yfWObb-iFfJF3kX5Flxj1LnviyuTAtVO9hPIY",
+    "expire_date": "2026-04-30T00:14:39.156Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "vmefol2qduu9uluxdcx09ktkkrltvxq9",
+  "fields": {
+    "session_data": "e30:1wCMWp:fDN6QruSCeq8PCSX4R7WtimGPxtXGCDpTQ5-akBZPGw",
+    "expire_date": "2026-04-27T19:00:59.884Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "x5v440vh3htl6rkutijoqlz9jlju5rtr",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lz1KyMel2e1Tw7B-EzYsWHylNehL_XYQe9DozzAucbG1yW02rmyOMgHD4ZV7CLT2_Qpaldo_SyjrXJm4pa5N7t_vana-X097-DSapE4ygidkqL0aQySfDjInU0Ns4EArrJDka1WMIpIOyKmXCSGZAyjYeOcL7A-I3N4E:1wDAE7:a9ItBmWGjcngDDGpoooS-eRZNY2BGyIGkP4biamtFnU",
+    "expire_date": "2026-04-30T00:04:59.370Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xte99ihjqvx8nht3923k3x1k45pqwyrc",
+  "fields": {
+    "session_data": ".eJxVjDEOgzAMAP_iuYpimmDM2J03ICc2hbYCicBU9e8VEkO73p3uDb3s29jvxdZ-UmgB4fLLkuSnzYfQh8z3xeVl3tYpuSNxpy2uW9Ret7P9G4xSRmihIubokwRBpmSBGY18U0dtCIUrk0GDrzFnqrKP3gZCpdAgDVGvrPD5AsenN1Y:1wDAtx:9c-R9BZMAl2slD9KZOtOgK3xnuGRzkIrMYby5JJED3s",
+    "expire_date": "2026-04-30T00:48:13.350Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "y25x2wp2nil1c1xj6sk4ow4c86te2hfd",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbLsdfCRkj5vsHZ94ABypDipEH9HkVJAOzOaNwTatxr2ntcwJxhBweWXMcVnbodID2r3RcSlbevM4kjEabuYlpRft7P9G1TqFUYouTAxZ3Ze6pgUWTfEq0WNRjssZkAs1qPxxqPkYlCTVDIyaelTQQWfL_PaN5U:1wApBr:fmwjkZtXyz-r0mgKr9g61hX81aJZXoJPKdjb6CWeBAI",
+    "expire_date": "2026-04-23T13:12:59.188Z"
+  }
+},
+{
+  "model": "fretes.cliente",
+  "pk": 1,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.611Z",
+    "atualizado_em": "2026-04-08T19:42:00.611Z",
+    "ativo": true,
+    "nome": "Posto Costa Azul",
+    "nome_fantasia": "",
+    "documento": "12.345.678/0001-90",
+    "contato": "",
+    "telefone": "",
+    "email": "",
+    "cidade": "Valença",
+    "uf": "BA"
+  }
+},
+{
+  "model": "fretes.cliente",
+  "pk": 2,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.618Z",
+    "atualizado_em": "2026-04-08T19:42:00.618Z",
+    "ativo": true,
+    "nome": "Posto Ilha Bela",
+    "nome_fantasia": "",
+    "documento": "98.765.432/0001-10",
+    "contato": "",
+    "telefone": "",
+    "email": "",
+    "cidade": "Ituberá",
+    "uf": "BA"
+  }
+},
+{
+  "model": "fretes.cliente",
+  "pk": 3,
+  "fields": {
+    "criado_em": "2026-04-15T17:17:52.249Z",
+    "atualizado_em": "2026-04-15T22:30:39.364Z",
+    "ativo": true,
+    "nome": "POSTO SAUBARA",
+    "nome_fantasia": "PAOSOASA",
+    "documento": "KSDKSKK",
+    "contato": "17741444",
+    "telefone": "1144444",
+    "email": "444dfdf@gmail.com",
+    "cidade": "SALVADOR",
+    "uf": "BA"
+  }
+},
+{
+  "model": "fretes.cliente",
+  "pk": 5,
+  "fields": {
+    "criado_em": "2026-04-17T00:30:25.953Z",
+    "atualizado_em": "2026-04-17T00:30:25.953Z",
+    "ativo": true,
+    "nome": "POSTO ARATUIPE",
+    "nome_fantasia": "COSTA AZUL ARATUIPE",
+    "documento": "29055074000107",
+    "contato": "7199157376",
+    "telefone": "71991587376",
+    "email": "publicacaoaposentamais@hotmail.com",
+    "cidade": "NAZARÉ",
+    "uf": "BA"
+  }
+},
+{
+  "model": "fretes.motorista",
+  "pk": 1,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.551Z",
+    "atualizado_em": "2026-04-09T01:27:22.670Z",
+    "ativo": true,
+    "user": null,
+    "nome": "JOAO VITOR DA SILVA",
+    "cpf": "111.111.111-11",
+    "cnh": "BA1234567",
+    "telefone": "(71) 99999-1000"
+  }
+},
+{
+  "model": "fretes.motorista",
+  "pk": 2,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.556Z",
+    "atualizado_em": "2026-04-10T02:39:26.079Z",
+    "ativo": true,
+    "user": [
+      "mot_22222222222"
+    ],
+    "nome": "FLORIANO ALVES MARQUES NETO",
+    "cpf": "222.222.222-22",
+    "cnh": "BA7654321",
+    "telefone": "(71) 99999-2000"
+  }
+},
+{
+  "model": "fretes.motorista",
+  "pk": 3,
+  "fields": {
+    "criado_em": "2026-04-08T20:33:47.425Z",
+    "atualizado_em": "2026-04-09T10:20:53.701Z",
+    "ativo": true,
+    "user": null,
+    "nome": "MARCELO SANTOS SANTANA",
+    "cpf": "03191829598",
+    "cnh": "845121",
+    "telefone": "7193370279"
+  }
+},
+{
+  "model": "fretes.motorista",
+  "pk": 4,
+  "fields": {
+    "criado_em": "2026-04-09T10:21:18.091Z",
+    "atualizado_em": "2026-04-09T10:21:18.091Z",
+    "ativo": true,
+    "user": null,
+    "nome": "LUCAS ANDRADE RIBEIRO",
+    "cpf": "11111111111111",
+    "cnh": "11111111111111111",
+    "telefone": ""
+  }
+},
+{
+  "model": "fretes.localcarregamento",
+  "pk": 1,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.545Z",
+    "atualizado_em": "2026-04-09T12:18:48.901Z",
+    "ativo": true,
+    "nome": "BASE PETROBAHIA CANDEIAS",
+    "cidade": "Candeias",
+    "uf": "BA",
+    "endereco": "Terminal Costa do Dendê"
+  }
+},
+{
+  "model": "fretes.caminhao",
+  "pk": 2,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.570Z",
+    "atualizado_em": "2026-04-09T12:11:52.162Z",
+    "ativo": true,
+    "placa": "RDM3F16",
+    "modelo": "",
+    "ano_fabricacao": null,
+    "tipo_eixo": "bi_truck",
+    "motorista_principal": 2,
+    "local_carregamento": 1,
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.caminhao",
+  "pk": 3,
+  "fields": {
+    "criado_em": "2026-04-08T20:37:38.208Z",
+    "atualizado_em": "2026-04-09T14:20:23.314Z",
+    "ativo": true,
+    "placa": "RCV2A7",
+    "modelo": "",
+    "ano_fabricacao": null,
+    "tipo_eixo": "truck",
+    "motorista_principal": 3,
+    "local_carregamento": 1,
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.caminhao",
+  "pk": 4,
+  "fields": {
+    "criado_em": "2026-04-09T12:19:19.153Z",
+    "atualizado_em": "2026-04-09T12:19:24.128Z",
+    "ativo": true,
+    "placa": "RPG7E07",
+    "modelo": "",
+    "ano_fabricacao": null,
+    "tipo_eixo": "bi_truck",
+    "motorista_principal": 4,
+    "local_carregamento": 1,
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.caminhao",
+  "pk": 5,
+  "fields": {
+    "criado_em": "2026-04-09T12:21:28.646Z",
+    "atualizado_em": "2026-04-09T12:21:28.646Z",
+    "ativo": true,
+    "placa": "RDG3C98",
+    "modelo": "",
+    "ano_fabricacao": null,
+    "tipo_eixo": "carreta",
+    "motorista_principal": 3,
+    "local_carregamento": 1,
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.caminhaodocumento",
+  "pk": 1,
+  "fields": {
+    "criado_em": "2026-04-15T13:05:58.451Z",
+    "atualizado_em": "2026-04-15T13:05:58.451Z",
+    "ativo": true,
+    "caminhao": 5,
+    "tipo": "crlv",
+    "descricao": "",
+    "arquivo": "documentos_caminhao/2026/04/Reconsideracao_de_Despacho_POSTO_-_ORLA_pdf_assinado.pdf",
+    "data_validade": "2026-04-29",
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.caminhaodocumento",
+  "pk": 2,
+  "fields": {
+    "criado_em": "2026-04-15T14:42:20.055Z",
+    "atualizado_em": "2026-04-15T14:42:20.055Z",
+    "ativo": true,
+    "caminhao": 2,
+    "tipo": "licenca_ambiental",
+    "descricao": "",
+    "arquivo": "documentos_caminhao/2026/04/Reconsideracao_de_Despacho_POSTO_-_ORLA_pdf_assinado_bnqlwYy.pdf",
+    "data_validade": "2026-04-29",
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 4,
+  "fields": {
+    "caminhao": 2,
+    "numero": 1,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 5,
+  "fields": {
+    "caminhao": 2,
+    "numero": 2,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 7,
+  "fields": {
+    "caminhao": 3,
+    "numero": 1,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 12,
+  "fields": {
+    "caminhao": 3,
+    "numero": 3,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 13,
+  "fields": {
+    "caminhao": 3,
+    "numero": 4,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 14,
+  "fields": {
+    "caminhao": 3,
+    "numero": 5,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 15,
+  "fields": {
+    "caminhao": 3,
+    "numero": 6,
+    "capacidade_litros": "2000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 16,
+  "fields": {
+    "caminhao": 2,
+    "numero": 3,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 17,
+  "fields": {
+    "caminhao": 2,
+    "numero": 4,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 18,
+  "fields": {
+    "caminhao": 2,
+    "numero": 5,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 19,
+  "fields": {
+    "caminhao": 2,
+    "numero": 6,
+    "capacidade_litros": "2000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 20,
+  "fields": {
+    "caminhao": 2,
+    "numero": 7,
+    "capacidade_litros": "2000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 21,
+  "fields": {
+    "caminhao": 3,
+    "numero": 7,
+    "capacidade_litros": "2000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 22,
+  "fields": {
+    "caminhao": 4,
+    "numero": 1,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 23,
+  "fields": {
+    "caminhao": 4,
+    "numero": 2,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 24,
+  "fields": {
+    "caminhao": 4,
+    "numero": 3,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 25,
+  "fields": {
+    "caminhao": 4,
+    "numero": 4,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 26,
+  "fields": {
+    "caminhao": 4,
+    "numero": 5,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 27,
+  "fields": {
+    "caminhao": 5,
+    "numero": 1,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 28,
+  "fields": {
+    "caminhao": 5,
+    "numero": 2,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 29,
+  "fields": {
+    "caminhao": 5,
+    "numero": 3,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 30,
+  "fields": {
+    "caminhao": 5,
+    "numero": 4,
+    "capacidade_litros": "5000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 31,
+  "fields": {
+    "caminhao": 5,
+    "numero": 5,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 32,
+  "fields": {
+    "caminhao": 5,
+    "numero": 6,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 33,
+  "fields": {
+    "caminhao": 5,
+    "numero": 7,
+    "capacidade_litros": "3000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 34,
+  "fields": {
+    "caminhao": 5,
+    "numero": 8,
+    "capacidade_litros": "2000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 35,
+  "fields": {
+    "caminhao": 5,
+    "numero": 9,
+    "capacidade_litros": "2000.00"
+  }
+},
+{
+  "model": "fretes.compartimento",
+  "pk": 36,
+  "fields": {
+    "caminhao": 5,
+    "numero": 10,
+    "capacidade_litros": "2000.00"
+  }
+},
+{
+  "model": "fretes.produto",
+  "pk": 1,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.638Z",
+    "atualizado_em": "2026-04-09T10:16:34.292Z",
+    "ativo": true,
+    "nome": "DIESEL S10",
+    "descricao": ""
+  }
+},
+{
+  "model": "fretes.produto",
+  "pk": 2,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.644Z",
+    "atualizado_em": "2026-04-09T10:16:45.345Z",
+    "ativo": true,
+    "nome": "GASOLINA ADITIVADA",
+    "descricao": ""
+  }
+},
+{
+  "model": "fretes.produto",
+  "pk": 3,
+  "fields": {
+    "criado_em": "2026-04-08T20:34:10.997Z",
+    "atualizado_em": "2026-04-09T10:16:25.366Z",
+    "ativo": true,
+    "nome": "GASOLINA COMUM",
+    "descricao": "diesel"
+  }
+},
+{
+  "model": "fretes.produto",
+  "pk": 4,
+  "fields": {
+    "criado_em": "2026-04-09T10:16:56.323Z",
+    "atualizado_em": "2026-04-09T10:16:56.324Z",
+    "ativo": true,
+    "nome": "DIESEL S500",
+    "descricao": ""
+  }
+},
+{
+  "model": "fretes.fornecedor",
+  "pk": 1,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.625Z",
+    "atualizado_em": "2026-04-08T19:42:00.625Z",
+    "ativo": true,
+    "nome": "Distribuidora Atlântico",
+    "documento": "10.000.000/0001-10",
+    "contato": "",
+    "telefone": "",
+    "email": "",
+    "cidade": "Salvador",
+    "uf": "BA"
+  }
+},
+{
+  "model": "fretes.fornecedor",
+  "pk": 2,
+  "fields": {
+    "criado_em": "2026-04-08T19:42:00.632Z",
+    "atualizado_em": "2026-04-08T19:42:00.632Z",
+    "ativo": true,
+    "nome": "Fuel Bahia",
+    "documento": "20.000.000/0001-20",
+    "contato": "",
+    "telefone": "",
+    "email": "",
+    "cidade": "Candeias",
+    "uf": "BA"
+  }
+},
+{
+  "model": "fretes.rota",
+  "pk": 4,
+  "fields": {
+    "criado_em": "2026-04-09T10:52:09.613Z",
+    "atualizado_em": "2026-04-09T10:52:09.613Z",
+    "ativo": true,
+    "nome": "POSTO VALENÇA I",
+    "origem": "Candeias/BA",
+    "destino": "Valença/BA",
+    "parada_1": null,
+    "parada_2": null,
+    "parada_3": null,
+    "parada_4": null,
+    "parada_5": null,
+    "parada_6": null,
+    "parada_7": null,
+    "destino_lat": null,
+    "destino_lng": null,
+    "distancia_km": "186.04",
+    "tempo_total_min": null
+  }
+},
+{
+  "model": "fretes.rota",
+  "pk": 5,
+  "fields": {
+    "criado_em": "2026-04-09T14:23:22.590Z",
+    "atualizado_em": "2026-04-09T14:23:22.590Z",
+    "ativo": true,
+    "nome": "POSTO JACOBINA",
+    "origem": "Candeias/BA",
+    "destino": "Jacobina/BA",
+    "parada_1": null,
+    "parada_2": null,
+    "parada_3": null,
+    "parada_4": null,
+    "parada_5": null,
+    "parada_6": null,
+    "parada_7": null,
+    "destino_lat": null,
+    "destino_lng": null,
+    "distancia_km": "264.81",
+    "tempo_total_min": null
+  }
+},
+{
+  "model": "fretes.rota",
+  "pk": 6,
+  "fields": {
+    "criado_em": "2026-04-15T16:52:28.389Z",
+    "atualizado_em": "2026-04-15T16:52:28.389Z",
+    "ativo": true,
+    "nome": "POSTO SALVADOR",
+    "origem": "Candeias/BA",
+    "destino": "41650700",
+    "parada_1": null,
+    "parada_2": null,
+    "parada_3": null,
+    "parada_4": null,
+    "parada_5": null,
+    "parada_6": null,
+    "parada_7": null,
+    "destino_lat": null,
+    "destino_lng": null,
+    "distancia_km": null,
+    "tempo_total_min": null
+  }
+},
+{
+  "model": "fretes.rota",
+  "pk": 7,
+  "fields": {
+    "criado_em": "2026-04-16T11:53:02.961Z",
+    "atualizado_em": "2026-04-16T11:53:02.962Z",
+    "ativo": true,
+    "nome": "BASE SALVADOR",
+    "origem": "Candeias/BA",
+    "destino": "JUAZEIRO BAHIA",
+    "parada_1": 1,
+    "parada_2": 1,
+    "parada_3": null,
+    "parada_4": null,
+    "parada_5": null,
+    "parada_6": null,
+    "parada_7": null,
+    "destino_lat": null,
+    "destino_lng": null,
+    "distancia_km": null,
+    "tempo_total_min": null
+  }
+},
+{
+  "model": "fretes.rota",
+  "pk": 8,
+  "fields": {
+    "criado_em": "2026-04-17T00:14:56.196Z",
+    "atualizado_em": "2026-04-17T00:26:18.494Z",
+    "ativo": true,
+    "nome": "VIAGEM SEGUNA FEIRA",
+    "origem": "Candeias/BA",
+    "destino": "",
+    "parada_1": 3,
+    "parada_2": 1,
+    "parada_3": 2,
+    "parada_4": null,
+    "parada_5": null,
+    "parada_6": null,
+    "parada_7": null,
+    "destino_lat": null,
+    "destino_lng": null,
+    "distancia_km": null,
+    "tempo_total_min": null
+  }
+},
+{
+  "model": "fretes.carga",
+  "pk": 33,
+  "fields": {
+    "criado_em": "2026-04-16T01:59:42.095Z",
+    "atualizado_em": "2026-04-16T01:59:42.095Z",
+    "ativo": true,
+    "data_carga": "2026-04-15",
+    "cliente": 3,
+    "fornecedor": 1,
+    "produto": null,
+    "caminhao": 3,
+    "motorista": 2,
+    "rota": 5,
+    "origem": "",
+    "litros": "8000.00",
+    "valor_frete_litro": "0.2000",
+    "valor_total_frete": "1600.00",
+    "numero_documento": "",
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.carga",
+  "pk": 34,
+  "fields": {
+    "criado_em": "2026-04-16T01:59:42.223Z",
+    "atualizado_em": "2026-04-16T01:59:42.223Z",
+    "ativo": true,
+    "data_carga": "2026-04-15",
+    "cliente": 1,
+    "fornecedor": 1,
+    "produto": null,
+    "caminhao": 3,
+    "motorista": 2,
+    "rota": 5,
+    "origem": "",
+    "litros": "6000.00",
+    "valor_frete_litro": "0.2000",
+    "valor_total_frete": "1200.00",
+    "numero_documento": "",
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.carga",
+  "pk": 35,
+  "fields": {
+    "criado_em": "2026-04-16T01:59:42.224Z",
+    "atualizado_em": "2026-04-16T01:59:42.224Z",
+    "ativo": true,
+    "data_carga": "2026-04-15",
+    "cliente": 2,
+    "fornecedor": 1,
+    "produto": null,
+    "caminhao": 3,
+    "motorista": 2,
+    "rota": 5,
+    "origem": "",
+    "litros": "2000.00",
+    "valor_frete_litro": "0.2000",
+    "valor_total_frete": "400.00",
+    "numero_documento": "",
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.cargacompartimento",
+  "pk": 183,
+  "fields": {
+    "carga": 33,
+    "compartimento": 7,
+    "produto": 1,
+    "cliente": 3
+  }
+},
+{
+  "model": "fretes.cargacompartimento",
+  "pk": 184,
+  "fields": {
+    "carga": 33,
+    "compartimento": 12,
+    "produto": 2,
+    "cliente": 3
+  }
+},
+{
+  "model": "fretes.cargacompartimento",
+  "pk": 187,
+  "fields": {
+    "carga": 33,
+    "compartimento": 15,
+    "produto": 3,
+    "cliente": 3
+  }
+},
+{
+  "model": "fretes.cargacompartimento",
+  "pk": 189,
+  "fields": {
+    "carga": 34,
+    "compartimento": 13,
+    "produto": 2,
+    "cliente": 1
+  }
+},
+{
+  "model": "fretes.cargacompartimento",
+  "pk": 190,
+  "fields": {
+    "carga": 34,
+    "compartimento": 14,
+    "produto": 2,
+    "cliente": 1
+  }
+},
+{
+  "model": "fretes.cargacompartimento",
+  "pk": 191,
+  "fields": {
+    "carga": 35,
+    "compartimento": 21,
+    "produto": 3,
+    "cliente": 2
+  }
+},
+{
+  "model": "fretes.pneu",
+  "pk": 1,
+  "fields": {
+    "criado_em": "2026-04-16T23:16:14.337Z",
+    "atualizado_em": "2026-04-16T23:16:56.266Z",
+    "ativo": true,
+    "caminhao": 3,
+    "posicao": "1E",
+    "marca": "PIRELLI",
+    "modelo": "275/90",
+    "numero_fogo": "541444",
+    "data_instalacao": null,
+    "km_instalacao": null,
+    "sulco_mm": "1.0",
+    "recapagem": "1",
+    "status": "bom",
+    "observacoes": ""
+  }
+},
+{
+  "model": "fretes.pneu",
+  "pk": 2,
+  "fields": {
+    "criado_em": "2026-04-16T23:22:20.180Z",
+    "atualizado_em": "2026-04-16T23:22:20.180Z",
+    "ativo": true,
+    "caminhao": 5,
+    "posicao": "1E",
+    "marca": "",
+    "modelo": "",
+    "numero_fogo": "",
+    "data_instalacao": null,
+    "km_instalacao": null,
+    "sulco_mm": null,
+    "recapagem": "1",
+    "status": "bom",
+    "observacoes": ""
+  }
+},
+{
+  "model": "motorista_portal.despesaviagem",
+  "pk": 2,
+  "fields": {
+    "carga": 35,
+    "motorista": 2,
+    "tipo": "abastecimento",
+    "descricao": "Abastecimento - POSTO SAUBARA",
+    "valor": "1500.00",
+    "data": "2026-04-16",
+    "comprovante": "despesas/2026/04/igressa_amparo.png"
+  }
+},
+{
+  "model": "motorista_portal.abastecimentoviagem",
+  "pk": 2,
+  "fields": {
+    "despesa": 2,
+    "posto": "POSTO SAUBARA",
+    "litros": "200.00",
+    "preco_litro": "7.4500",
+    "foto_cupom": "abastecimentos/2026/04/igressa_amparo.png"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-04-08T20:33:47.430Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "motorista"
+    ],
+    "object_id": "3",
+    "object_repr": "cezinha",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-04-08T20:34:10.999Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "produto"
+    ],
+    "object_id": "3",
+    "object_repr": "s10",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-04-08T20:34:53.001Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "3",
+    "object_repr": "posto valença 1",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-04-08T20:35:34.174Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "tabelafrete"
+    ],
+    "object_id": "5",
+    "object_repr": "Posto Costa Azul - Diesel S10 - Salvador x Ituberá",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2026-04-08T20:37:38.212Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 1\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 2\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 3\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 4\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 5\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2026-04-09T01:27:22.672Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "motorista"
+    ],
+    "object_id": "1",
+    "object_repr": "JOAO VITOR DA SILVA",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2026-04-09T01:27:38.678Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "1",
+    "object_repr": "RCV 2A78",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Placa\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2026-04-09T01:27:49.565Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "2",
+    "object_repr": "EFG4H56",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2026-04-09T01:28:21.301Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "1",
+    "object_repr": "RCV 2A78",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"Compartimento\", \"object\": \"RCV 2A78 - Compartimento 0\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2026-04-09T01:28:53.616Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "1",
+    "object_repr": "RCV 2A78",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento\", \"object\": \"RCV 2A78 - Compartimento 1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2026-04-09T01:48:33.167Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "11",
+    "object_repr": "RCV 2A78 - Compartimento 1",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2026-04-09T01:50:19.335Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "2",
+    "object_repr": "RCV 2A78 - Compartimento 2",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2026-04-09T01:50:38.937Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "1",
+    "object_repr": "RCV 2A78",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2026-04-09T02:10:12.200Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "6",
+    "object_repr": "KWA6877 - Compartimento 1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2026-04-09T02:11:04.423Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2026-04-09T02:12:05.496Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "localcarregamento"
+    ],
+    "object_id": "1",
+    "object_repr": "Base Salvador - Salvador/BA",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2026-04-09T02:14:18.629Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2026-04-09T02:14:31.242Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "10",
+    "object_repr": "KWA6877 - Compartimento 5",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2026-04-09T02:17:41.853Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "10",
+    "object_repr": "KWA6877 - Compartimento 5",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2026-04-09T02:19:02.951Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "motorista"
+    ],
+    "object_id": "3",
+    "object_repr": "JOAO VITOR DA SILVA",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2026-04-09T02:21:03.781Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "9",
+    "object_repr": "KWA6877 - Compartimento 4",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2026-04-09T02:27:49.420Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "8",
+    "object_repr": "KWA6877 - Compartimento 3",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2026-04-09T02:28:04.416Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 3\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2026-04-09T02:28:18.518Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 4\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2026-04-09T02:28:37.939Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 5\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2026-04-09T10:07:56.898Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento\", \"object\": \"KWA6877 - Compartimento 6\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2026-04-09T10:08:18.384Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "KWA6877",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2026-04-09T10:09:03.215Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Placa\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2026-04-09T10:09:29.774Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2026-04-09T10:10:15.486Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "motorista"
+    ],
+    "object_id": "2",
+    "object_repr": "FLORIANO ALVES MARQUES NETO",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2026-04-09T10:11:03.268Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "2",
+    "object_repr": "RDM3F16",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Placa\"]}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDM3F16 - Compartimento 3\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDM3F16 - Compartimento 4\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDM3F16 - Compartimento 5\"}}, {\"changed\": {\"name\": \"Compartimento\", \"object\": \"RDM3F16 - Compartimento 1\", \"fields\": [\"Capacidade litros\"]}}, {\"changed\": {\"name\": \"Compartimento\", \"object\": \"RDM3F16 - Compartimento 2\", \"fields\": [\"Capacidade litros\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2026-04-09T10:11:49.324Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "2",
+    "object_repr": "RDM3F16",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento\", \"object\": \"RDM3F16 - Compartimento 6\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDM3F16 - Compartimento 7\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2026-04-09T10:12:02.357Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "2",
+    "object_repr": "RDM3F16",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2026-04-09T10:16:11.723Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "produto"
+    ],
+    "object_id": "3",
+    "object_repr": "DIESEL S10",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2026-04-09T10:16:16.340Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "produto"
+    ],
+    "object_id": "1",
+    "object_repr": "Diesel S10",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2026-04-09T10:16:25.370Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "produto"
+    ],
+    "object_id": "3",
+    "object_repr": "GASOLINA COMUM",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2026-04-09T10:16:34.294Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "produto"
+    ],
+    "object_id": "1",
+    "object_repr": "DIESEL S10",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2026-04-09T10:16:45.347Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "produto"
+    ],
+    "object_id": "2",
+    "object_repr": "GASOLINA ADITIVADA",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2026-04-09T10:16:56.326Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "produto"
+    ],
+    "object_id": "4",
+    "object_repr": "DIESEL S500",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2026-04-09T10:20:17.667Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "motorista"
+    ],
+    "object_id": "3",
+    "object_repr": "FLORIANO ALVES MARQUES NETO",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2026-04-09T10:20:53.704Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "motorista"
+    ],
+    "object_id": "3",
+    "object_repr": "MARCELO SANTOS SANTANA",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2026-04-09T10:21:18.098Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "motorista"
+    ],
+    "object_id": "4",
+    "object_repr": "LUCAS ANDRADE RIBEIRO",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2026-04-09T10:52:09.616Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "4",
+    "object_repr": "POSTO VALENÇA I",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2026-04-09T12:11:09.487Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"Compartimento\", \"object\": \"RCV2A7 - Compartimento 2\", \"fields\": [\"Capacidade litros\"]}}, {\"changed\": {\"name\": \"Compartimento\", \"object\": \"RCV2A7 - Compartimento 3\", \"fields\": [\"Capacidade litros\"]}}, {\"changed\": {\"name\": \"Compartimento\", \"object\": \"RCV2A7 - Compartimento 4\", \"fields\": [\"Capacidade litros\"]}}, {\"changed\": {\"name\": \"Compartimento\", \"object\": \"RCV2A7 - Compartimento 5\", \"fields\": [\"Capacidade litros\"]}}, {\"changed\": {\"name\": \"Compartimento\", \"object\": \"RCV2A7 - Compartimento 6\", \"fields\": [\"Capacidade litros\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2026-04-09T12:11:34.345Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2026-04-09T12:11:44.646Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "2",
+    "object_repr": "RDM3F16",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2026-04-09T12:11:52.245Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "2",
+    "object_repr": "RDM3F16",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2026-04-09T12:12:15.684Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento\", \"object\": \"RCV2A7 - Compartimento 7\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2026-04-09T12:12:20.213Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 50,
+  "fields": {
+    "action_time": "2026-04-09T12:18:48.903Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "localcarregamento"
+    ],
+    "object_id": "1",
+    "object_repr": "BASE PETROBAHIA CANDEIAS - Candeias/BA",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Nome\", \"Cidade\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 51,
+  "fields": {
+    "action_time": "2026-04-09T12:19:19.159Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "4",
+    "object_repr": "RPG7E07",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RPG7E07 - Compartimento 1\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RPG7E07 - Compartimento 2\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RPG7E07 - Compartimento 3\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RPG7E07 - Compartimento 4\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RPG7E07 - Compartimento 5\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 52,
+  "fields": {
+    "action_time": "2026-04-09T12:19:24.132Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "4",
+    "object_repr": "RPG7E07",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 53,
+  "fields": {
+    "action_time": "2026-04-09T12:21:28.654Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "5",
+    "object_repr": "RDG3C98",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 1\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 2\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 3\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 4\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 5\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 6\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 7\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 8\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 9\"}}, {\"added\": {\"name\": \"Compartimento\", \"object\": \"RDG3C98 - Compartimento 10\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 54,
+  "fields": {
+    "action_time": "2026-04-09T12:33:59.879Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 55,
+  "fields": {
+    "action_time": "2026-04-09T12:57:02.324Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "compartimento"
+    ],
+    "object_id": "7",
+    "object_repr": "RCV2A7 - Compartimento 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Numero\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 56,
+  "fields": {
+    "action_time": "2026-04-09T12:58:08.932Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "5",
+    "object_repr": "08/04/2026 - Posto Costa Azul - DIESEL S10",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 57,
+  "fields": {
+    "action_time": "2026-04-09T13:00:25.235Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "5",
+    "object_repr": "08/04/2026 - Posto Costa Azul - DIESEL S10",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 58,
+  "fields": {
+    "action_time": "2026-04-09T13:00:35.401Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "5",
+    "object_repr": "08/04/2026 - Posto Costa Azul - DIESEL S10",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S500\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 59,
+  "fields": {
+    "action_time": "2026-04-09T13:04:05.479Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "6",
+    "object_repr": "09/04/2026 - Posto Costa Azul - DIESEL S10",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - DIESEL S500\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 60,
+  "fields": {
+    "action_time": "2026-04-09T13:16:01.189Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "7",
+    "object_repr": "09/04/2026 - Posto Costa Azul - DIESEL S10",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S500\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 61,
+  "fields": {
+    "action_time": "2026-04-09T14:20:23.316Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhao"
+    ],
+    "object_id": "3",
+    "object_repr": "RCV2A7",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 62,
+  "fields": {
+    "action_time": "2026-04-09T14:23:22.592Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "5",
+    "object_repr": "POSTO JACOBINA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 63,
+  "fields": {
+    "action_time": "2026-04-09T14:26:18.459Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "8",
+    "object_repr": "09/04/2026 - Posto Costa Azul",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S500\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 64,
+  "fields": {
+    "action_time": "2026-04-09T14:26:38.491Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "8",
+    "object_repr": "09/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 65,
+  "fields": {
+    "action_time": "2026-04-09T14:26:38.491Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "7",
+    "object_repr": "09/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 66,
+  "fields": {
+    "action_time": "2026-04-09T14:26:38.491Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "6",
+    "object_repr": "09/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 67,
+  "fields": {
+    "action_time": "2026-04-09T14:26:38.491Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "5",
+    "object_repr": "08/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 68,
+  "fields": {
+    "action_time": "2026-04-10T12:35:18.158Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "10",
+    "object_repr": "10/04/2026 - Posto Ilha Bela",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 8 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 9 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 10 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 69,
+  "fields": {
+    "action_time": "2026-04-10T20:44:36.782Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "11",
+    "object_repr": "10/04/2026 - Posto Ilha Bela",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA ADITIVADA\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 70,
+  "fields": {
+    "action_time": "2026-04-14T13:40:19.215Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "11",
+    "object_repr": "10/04/2026 - Posto Ilha Bela",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 71,
+  "fields": {
+    "action_time": "2026-04-14T13:40:19.215Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "10",
+    "object_repr": "10/04/2026 - Posto Ilha Bela",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 72,
+  "fields": {
+    "action_time": "2026-04-14T13:40:19.215Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "9",
+    "object_repr": "08/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 73,
+  "fields": {
+    "action_time": "2026-04-15T13:05:58.452Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhaodocumento"
+    ],
+    "object_id": "1",
+    "object_repr": "RDG3C98 – CRLV",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 74,
+  "fields": {
+    "action_time": "2026-04-15T14:42:20.058Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "caminhaodocumento"
+    ],
+    "object_id": "2",
+    "object_repr": "RDM3F16 – Licença Ambiental",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 75,
+  "fields": {
+    "action_time": "2026-04-15T16:52:28.452Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "6",
+    "object_repr": "POSTO SALVADOR",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 76,
+  "fields": {
+    "action_time": "2026-04-15T16:56:15.923Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "12",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 8 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 9 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 10 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 77,
+  "fields": {
+    "action_time": "2026-04-15T17:17:52.250Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "cliente"
+    ],
+    "object_id": "3",
+    "object_repr": "POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 78,
+  "fields": {
+    "action_time": "2026-04-15T18:30:39.937Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "3",
+    "object_repr": "jonathan_fsa",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 79,
+  "fields": {
+    "action_time": "2026-04-15T18:31:00.294Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "3",
+    "object_repr": "JONATHAN_FSA",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 80,
+  "fields": {
+    "action_time": "2026-04-15T18:42:50.236Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "3",
+    "object_repr": "JONATHAN_FSA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 81,
+  "fields": {
+    "action_time": "2026-04-15T18:43:17.675Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "4",
+    "object_repr": "03888170540",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 82,
+  "fields": {
+    "action_time": "2026-04-15T18:50:42.738Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "4",
+    "object_repr": "03888170540",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 83,
+  "fields": {
+    "action_time": "2026-04-15T19:01:39.018Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "4",
+    "object_repr": "03888170540",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 84,
+  "fields": {
+    "action_time": "2026-04-15T21:02:13.702Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "2",
+    "object_repr": "Salvador x Ituberá",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 85,
+  "fields": {
+    "action_time": "2026-04-15T21:02:19.721Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "1",
+    "object_repr": "Salvador x Valença",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 86,
+  "fields": {
+    "action_time": "2026-04-15T21:02:22.443Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "3",
+    "object_repr": "posto valença 1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 87,
+  "fields": {
+    "action_time": "2026-04-15T22:30:39.366Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "cliente"
+    ],
+    "object_id": "3",
+    "object_repr": "POSTO SAUBARA",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 88,
+  "fields": {
+    "action_time": "2026-04-15T22:31:19.167Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "cliente"
+    ],
+    "object_id": "4",
+    "object_repr": "JOAO",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 89,
+  "fields": {
+    "action_time": "2026-04-15T22:31:26.342Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "cliente"
+    ],
+    "object_id": "4",
+    "object_repr": "JOAO",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 90,
+  "fields": {
+    "action_time": "2026-04-16T00:42:24.901Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "13",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 02 - Posto Ilha Bela\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 03 - POSTO SAUBARA\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 04 - Posto Costa Azul\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 8 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 9 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 10 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 91,
+  "fields": {
+    "action_time": "2026-04-16T00:48:33.428Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "13",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 92,
+  "fields": {
+    "action_time": "2026-04-16T00:48:33.428Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "12",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 93,
+  "fields": {
+    "action_time": "2026-04-16T00:49:51.587Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "14",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 02 - POSTO SAUBARA\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 03 - Posto Costa Azul\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 04 - Posto Ilha Bela\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 8 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 94,
+  "fields": {
+    "action_time": "2026-04-16T01:12:46.030Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "17",
+    "object_repr": "15/04/2026 - Posto Ilha Bela",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 95,
+  "fields": {
+    "action_time": "2026-04-16T01:12:46.030Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "16",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 96,
+  "fields": {
+    "action_time": "2026-04-16T01:12:46.030Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "15",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 97,
+  "fields": {
+    "action_time": "2026-04-16T01:12:46.030Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "14",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 98,
+  "fields": {
+    "action_time": "2026-04-16T01:18:05.878Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "18",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 02 - POSTO SAUBARA\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 03 - Posto Costa Azul\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 04 - Posto Ilha Bela\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 8 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 9 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 10 - GASOLINA ADITIVADA\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 99,
+  "fields": {
+    "action_time": "2026-04-16T01:28:44.193Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "21",
+    "object_repr": "15/04/2026 - Posto Ilha Bela",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 100,
+  "fields": {
+    "action_time": "2026-04-16T01:28:44.193Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "20",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 101,
+  "fields": {
+    "action_time": "2026-04-16T01:28:44.193Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "19",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 102,
+  "fields": {
+    "action_time": "2026-04-16T01:28:44.193Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "18",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 103,
+  "fields": {
+    "action_time": "2026-04-16T01:30:41.542Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "22",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 06 - POSTO SAUBARA\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 07 - Posto Ilha Bela\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 2 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 8 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 9 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 10 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 104,
+  "fields": {
+    "action_time": "2026-04-16T01:45:18.505Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "24",
+    "object_repr": "15/04/2026 - Posto Ilha Bela",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 105,
+  "fields": {
+    "action_time": "2026-04-16T01:45:18.505Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "23",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 106,
+  "fields": {
+    "action_time": "2026-04-16T01:45:18.505Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "22",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 107,
+  "fields": {
+    "action_time": "2026-04-16T01:46:22.517Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "25",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 108,
+  "fields": {
+    "action_time": "2026-04-16T01:47:40.073Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "26",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 02 - POSTO SAUBARA\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 03 - Posto Ilha Bela\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA ADITIVADA\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 109,
+  "fields": {
+    "action_time": "2026-04-16T01:48:09.284Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "27",
+    "object_repr": "15/04/2026 - Posto Ilha Bela",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 110,
+  "fields": {
+    "action_time": "2026-04-16T01:48:09.284Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "26",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 111,
+  "fields": {
+    "action_time": "2026-04-16T01:48:09.284Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "25",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 112,
+  "fields": {
+    "action_time": "2026-04-16T01:49:28.242Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "28",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 02 - Posto Costa Azul\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 03 - Posto Ilha Bela\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - DIESEL S500\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 113,
+  "fields": {
+    "action_time": "2026-04-16T01:55:09.060Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "31",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 02 - Posto Costa Azul\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 03 - Posto Costa Azul\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 114,
+  "fields": {
+    "action_time": "2026-04-16T01:58:21.781Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "32",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 115,
+  "fields": {
+    "action_time": "2026-04-16T01:58:21.781Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "31",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 116,
+  "fields": {
+    "action_time": "2026-04-16T01:58:21.781Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "30",
+    "object_repr": "15/04/2026 - Posto Ilha Bela",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 117,
+  "fields": {
+    "action_time": "2026-04-16T01:58:21.781Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "29",
+    "object_repr": "15/04/2026 - Posto Costa Azul",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 118,
+  "fields": {
+    "action_time": "2026-04-16T01:58:21.781Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "28",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 119,
+  "fields": {
+    "action_time": "2026-04-16T01:59:42.226Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "carga"
+    ],
+    "object_id": "33",
+    "object_repr": "15/04/2026 - POSTO SAUBARA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 02 - Posto Costa Azul\"}}, {\"added\": {\"name\": \"Cliente adicional\", \"object\": \"Cliente 03 - Posto Ilha Bela\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 1 - DIESEL S10\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 3 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 4 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 5 - GASOLINA ADITIVADA\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 6 - GASOLINA COMUM\"}}, {\"added\": {\"name\": \"Compartimento da Carga\", \"object\": \"Boca 7 - GASOLINA COMUM\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 120,
+  "fields": {
+    "action_time": "2026-04-16T11:53:02.963Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "7",
+    "object_repr": "BASE SALVADOR",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 121,
+  "fields": {
+    "action_time": "2026-04-17T00:14:56.257Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "8",
+    "object_repr": "VIAGEM SEGUNA FEIRA",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 122,
+  "fields": {
+    "action_time": "2026-04-17T00:26:18.496Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "rota"
+    ],
+    "object_id": "8",
+    "object_repr": "VIAGEM SEGUNA FEIRA",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 123,
+  "fields": {
+    "action_time": "2026-04-17T00:30:25.955Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "fretes",
+      "cliente"
+    ],
+    "object_id": "5",
+    "object_repr": "POSTO ARATUIPE",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+}
+]
