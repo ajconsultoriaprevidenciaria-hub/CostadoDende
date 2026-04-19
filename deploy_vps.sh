@@ -9,6 +9,14 @@ set -euo pipefail
 
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; RED='\033[0;31m'; NC='\033[0m'
 APP_DIR="/home/costadodende/app"
+
+# ── Proteção: impede execução fora da VPS ────────────
+if [ ! -d "$APP_DIR" ]; then
+    echo -e "${RED}❌ Este script deve rodar DENTRO da VPS, não localmente.${NC}"
+    echo -e "   Para fazer deploy, execute na sua máquina:"
+    echo -e "   ${YELLOW}./deploy.sh \"mensagem do commit\"${NC}"
+    exit 1
+fi
 VENV="/home/costadodende/venv"
 SETTINGS="config.settings_production"
 
