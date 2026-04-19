@@ -213,7 +213,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  overflow: hidden;
+  min-width: 0;       /* evita que o grid cell expanda além de 1fr */
+  overflow: visible;  /* não corta o conteúdo — scroll fica no .adm-content */
 }
 .adm-topbar {
   background: #050c17;
@@ -246,12 +247,7 @@ body {
   overflow: auto;
   max-width: 1944px;
   margin: 0 auto;
-
-  flex: 1;
-  padding: 22px;
-  overflow: auto;
-  max-width: 1944px;
-  margin: 0 auto;
+  width: 100%;
 }
 .adm-page-header { margin-bottom: 22px; }
 .adm-page-header h1 { font-size: 1.35rem; font-weight: 800; color: var(--text); letter-spacing: -.01em; }
