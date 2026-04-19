@@ -1078,18 +1078,46 @@ body.popup .adm-content { max-width: 100%; padding: 18px; }
     });
   });
 
-  /* Sub-menus: mouseenter/leave na group para abrir/fechar de forma confiável */
+  /* Sub-menus: mouseenter/leave (desktop) + touchend (touch) */
+  var lastTouchTime = 0;
+
   document.querySelectorAll('.adm-nav-group').forEach(function(group){
     var timer;
+
+    /* Desktop: hover abre/fecha com pequeno delay */
     group.addEventListener('mouseenter', function(){
+      if (Date.now() - lastTouchTime < 700) return; // ignora eventos sintéticos pós-touch
       clearTimeout(timer);
       group.classList.add('open');
     });
     group.addEventListener('mouseleave', function(){
-      // pequeno delay para não fechar ao mover entre link e submenu
+      if (Date.now() - lastTouchTime < 700) return;
       timer = setTimeout(function(){ group.classList.remove('open'); }, 80);
     });
+
+    /* Touch: tap no link-pai alterna o submenu sem navegar na 1ª vez */
+    var mainLink = group.querySelector('.adm-nav-link');
+    if (mainLink && group.querySelector('.adm-nav-sub')) {
+      mainLink.addEventListener('touchend', function(e){
+        lastTouchTime = Date.now();
+        clearTimeout(timer);
+        var wasOpen = group.classList.contains('open');
+        /* fecha todos os outros grupos */
+        document.querySelectorAll('.adm-nav-group').forEach(function(g){ g.classList.remove('open'); });
+        if (!wasOpen) {
+          group.classList.add('open');
+          e.preventDefault(); // impede navegação imediata; 2º tap navega normalmente
+        }
+      });
+    }
   });
+
+  /* Touch: fecha ao tocar fora de qualquer grupo */
+  document.addEventListener('touchstart', function(e){
+    if (!e.target.closest('.adm-nav-group')) {
+      document.querySelectorAll('.adm-nav-group.open').forEach(function(g){ g.classList.remove('open'); });
+    }
+  }, { passive: true });
 
   document.querySelectorAll('.adm-nav-link[href]').forEach(function(a){
     var href = a.getAttribute('href');
