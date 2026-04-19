@@ -20,13 +20,13 @@ Use este checklist para garantir que nada foi esquecido.
 - [ ] Banco de dados MySQL criado
   - Nome: `u978535582_costadodende`
   - Usuário: `u978535582_costadodende`
-  - Senha: ********\_\_\_********
+  - Senha: **\*\*\*\***\_\_\_**\*\*\*\***
   - Host: `localhost`
 
 - [ ] Aplicativo Python configurado
   - Versão: Python 3.11+
   - Diretório: `public_html`
-  - Arquivo inicial: `passenger_wsgi.py`
+  - Arquivo inicial: `passenger_wsgi.py` (copiar de config/passenger_wsgi.py)
   - URL: `postoscostadodende.com.br`
 
 - [ ] SSL/HTTPS habilitado
@@ -71,8 +71,8 @@ Use este checklist para garantir que nada foi esquecido.
 
 - [ ] Superusuário criado
   - `python manage.py createsuperuser`
-  - Usuário: ********\_\_\_********
-  - Senha: ********\_\_\_********
+  - Usuário: **\*\*\*\***\_\_\_**\*\*\*\***
+  - Senha: **\*\*\*\***\_\_\_**\*\*\*\***
 
 - [ ] Arquivos estáticos coletados
   - `python manage.py collectstatic --noinput`

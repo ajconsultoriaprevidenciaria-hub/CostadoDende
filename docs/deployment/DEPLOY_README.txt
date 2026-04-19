@@ -1,6 +1,13 @@
 DEPLOY - COSTA DO DENDE - postoscostadodende.com.br
 ====================================================
 
+⚠️ NOTA: Este é o método de deploy LEGADO via Hostinger/Passenger.
+O deploy atual usa VPS com Nginx+Gunicorn. Veja DEPLOY_PRODUCAO_CREDENCIAIS.md
+
+Arquivos mencionados abaixo estão em:
+- passenger_wsgi.py → config/passenger_wsgi.py (copiar para raiz no deploy)
+- deploy_requirements.txt → docs/deployment/deploy_requirements.txt
+
 PASSO A PASSO PARA HOSTINGER:
 
 1. Acesse hPanel > Avancado > Aplicativo Python (Setup Python App)

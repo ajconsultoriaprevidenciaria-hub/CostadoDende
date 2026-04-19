@@ -114,8 +114,10 @@ tar --exclude='*.pyc' \
     --exclude='media/*' \
     -czf costadodende_deploy.tar.gz \
     apps/ config/ templates/ static/ \
-    manage.py passenger_wsgi.py requirements.txt \
+    manage.py config/passenger_wsgi.py requirements.txt \
     .env.production.example
+
+# Nota: passenger_wsgi.py está em config/, copiar para raiz se necessário
 
 # Enviar para o servidor
 scp -P 65002 costadodende_deploy.tar.gz u978535582@82.180.153.36:~/public_html/

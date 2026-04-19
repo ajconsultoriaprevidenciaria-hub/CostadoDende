@@ -15,6 +15,7 @@ Sistema de gestão integrado para controle de fretes, motoristas, abastecimentos
 ```
 
 O script `start_local.sh` detecta automaticamente se é a primeira execução e:
+
 - Cria ambiente virtual Python
 - Instala dependências
 - Executa migrações
@@ -29,6 +30,7 @@ O script `start_local.sh` detecta automaticamente se é a primeira execução e:
 ```
 
 O script automatiza:
+
 - Commit e push para GitHub
 - Deploy no servidor VPS
 - Migrações de banco de dados
@@ -75,16 +77,21 @@ CostadoDende/
 ## 📝 Aplicações
 
 ### Core
+
 Aplicação principal com funcionalidades base do sistema.
 
 ### Dashboard
+
 Dashboard administrativo com métricas e visualizações.
 
 ### Fretes
+
 Gestão completa de fretes, cargas, rotas e clientes.
 
 ### Motorista Portal
+
 Portal para motoristas com acesso a:
+
 - Abastecimentos
 - Fretes atribuídos
 - Comprovantes
@@ -93,6 +100,7 @@ Portal para motoristas com acesso a:
 ## 🔧 Comandos Úteis
 
 ### Desenvolvimento
+
 ```bash
 # Criar novas migrações
 python manage.py makemigrations
@@ -111,6 +119,7 @@ python manage.py shell
 ```
 
 ### Produção
+
 ```bash
 # Verificar status do Gunicorn
 ssh root@72.61.27.65 'supervisorctl status costadodende'
