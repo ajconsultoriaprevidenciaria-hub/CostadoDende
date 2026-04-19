@@ -10,7 +10,7 @@ GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; RED='\033[0;31m'; NC
 VPS_HOST="root@72.61.27.65"
 VPS_SCRIPT="/home/costadodende/deploy_vps.sh"
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 echo -e "${BLUE}╔══════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║   Costa do Dendê — Deploy                ║${NC}"

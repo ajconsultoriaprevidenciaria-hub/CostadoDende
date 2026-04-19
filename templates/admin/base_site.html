@@ -36,6 +36,7 @@
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
+html { overflow-x: hidden; }
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--bg);
@@ -43,6 +44,7 @@ body {
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* impede scroll horizontal na página inteira */
 }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
