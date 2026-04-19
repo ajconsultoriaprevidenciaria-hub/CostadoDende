@@ -57,8 +57,9 @@ else
     source .venv/bin/activate
 
     # Aplica migrations pendentes silenciosamente
-    PENDING=$(python manage.py showmigrations --plan 2>/dev/null | grep -c "\[ \]" || echo "0")
-    if [ "$PENDING" -gt 0 ]; then
+    PENDING=$(python manage.py showmigrations --plan 2>/dev/null | grep -c "\[ \]" || true)
+    PENDING=${PENDING:-0}
+    if [ "${PENDING}" -gt 0 ] 2>/dev/null; then
         echo -e "${YELLOW}⚡ $PENDING migration(s) pendente(s). Aplicando...${NC}"
         python manage.py migrate
         echo -e "${GREEN}✅ Migrations aplicadas${NC}"
